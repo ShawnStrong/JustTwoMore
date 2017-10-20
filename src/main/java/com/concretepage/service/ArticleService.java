@@ -1,4 +1,4 @@
-package com.concretepage.service;
+/*package com.concretepage.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,4 +39,4 @@ public class ArticleService implements IArticleService {
 		articleDAO.initArticleTable();
 		
 	}
-} 
+} */
