@@ -1,5 +1,7 @@
 package com.concretepage.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -13,10 +15,14 @@ import com.concretepage.entity.Partner;
 // Query object. In here you will most likely be receiving or giving java bean objects (i.e. Partner) 
 // to or from controllers or services. Any data processing is done in the Services layer for whatever
 // reason, not sure yet.
+// More about Query here:
+// https://www.thoughts-on-java.org/jpa-native-queries/
 @Transactional
 @Repository
 public class PartnerDAO implements IntPartnerDAO {
 	
+	// http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html
+	// Definitely read this about EntityManager
 	@PersistenceContext	
 	private EntityManager entityManager;
 
@@ -31,6 +37,16 @@ public class PartnerDAO implements IntPartnerDAO {
 	        query.setParameter(4, partner.getContactEmail());
 	        query.setParameter(5, partner.getDescription());
 	        query.executeUpdate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Partner> listPartner() {
+		
+		Query q = entityManager.createNativeQuery("SELECT * FROM partners", Partner.class);
+		List<Partner> partners = q.getResultList();
+		return partners;
+		
 	}
 
 	@Override

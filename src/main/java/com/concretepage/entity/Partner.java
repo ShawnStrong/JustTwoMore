@@ -8,6 +8,7 @@ import javax.persistence.Id;
 // compiled into a bean called 'Partner'. Pretty neat, huh?
 @Entity
 public class Partner {
+	
 	// @Id designates the next variable (id in this case) to be the primary key value of the table that the
 	// Partner bean belongs to. @GeneratedValue allows id to take on the 'auto-increment' property in MySQL
     @Id
@@ -25,6 +26,16 @@ public class Partner {
     private String description;
     
     public Partner() {}
+    
+    public Partner(int id, String name, String contactName, 
+    		String contactPhone, String contactEmail, String description) {
+    	this.id = id;
+    	this.name = name;
+    	this.contactName = contactName;
+    	this.contactPhone = contactPhone;
+    	this.contactEmail = contactEmail;
+    	this.description = description;
+    }
 
 	public int getId() {
         return id;

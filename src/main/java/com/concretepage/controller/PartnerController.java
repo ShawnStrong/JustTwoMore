@@ -40,6 +40,10 @@ public class PartnerController {
 		return "all good";
 	}
 	
+	// need sumkinda way to transport da partners over to html. A possible quest for Adam?
+//	@GetMapping("list")
+//	public 
+	
 	@GetMapping("init")
 	public @ResponseBody String initIncomingRecordTable() {
 		partnerDAO.initPartnerTable();
