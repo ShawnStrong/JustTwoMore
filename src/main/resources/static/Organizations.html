@@ -4,6 +4,13 @@
     <title>its comin 4 u</title>
 </head>
 <body>
+
+	<form method="get" action="/partner/list">
+		<button type="submit">List yo doods</button>
+	</form>
+	
+	<br>
+	
     <form action="/partner/add">
         Partner:<br>
         <input type="text" name="name" value="">
@@ -23,5 +30,16 @@
         <input type="submit" value="Submit">
     </form>
     <a href='index.html' class='button'>back</a>
+	
+	<br>
+	
+	<div id='root'></div>
+	
+	<script src="https://fb.me/react-15.0.1.js"></script>
+    <script src="https://fb.me/react-dom-15.0.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    
+	<script src="partnerTable.js" type="text/babel"></script>
+	
 </body>
 </html>

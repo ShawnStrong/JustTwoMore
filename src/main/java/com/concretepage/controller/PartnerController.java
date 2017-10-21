@@ -1,5 +1,7 @@
 package com.concretepage.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +43,11 @@ public class PartnerController {
 	}
 	
 	// need sumkinda way to transport da partners over to html. A possible quest for Adam?
-//	@GetMapping("list")
-//	public 
+	@GetMapping("list")
+	public @ResponseBody List<Partner> listPartner() {
+		List<Partner> lop = partnerDAO.listPartner();
+		return lop;
+	}
 	
 	@GetMapping("init")
 	public @ResponseBody String initIncomingRecordTable() {

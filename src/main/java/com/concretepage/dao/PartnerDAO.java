@@ -43,7 +43,7 @@ public class PartnerDAO implements IntPartnerDAO {
 	@Override
 	public List<Partner> listPartner() {
 		
-		Query q = entityManager.createNativeQuery("SELECT * FROM partners", Partner.class);
+		Query q = entityManager.createNativeQuery("SELECT * FROM partners;", Partner.class);
 		List<Partner> partners = q.getResultList();
 		return partners;
 		

@@ -17,11 +17,11 @@ public class Partner {
 
     private String name;
 
-    private String contactName;
+    private String contactname;
     
-    private String contactPhone;
+    private String contactphone;
     
-    private String contactEmail;
+    private String contactemail;
     
     private String description;
     
@@ -31,9 +31,9 @@ public class Partner {
     		String contactPhone, String contactEmail, String description) {
     	this.id = id;
     	this.name = name;
-    	this.contactName = contactName;
-    	this.contactPhone = contactPhone;
-    	this.contactEmail = contactEmail;
+    	this.contactname = contactName;
+    	this.contactphone = contactPhone;
+    	this.contactemail = contactEmail;
     	this.description = description;
     }
 
@@ -54,27 +54,27 @@ public class Partner {
     }
 
     public String getContactName() {
-    	return contactName;
+    	return contactname;
     }
     
     public void setContactName(String contactName) {
-    	this.contactName = contactName;
+    	this.contactname = contactName;
     }
     
     public String getContactPhone() {
-    	return contactPhone;
+    	return contactphone;
     }
     
     public void setContactPhone(String contactPhone) {
-    	this.contactPhone = contactPhone;
+    	this.contactphone = contactPhone;
     }
     
     public String getContactEmail() {
-    	return contactEmail;
+    	return contactemail;
     }
     
     public void setContactEmail(String contactEmail) {
-    	this.contactEmail = contactEmail;
+    	this.contactemail = contactEmail;
     }
     
     public String getDescription() {
