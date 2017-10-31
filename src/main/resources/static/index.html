@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shwan has monster dong</title>
+<script>
+function validateForm() {
+    var x = document.forms["myForm"]["fname"].value;
+    if (x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+}
+</script>
 </head>
 <body>
-	<a href='Organizations.html' class='button'>Organizations</a>
-	<br>
-    <a href='IncomingRecords.html' class='button'>Incoming Partners</a>
-	<br>
-	<a href='OutgoingRecords.html' class='button'>Outgoing Partners</a>
+
+<form name="myForm" action="/action_page.php"
+onsubmit="return validateForm()" method="post">
+Name: <input type="text" name="fname">
+<input type="submit" value="Submit">
+</form>
+
+<br>
+
+<a href='Console.html' class='button'>Console</a>
+
 </body>
 </html>

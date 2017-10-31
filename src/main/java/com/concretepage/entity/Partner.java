@@ -13,75 +13,75 @@ public class Partner {
 	// Partner bean belongs to. @GeneratedValue allows id to take on the 'auto-increment' property in MySQL
     @Id
     @GeneratedValue
-    private int id;
+    private int org_id;
 
-    private String name;
+    private String org_name;
 
-    private String contactname;
+    private String contact_name;
     
-    private String contactphone;
+    private String contact_number;
     
-    private String contactemail;
+    private String contact_email;
     
-    private String description;
+    private String notes;
     
     public Partner() {}
     
     public Partner(int id, String name, String contactName, 
     		String contactPhone, String contactEmail, String description) {
-    	this.id = id;
-    	this.name = name;
-    	this.contactname = contactName;
-    	this.contactphone = contactPhone;
-    	this.contactemail = contactEmail;
-    	this.description = description;
+    	this.org_id = id;
+    	this.org_name = name;
+    	this.contact_name = contactName;
+    	this.contact_number = contactPhone;
+    	this.contact_email = contactEmail;
+    	this.notes = description;
     }
 
 	public int getId() {
-        return id;
+        return org_id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.org_id = id;
     }
 
     public String getName() {
-        return name;
+        return org_name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.org_name = name;
     }
 
     public String getContactName() {
-    	return contactname;
+    	return contact_name;
     }
     
     public void setContactName(String contactName) {
-    	this.contactname = contactName;
+    	this.contact_name = contactName;
     }
     
-    public String getContactPhone() {
-    	return contactphone;
+    public String getContactNumber() {
+    	return contact_number;
     }
     
-    public void setContactPhone(String contactPhone) {
-    	this.contactphone = contactPhone;
+    public void setContactNumber(String contactPhone) {
+    	this.contact_number = contactPhone;
     }
     
     public String getContactEmail() {
-    	return contactemail;
+    	return contact_email;
     }
     
     public void setContactEmail(String contactEmail) {
-    	this.contactemail = contactEmail;
+    	this.contact_email = contactEmail;
     }
     
-    public String getDescription() {
-    	return description;
+    public String getNotes() {
+    	return notes;
     }
     
     public void setDescription(String description) {
-    	this.description = description;
+    	this.notes = description;
     }
 }
