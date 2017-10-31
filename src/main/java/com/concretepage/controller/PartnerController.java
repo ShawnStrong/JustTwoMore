@@ -13,7 +13,7 @@ import com.concretepage.dao.IntPartnerDAO;
 import com.concretepage.entity.Partner;
 
 @Controller
-@RequestMapping("partner")
+@RequestMapping("org")
 public class PartnerController {
 	
 	// @Autowired - When beans are being collected by Spring at runtime, it looks for properties 
@@ -25,24 +25,28 @@ public class PartnerController {
 	@Autowired
 	private IntPartnerDAO partnerDAO;
 	
-	@GetMapping("add")
-	public @ResponseBody String addNewIncomingRecord (
-			@RequestParam String name,
-			@RequestParam String contactname,
-			@RequestParam String contactphone,
-			@RequestParam String contactemail,
-			@RequestParam String description) {
-		Partner part = new Partner();
-		part.setName(name);
-		part.setContactName(contactname);
-		part.setContactPhone(contactphone);
-		part.setContactEmail(contactemail);
-		part.setDescription(description);
-		partnerDAO.addPartner(part);
-		return "all good";
+	@GetMapping("create")
+	public @ResponseBody int createOrg (
+			@RequestParam String org_name,
+			@RequestParam String contact_name,
+			@RequestParam String contact_number,
+			@RequestParam String contact_email,
+			@RequestParam String notes) {
+
+		return partnerDAO.createOrg(org_name, contact_name, contact_number, contact_email, notes);
 	}
 	
-	// need sumkinda way to transport da partners over to html. A possible quest for Adam?
+	@GetMapping("update")
+	public @ResponseBody int updateOrg (
+			@RequestParam String org_name,
+			@RequestParam String contact_name,
+			@RequestParam String contact_number,
+			@RequestParam String contact_email,
+			@RequestParam String notes) {
+
+		return partnerDAO.updateOrg(org_name, contact_name, contact_number, contact_email, notes);
+	}
+	
 	@GetMapping("list")
 	public @ResponseBody List<Partner> listPartner() {
 		List<Partner> lop = partnerDAO.listPartner();
