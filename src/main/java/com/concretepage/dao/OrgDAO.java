@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.concretepage.entity.Partner;
+import com.concretepage.entity.Org;
 import com.concretepage.entity.User;
 
 // DAOs - Data Access Objects. These guys are the objects that execute MySQL statements using the
@@ -20,7 +20,7 @@ import com.concretepage.entity.User;
 // https://www.thoughts-on-java.org/jpa-native-queries/
 @Transactional
 @Repository
-public class PartnerDAO implements IntPartnerDAO {
+public class OrgDAO implements IntOrgDAO {
 	
 	// http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html
 	// Definitely read this about EntityManager
@@ -34,9 +34,9 @@ public class PartnerDAO implements IntPartnerDAO {
 		// 1 for org already exists
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM org_table WHERE org_name='" +
-				org_name + "';", Partner.class);
+				org_name + "';", Org.class);
 		
-		List<Partner> orgs = query.getResultList();
+		List<Org> orgs = query.getResultList();
 		
 		// check if org with org_name is already made
 		if (orgs.isEmpty()) {
@@ -58,10 +58,10 @@ public class PartnerDAO implements IntPartnerDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Partner> listPartner() {
+	public List<Org> listPartner() {
 		
-		Query q = entityManager.createNativeQuery("SELECT * FROM partners;", Partner.class);
-		List<Partner> partners = q.getResultList();
+		Query q = entityManager.createNativeQuery("SELECT * FROM partners;", Org.class);
+		List<Org> partners = q.getResultList();
 		return partners;
 		
 	}
@@ -88,9 +88,9 @@ public class PartnerDAO implements IntPartnerDAO {
 				// 1 for org not created yet
 				Query query = entityManager.createNativeQuery(
 						"SELECT * FROM org_table WHERE org_name='" +
-						org_name + "';", Partner.class);
+						org_name + "';", Org.class);
 				
-				List<Partner> orgs = query.getResultList();
+				List<Org> orgs = query.getResultList();
 				
 				// check if org is made
 				if (!orgs.isEmpty()) {

@@ -2,11 +2,11 @@ package com.concretepage.dao;
 
 import java.util.List;
 
-import com.concretepage.entity.Partner;
+import com.concretepage.entity.Org;
 
-public interface IntPartnerDAO {
+public interface IntOrgDAO {
 	
-	public List<Partner> listPartner();
+	public List<Org> listPartner();
 	
 	public void initPartnerTable();
 

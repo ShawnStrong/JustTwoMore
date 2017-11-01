@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.concretepage.entity.Partner;
+import com.concretepage.entity.Org;
 import com.concretepage.entity.User;
 
 // DAOs - Data Access Objects. These guys are the objects that execute MySQL statements using the

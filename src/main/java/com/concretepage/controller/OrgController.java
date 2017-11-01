@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.concretepage.dao.IntPartnerDAO;
-import com.concretepage.entity.Partner;
+import com.concretepage.dao.IntOrgDAO;
+import com.concretepage.entity.Org;
 
 @Controller
 @RequestMapping("org")
-public class PartnerController {
+public class OrgController {
 	
 	// @Autowired - When beans are being collected by Spring at runtime, it looks for properties 
 	// within the Java class that represents properties in the bean. @Autowired sets the dependency
@@ -23,7 +23,7 @@ public class PartnerController {
 	// which creates any 'Partner' Java beans to throw at the DAO to query the DB.
 	// https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html
 	@Autowired
-	private IntPartnerDAO partnerDAO;
+	private IntOrgDAO partnerDAO;
 	
 	@GetMapping("create")
 	public @ResponseBody int createOrg (
@@ -48,14 +48,14 @@ public class PartnerController {
 	}
 	
 	@GetMapping("list")
-	public @ResponseBody List<Partner> listPartner() {
-		List<Partner> lop = partnerDAO.listPartner();
+	public @ResponseBody List<Org> listPartner() {
+		List<Org> lop = partnerDAO.listPartner();
 		return lop;
 	}
 	
 	@GetMapping("init")
 	public @ResponseBody String initIncomingRecordTable() {
 		partnerDAO.initPartnerTable();
-		return "all good";
+		return "Org table created";
 	}
 }

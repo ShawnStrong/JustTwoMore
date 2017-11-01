@@ -7,7 +7,7 @@ import javax.persistence.Id;
 // (usually) represents a row in a table. Every variable in here is collected by Spring at runtime and 
 // compiled into a bean called 'Partner'. Pretty neat, huh?
 @Entity
-public class Partner {
+public class Org {
 	
 	// @Id designates the next variable (id in this case) to be the primary key value of the table that the
 	// Partner bean belongs to. @GeneratedValue allows id to take on the 'auto-increment' property in MySQL
@@ -25,9 +25,9 @@ public class Partner {
     
     private String notes;
     
-    public Partner() {}
+    public Org() {}
     
-    public Partner(int id, String name, String contactName, 
+    public Org(int id, String name, String contactName, 
     		String contactPhone, String contactEmail, String description) {
     	this.org_id = id;
     	this.org_name = name;
