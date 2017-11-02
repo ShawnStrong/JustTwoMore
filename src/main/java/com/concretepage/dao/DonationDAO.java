@@ -20,6 +20,7 @@ public class DonationDAO implements IntDonationDAO {
 	
 	@Override
 	public int inputDonation(String org_name, String category, int weight, int donation) {
+		
 		Query query = entityManager.createNativeQuery(
 				"INSERT INTO donation_table SET "
 				+ "org_id=(SELECT org_id FROM org_table WHERE "
@@ -35,6 +36,7 @@ public class DonationDAO implements IntDonationDAO {
 
 	@Override
 	public List<String> listOrg(int donation) {
+		
 		Query query = entityManager.createNativeQuery(
 				"SELECT DISTINCT org_name FROM donation_table WHERE " +
 				"donation='" + donation + "';");
@@ -45,7 +47,6 @@ public class DonationDAO implements IntDonationDAO {
 
 	@Override
 	public List<Donation> listInfo(String org_name, int donation) {
-		// TODO Auto-generated method stub
 		
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM donation_table WHERE org_name='" + 
@@ -57,6 +58,7 @@ public class DonationDAO implements IntDonationDAO {
 
 	@Override
 	public void initDonationTable() {
+		
 		Query query = entityManager.createNativeQuery(
 				"CREATE TABLE IF NOT EXISTS `donation_table` (" +
 				" `order_id` int(5) NOT NULL AUTO_INCREMENT," +

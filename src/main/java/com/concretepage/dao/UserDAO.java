@@ -54,22 +54,14 @@ public class UserDAO implements IntUserDAO {
 	public int login(String username, String password) {
 		// error codes:
 		// 0 for successful login
-		// 1 for user not created yet
-		// 2 for wrong password
+		// 1 for wrong password
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM user_table WHERE username='" +
 				username + "';", User.class);
 		
 		List<User> users = query.getResultList();
-		
-		// check if user is made
-		if (!users.isEmpty()) {
 			
-			// check if password is correct
-			return users.get(0).getPassword().equals(password)? 0 : 2;
-		} else {
-			return 1;
-		}
+		return users.get(0).getPassword().equals(password)? 0 : 1;
 	}
 
 	@Override
