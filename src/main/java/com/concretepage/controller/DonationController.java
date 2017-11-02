@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntDonationDAO;
+import com.concretepage.entity.Donation;
+
 
 @Controller
 @RequestMapping("donation")
@@ -35,9 +37,18 @@ public class DonationController {
 		return donationDAO.listOrg(donation);
 	}
 	
+	@GetMapping("listInfo")
+	public @ResponseBody List<Donation> listInfo (
+			@RequestParam String org_name,
+			@RequestParam int donation) {
+		
+		return donationDAO.listInfo(org_name, donation);
+	}
+	
 	@GetMapping("init")
 	public @ResponseBody String initDonationTable() {
 		donationDAO.initDonationTable();
+		
 		return "Donation table created";
 	}
 }

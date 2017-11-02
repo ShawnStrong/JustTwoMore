@@ -68,7 +68,8 @@ public class OrgDAO implements IntOrgDAO {
 
 	@Override
 	public void initPartnerTable() {
-		Query query = entityManager.createNativeQuery("CREATE TABLE IF NOT EXISTS `org_table` (" + 
+		Query query = entityManager.createNativeQuery(
+				"CREATE TABLE IF NOT EXISTS `org_table` (" + 
 				"  `org_id` int(5) NOT NULL AUTO_INCREMENT," + 
 				"  `org_name` TINYTEXT NOT NULL," + 
 				"  `contact_name` TINYTEXT NOT NULL," + 

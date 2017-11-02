@@ -30,7 +30,6 @@ public class DonationDAO implements IntDonationDAO {
 				+ "', donation = '" + donation + "';");
 		
 		query.executeUpdate();
-			
 		return 0;
 	}
 
@@ -47,7 +46,13 @@ public class DonationDAO implements IntDonationDAO {
 	@Override
 	public List<Donation> listInfo(String org_name, int donation) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Query query = entityManager.createNativeQuery(
+				"SELECT * FROM donation_table WHERE org_name='" + 
+				org_name + "' AND donation='" + donation + "';", Donation.class);
+		
+		List<Donation> donations = query.getResultList();
+		return donations;
 	}
 
 	@Override
