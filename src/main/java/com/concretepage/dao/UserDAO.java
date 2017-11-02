@@ -34,7 +34,7 @@ public class UserDAO implements IntUserDAO {
 				username + "';", User.class);
 		
 		List<User> users = query.getResultList();
-		
+
 		if (users.isEmpty()) {
 			query = entityManager.createNativeQuery(
 					"INSERT INTO user_table (username,password,user_email) " +
