@@ -51,4 +51,13 @@ public class DonationController {
 		
 		return "Donation table created";
 	}
+	
+	@GetMapping("report")
+	public @ResponseBody List<Donation> getReport(
+			@RequestParam int donation,
+			@RequestParam String start_date,
+			@RequestParam String end_date) {
+		
+		return donationDAO.getReport(donation, start_date, end_date);
+	}
 }

@@ -33,4 +33,6 @@ public interface IntDonationDAO {
 			int donation);
 
 	void initDonationTable();
+
+	List<Donation> getReport(int donation, String start_date, String end_date);
 }

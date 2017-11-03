@@ -25,7 +25,7 @@ public class UserController {
 			@RequestParam String user_email) {
 
 		userDAO.createUser(username, password, user_email);
-		return "all good";
+		return "Created user " + username;
 	}
 	
 	@GetMapping("login")
