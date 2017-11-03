@@ -22,6 +22,8 @@ public class Donation {
 	
 	private int donation;
 	
+	private String ts;
+	
 	public Donation() {}
 	
 	public Donation(int order_id, int org_id, 
@@ -81,5 +83,13 @@ public class Donation {
 	
 	public void setDonation(int donation) {
 		this.donation = donation;
+	}
+	
+	public String getTs() {
+		return ts;
+	}
+	
+	public void setTs(String ts) {
+		this.ts = ts;
 	}
 }

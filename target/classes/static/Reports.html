@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Reports </title>
+</head>
+<body>
+<p>Generate a report</p>
+<br>
+<form method="get" action="/donation/report">
+  <input type="radio" name="donation" value="1" checked> Incoming<br>
+  <input type="radio" name="donation" value="0"> Outgoing<br>
+  Enter a start date: YYYY-MM-DD<br>
+  <input type="date" name="start_date"><br>
+  Enter an end date: YYYY-MM-DD<br>
+  <input type="date" name="end_date"><br>
+  <input type="submit" value="Submit"><br>
+</form>
+
+<a href='Console.html' class='button'>back</a>
+
+</body>
+</html>

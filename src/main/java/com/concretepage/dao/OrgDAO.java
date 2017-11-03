@@ -60,7 +60,7 @@ public class OrgDAO implements IntOrgDAO {
 	@Override
 	public List<Org> listPartner() {
 		
-		Query q = entityManager.createNativeQuery("SELECT * FROM partners;", Org.class);
+		Query q = entityManager.createNativeQuery("SELECT * FROM org_table;", Org.class);
 		List<Org> partners = q.getResultList();
 		return partners;
 		
