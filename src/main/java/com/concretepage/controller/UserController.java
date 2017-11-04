@@ -36,6 +36,15 @@ public class UserController {
 		return userDAO.login(username, password);
 	}
 	
+	@GetMapping("changePassword")
+	public @ResponseBody int changeUserPassword(
+			@RequestParam int user_id,
+			@RequestParam String oldpassword,
+			@RequestParam String newpassword) {
+			
+		return userDAO.changeUserPassword(user_id, oldpassword, newpassword);
+	}
+	
 	@GetMapping("init")
 	public @ResponseBody String initIncomingRecordTable() {
 		userDAO.initUserTable();

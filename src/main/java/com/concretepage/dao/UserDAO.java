@@ -65,8 +65,24 @@ public class UserDAO implements IntUserDAO {
 	}
 
 	@Override
-	public void changePassword(int user_id, String oldpassword, String newpassword) {
+	public int changeUserPassword(int user_id, String oldpassword, String newpassword) {
 		// verify old password, then insert new password
+		Query query = entityManager.createNativeQuery(
+				"SELECT password FROM user_table WHERE user_id='" +
+				user_id + "';", User.class);
+		
+		String passwordFromDB = query.getSingleResult().toString();
+		
+		if (passwordFromDB.equals(oldpassword)) {
+			Query query2 = entityManager.createNativeQuery(
+				"UPDATE user_table SET password = '" + newpassword + "' " + 
+				"WHERE user_id = '" + user_id + "';", User.class);
+			
+			query2.executeUpdate();
+			return 1;
+		}
+		
+		return 0; 
 		
 	}
 

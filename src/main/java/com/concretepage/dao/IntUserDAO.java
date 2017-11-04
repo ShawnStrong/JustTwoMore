@@ -7,7 +7,7 @@ public interface IntUserDAO {
 	
 	public int login(String username, String password);
 	
-	public void changePassword(int user_id, String oldpassword, String newpassword);
+	public int changeUserPassword(int user_id, String oldpassword, String newpassword);
 	
 	public void initUserTable();
 
