@@ -1,5 +1,6 @@
 package com.concretepage.controller;
 
+import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntDonationDAO;
 import com.concretepage.entity.Donation;
+import com.concretepage.utils.DonationUtils;
 
 
 @Controller
@@ -57,6 +59,8 @@ public class DonationController {
 			@RequestParam int donation,
 			@RequestParam String start_date,
 			@RequestParam String end_date) {
+
+		System.out.print(start_date);
 		
 		return donationDAO.getReport(donation, start_date, end_date);
 	}
