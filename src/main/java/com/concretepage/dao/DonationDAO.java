@@ -78,8 +78,9 @@ public class DonationDAO implements IntDonationDAO {
 	public List<Donation> getReport(int donation, String start_date, String end_date) {
 		
 		Query query = entityManager.createNativeQuery(
-				"SELECT * FROM donation_table"
-				+ " WHERE (ts BETWEEN " + start_date + " AND " + end_date + ") AND "
+				"SELECT * FROM `donation_table`"
+				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '" 
+				+ end_date + " 00:00:00') AND "
 				+ "donation=" + donation + ";", Donation.class);
 		
 		List<Donation> donations = query.getResultList();
