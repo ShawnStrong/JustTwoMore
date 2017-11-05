@@ -1,7 +1,5 @@
 package com.concretepage.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,11 +36,11 @@ public class UserController {
 	
 	@GetMapping("changePassword")
 	public @ResponseBody int changeUserPassword(
-			@RequestParam int user_id,
+			@RequestParam String username,
 			@RequestParam String oldpassword,
 			@RequestParam String newpassword) {
 			
-		return userDAO.changeUserPassword(user_id, oldpassword, newpassword);
+		return userDAO.changeUserPassword(username, oldpassword, newpassword);
 	}
 	
 	@GetMapping("init")

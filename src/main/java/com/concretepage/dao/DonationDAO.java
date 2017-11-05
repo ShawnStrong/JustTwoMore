@@ -34,6 +34,7 @@ public class DonationDAO implements IntDonationDAO {
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> listOrg(int donation) {
 		
@@ -45,6 +46,7 @@ public class DonationDAO implements IntDonationDAO {
 		return orgs;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Donation> listInfo(String org_name, int donation) {
 		
@@ -74,6 +76,7 @@ public class DonationDAO implements IntDonationDAO {
 		query.executeUpdate();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Donation> getReport(int donation, String start_date, String end_date) {
 		
@@ -85,14 +88,5 @@ public class DonationDAO implements IntDonationDAO {
 		
 		List<Donation> donations = query.getResultList();
 		return donations;
-		/*
-		 * SELECT *
-			FROM `objects`
-				WHERE (date_field BETWEEN '2010-01-30 14:15:55' AND '2010-09-29 10:15:55')
-		 */
 	}
-}/*
-SELECT * 
-FROM yourtable
-WHERE yourtimetimefield>='2010-10-01'
- AND yourtimetimefield< '2010-11-01'*/
+}

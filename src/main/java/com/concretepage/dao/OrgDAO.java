@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.concretepage.entity.Org;
-import com.concretepage.entity.User;
 
 // DAOs - Data Access Objects. These guys are the objects that execute MySQL statements using the
 // Query object. In here you will most likely be receiving or giving java bean objects (i.e. Partner) 
@@ -27,6 +26,7 @@ public class OrgDAO implements IntOrgDAO {
 	@PersistenceContext	
 	private EntityManager entityManager;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int createOrg(String org_name, String contact_name, String contact_number, String contact_email, String notes) {
 		// error codes:
@@ -81,6 +81,7 @@ public class OrgDAO implements IntOrgDAO {
 		query.executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int updateOrg(String org_name, String contact_name, String contact_number, String contact_email,
 			String notes) {

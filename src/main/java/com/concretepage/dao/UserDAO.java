@@ -9,7 +9,6 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.concretepage.entity.Org;
 import com.concretepage.entity.User;
 
 // DAOs - Data Access Objects. These guys are the objects that execute MySQL statements using the
@@ -24,6 +23,7 @@ public class UserDAO implements IntUserDAO {
 	@PersistenceContext	
 	private EntityManager entityManager;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int createUser(String username, String password, String user_email) {
 		// error codes:
@@ -50,6 +50,7 @@ public class UserDAO implements IntUserDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int login(String username, String password) {
 		// error codes:
@@ -64,25 +65,30 @@ public class UserDAO implements IntUserDAO {
 		return users.get(0).getPassword().equals(password)? 0 : 1;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public int changeUserPassword(int user_id, String oldpassword, String newpassword) {
+	public int changeUserPassword(String username, String oldpassword, String newpassword) {
+		// error codes:
+		// 0 for successful change
+		// 1 for wrong password
 		// verify old password, then insert new password
 		Query query = entityManager.createNativeQuery(
-				"SELECT password FROM user_table WHERE user_id='" +
-				user_id + "';", User.class);
+				"SELECT * FROM user_table WHERE username='" +
+				username + "';", User.class);
 		
-		String passwordFromDB = query.getSingleResult().toString();
+		List<User> user = query.getResultList();
+		String passwordFromDB = user.get(0).getPassword();
 		
 		if (passwordFromDB.equals(oldpassword)) {
 			Query query2 = entityManager.createNativeQuery(
 				"UPDATE user_table SET password = '" + newpassword + "' " + 
-				"WHERE user_id = '" + user_id + "';", User.class);
+				"WHERE username = '" + username + "';", User.class);
 			
 			query2.executeUpdate();
-			return 1;
+			return 0;
 		}
 		
-		return 0; 
+		return 1; 
 		
 	}
 

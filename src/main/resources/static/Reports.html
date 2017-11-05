@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Reports </title>
+	
+	<title> Reports </title>	
+	<style>
+		h1 {
+			color: green;
+			font-family: verdana;
+			font-size: 300%;
+		}
+		input {
+			align: center;
+			width: 30%;
+			padding: 4px 8px;
+			margin: 8px 0;
+			box-sizing: border-box;
+		}
+		input[type=text] {
+			width: 30%;
+			padding: 12px 20px;
+			margin: 8px 0;
+			box-sizing: border-box;
+	}
+	</style>
 </head>
+
 <body>
-<p>Generate a report</p>
+<h1 align="center">Generate a report</h1>
 <br>
+
 <form method="get" action="/donation/report">
   <input type="radio" name="donation" value="1" checked> Incoming<br>
   <input type="radio" name="donation" value="0"> Outgoing<br>
-  Enter a start date: YYYY-MM-DD<br>
-  <input type="date" name="start_date" min="1979-12-31"><br>
-  Enter an end date: YYYY-MM-DD<br>
-  <input type="date" name="end_date" max="2050-12-31"><br>
+  Enter a start date:<br>
+  <input type="date" name="start_date"><br>
+  Enter an end date:<br>
+  <input type="date" name="end_date"><br>
   <input type="submit" value="Submit"><br>
 </form>
 
