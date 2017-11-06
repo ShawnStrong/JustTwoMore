@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Donations</title>
+</head>
+<body>
+    <form action="/donation/input">
+        Org's Name:<br>
+        <input type="text" name="org_name" value="" required>
+        <br>
+        Deli:<br>
+        <input type="number" min="0" name="deli" value="0">
+        <br>
+        Dairy:<br>
+        <input type="number" min="0" name="dairy" value="0">
+        <br>
+		Meat:<br>
+        <input type="number" min="0" name="meat" value="0">
+        <br>
+		Produce:<br>
+        <input type="number" min="0" name="produce" value="0">
+        <br>
+		Pantry:<br>
+        <input type="number" min="0" name="pantry" value="0">
+        <br>
+		Bakery:<br>
+        <input type="number" min="0" name="bakery" value="0">
+		<br>
+		<input type="radio" name="donation" value="1" checked> Incoming<br>
+		<input type="radio" name="donation" value="0"> Outgoing<br>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <a href='Console.html' class='button'>back</a>
+</body>
+</html>

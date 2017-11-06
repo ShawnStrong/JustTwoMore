@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntDonationDAO;
 import com.concretepage.entity.Donation;
+import com.concretepage.service.IntDonationService;
 
 
 @Controller
@@ -20,15 +21,33 @@ public class DonationController {
 	@Autowired
 	private IntDonationDAO donationDAO;
 	
+	@Autowired
+	private IntDonationService donationService;
+	
+	// Bakery, Deli, Dairy, Meat, Produce, & Pantry
 	@GetMapping("input")
-	public @ResponseBody int inputDonation (
+	public @ResponseBody String inputDonation (
+			@RequestParam int donation,
 			@RequestParam String org_name,
-			@RequestParam String category,
-			@RequestParam int weight,
-			@RequestParam int donation) {
+			@RequestParam int deli,
+			@RequestParam int dairy,
+			@RequestParam int meat,
+			@RequestParam int produce,
+			@RequestParam int pantry,
+			@RequestParam int bakery) {
 		
-		return donationDAO.inputDonation(org_name, category, weight, donation);
+		return donationService.separateDonations(donation, org_name, deli, dairy, meat, produce, pantry, bakery);
 	}
+	
+//	@GetMapping("input")
+//	public @ResponseBody int inputDonation (
+//			@RequestParam String org_name,
+//			@RequestParam String category,
+//			@RequestParam int weight,
+//			@RequestParam int donation) {
+//		
+//		return donationDAO.inputDonation(org_name, category, weight, donation);
+//	}
 	
 	@GetMapping("listOrg")
 	public @ResponseBody List<String> listOrg (
