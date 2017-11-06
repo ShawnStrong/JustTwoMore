@@ -2,12 +2,39 @@
 <html>
 <head>
     <title>Donations</title>
+	
+	<style>
+		h1 {
+			color: green;
+			font-family: verdana;
+			font-size: 300%;
+		}
+		.btn-group {
+			background-color: #4CAF50;
+		}
+	</style>
+	
+	<script>
+		// Get the <datalist> and <input> elements.
+		var dataList = document.getElementById('orgList');
+		var input = document.getElementById('getOrgs');
+	</script>
 </head>
 <body>
+	<h1 align="center">Input a Donation</h1>
+	<br>
+	
     <form action="/donation/input">
-        Org's Name:<br>
-        <input type="text" name="org_name" value="" required>
-        <br>
+		Org's Name:<br>
+		<input type="text" id="getOrgs" list="orglist" placeholder="e.g. datalist" required>
+		<datalist id="orglist">
+			<option value="org1">
+			<option value="org2">
+			<option value="org3">
+			<option value="org4">
+		</datalist>
+		<br>
+        
         Deli:<br>
         <input type="number" min="0" name="deli" value="0">
         <br>
@@ -25,9 +52,17 @@
         <br>
 		Bakery:<br>
         <input type="number" min="0" name="bakery" value="0">
-		<br>
-		<input type="radio" name="donation" value="1" checked> Incoming<br>
-		<input type="radio" name="donation" value="0"> Outgoing<br>
+		<br><br>
+		
+		<div class="btn-group" data-toggle="buttons">
+			<label class="btn btn-primary active">
+				<input type="radio" name="donation" value="1" id="incoming" checked> Incoming
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="donation" value="0" id="outgoing"> Outgoing
+			</label>
+		</div>
+
         <br>
         <input type="submit" value="Submit">
     </form>

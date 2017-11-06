@@ -31,8 +31,9 @@ public class DonationService implements IntDonationService {
 		
 		//iterate over mp to check for donations with values > 0. If so, input to database
 		for (String category : mp.keySet()){
-			if (mp.get(category) > 0) {
-				donationDAO.inputDonation(org_name, category, mp.get(category), donation);
+			int weight = mp.get(category);
+			if (weight > 0) {
+				donationDAO.inputDonation(org_name, category, weight, donation);
 			}
         }
 		return "ok";
