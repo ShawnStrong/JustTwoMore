@@ -53,9 +53,7 @@ public class Donation {
 		this.org_id = id;
 	}
 	
-	public String getOrgName() {
-		return org_name;
-	}
+	public String getOrgName() {return org_name;}
 	
 	public void setOrgName(String org) {
 		this.org_name = org;

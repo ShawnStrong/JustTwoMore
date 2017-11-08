@@ -75,7 +75,7 @@ public class DonationDAO implements IntDonationDAO {
 		
 		query.executeUpdate();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Donation> getReport(int donation, String start_date, String end_date) {
@@ -84,9 +84,52 @@ public class DonationDAO implements IntDonationDAO {
 				"SELECT * FROM `donation_table`"
 				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '" 
 				+ end_date + " 00:00:00') AND "
-				+ "donation=" + donation + ";", Donation.class);
-		
+				+ "donation=" + donation + " ORDER BY org_name;", Donation.class);
+
+
 		List<Donation> donations = query.getResultList();
+		int donationListSize = 0;
+		String temp;
+		int currentOrgsWeight = 0;
+		if(donations.get(0) != null)
+		{
+			donationListSize = donations.size();
+			System.out.println("\n" + "Donation Size: " + donationListSize);
+
+			temp = donations.get(0).getOrgName().toString();
+			System.out.println("\n" + "Org Name: " + temp);
+			currentOrgsWeight = donations.get(0).getWeight();
+			System.out.println("\n" + "Current Org's Weight: " + currentOrgsWeight);
+
+			for(int i=0; i<donationListSize;i++)
+			{
+				if(i == 0)
+				{
+					temp = donations.get(i).getOrgName().toString();
+					currentOrgsWeight = donations.get(i).getWeight();
+				}
+				else
+				{
+					if(temp.equals(donations.get(i).getOrgName().toString()))
+					{
+						currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
+					}
+					else
+					{
+						//write temp to csv, then write current weight to csv
+						System.out.println("\n" + "Org Name: " + temp + " Weight: " + currentOrgsWeight);
+						temp = donations.get(i).getOrgName().toString();
+						currentOrgsWeight = donations.get(i).getWeight();
+					}
+				}
+				if(i == donationListSize - 1)
+				{
+					System.out.println("\n" + "Org Name: " + temp + " Weight: " + currentOrgsWeight);
+				}
+			}
+
+		}
+
 		return donations;
 	}
 }
