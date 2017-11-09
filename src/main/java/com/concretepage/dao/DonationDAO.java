@@ -189,10 +189,6 @@ public class DonationDAO implements IntDonationDAO {
 				for (int i = 0; i < donationListSize; i++) {
 					DetailedReport tempReport = new DetailedReport();
 					if (i == 0) {
-						temp = donations.get(i).getOrgName().toString();
-						currentOrgsWeight = donations.get(i).getWeight();
-						tempCategory = donations.get(i).getCategory();
-
 						tempReport.setOrg(donations.get(i).getOrgName());
 						tempReport.setWeight(donations.get(i).getWeight());
 						tempReport.setCategory(donations.get(i).getCategory());
@@ -201,8 +197,8 @@ public class DonationDAO implements IntDonationDAO {
 					}
 					else
 					{
-						if (temp.equalsIgnoreCase(donations.get(i).getOrgName().toString())) {
-							if (tempCategory.equalsIgnoreCase(donations.get(i).getCategory()))
+						if (reportList.get(reportListIndex).getOrg().equalsIgnoreCase(donations.get(i).getOrgName().toString())) {
+							if (reportList.get(reportListIndex).getCategory().equalsIgnoreCase(donations.get(i).getCategory()))
 							{
 								currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
 								if (reportList.get(reportListIndex).getTimeRange().equals(donations.get(i).getTs().substring(0,4)))
@@ -223,10 +219,6 @@ public class DonationDAO implements IntDonationDAO {
 							}
 							else
 							{
-								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
-								tempCategory = donations.get(i).getCategory();
-								currentOrgsWeight = donations.get(i).getWeight();
-
 								reportListIndex++;
 								tempReport.setOrg(donations.get(i).getOrgName());
 								tempReport.setWeight(donations.get(i).getWeight());
@@ -236,12 +228,6 @@ public class DonationDAO implements IntDonationDAO {
 							}
 
 						} else {
-							//write temp to csv, then write current weight to csv
-							System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
-							temp = donations.get(i).getOrgName().toString();
-							currentOrgsWeight = donations.get(i).getWeight();
-							tempCategory = donations.get(i).getCategory();
-
 							reportListIndex++;
 							tempReport.setOrg(donations.get(i).getOrgName());
 							tempReport.setWeight(donations.get(i).getWeight());
