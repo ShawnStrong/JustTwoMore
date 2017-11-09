@@ -142,25 +142,6 @@ public class DonationDAO implements IntDonationDAO {
 						reportList.add(tempSummary);
 
 					}
-					else if (i == donationListSize - 1)
-					{
-
-						if(reportList.get(reportListIndex).getOrg().equals(donations.get(i).getOrgName()))
-						{
-							tempWeight = reportList.get(reportListIndex).getWeight();
-							tempWeight += donations.get(i).getWeight();
-							reportList.get(reportListIndex).setWeight(tempWeight);
-						}
-						else
-						{
-							currentOrgsTimeRange = donations.get(i).getTs();
-							currentOrgsTimeRange = currentOrgsTimeRange.substring(0,4);
-							tempSummary.setOrg(donations.get(i).getOrgName());
-							tempSummary.setWeight(donations.get(i).getWeight());
-							tempSummary.setTimeRange(currentOrgsTimeRange);
-							reportList.add(tempSummary);
-						}
-					}
 					else
 					{
 						if(reportList.get(reportListIndex).getOrg().equals(donations.get(i).getOrgName())){
@@ -185,48 +166,73 @@ public class DonationDAO implements IntDonationDAO {
 			}
 			else if (time == 2 && type == 0)
 			{
+				int YearsSpanned = Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear);
+				List<DetailedReport> reportList = new ArrayList<DetailedReport>();
+				String timeRangeArray[] = new String[YearsSpanned+1];//timeRangeArray is used to check which year to put weights into.
+				if (YearsSpanned == 0)
+				{
+					timeRangeArray[0] = lastTsYear;
+				}
+				else
+				{
+					int tempYear = Integer.parseInt(firstTsYear);
+					for (int i = 0; i<= YearsSpanned;i++)
+					{
+						tempYear += i;
+						timeRangeArray[i] = Integer.toString(tempYear);
+					}
+				}
+				//SummaryReport tempSummary = new SummaryReport();
+				int reportListIndex = 0;
+				int tempWeight = 0;
+				String currentOrgsTimeRange ="";
 				for (int i = 0; i < donationListSize; i++) {
+					DetailedReport tempReport = new DetailedReport();
 					if (i == 0) {
 						temp = donations.get(i).getOrgName().toString();
 						currentOrgsWeight = donations.get(i).getWeight();
 						tempCategory = donations.get(i).getCategory();
+
+						tempReport.setOrg(donations.get(i).getOrgName());
+						tempReport.setWeight(donations.get(i).getWeight());
+						tempReport.setCategory(donations.get(i).getCategory());
+						tempReport.setTimeRange(donations.get(i).getTs().substring(0,4));
+						reportList.add(tempReport);
 					}
-					else if (i == donationListSize - 1)
+					else
 					{
 						if (temp.equalsIgnoreCase(donations.get(i).getOrgName().toString())) {
 							if (tempCategory.equalsIgnoreCase(donations.get(i).getCategory()))
 							{
 								currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
-								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
-							}
-							else
-							{
-								tempCategory = donations.get(i).getCategory();
-								currentOrgsWeight = donations.get(i).getWeight();
-								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
-							}
-						}
-						else
-						{
-							System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
-							temp = donations.get(i).getOrgName().toString();
-							tempCategory = donations.get(i).getCategory();
-							currentOrgsWeight = donations.get(i).getWeight();
-							System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
-						}
-					}
-					else
-					{
-						if (temp.equalsIgnoreCase(donations.get(i).getOrgName().toString())) {
-							if (tempCategory.equals(donations.get(i).getCategory()))
-							{
-								currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
+								if (reportList.get(reportListIndex).getTimeRange().equals(donations.get(i).getTs().substring(0,4)))
+								{
+									tempWeight = reportList.get(reportListIndex).getWeight();
+									tempWeight += donations.get(i).getWeight();
+									reportList.get(reportListIndex).setWeight(tempWeight);
+								}
+								else
+								{
+									reportListIndex++;
+									tempReport.setOrg(donations.get(i).getOrgName());
+									tempReport.setWeight(donations.get(i).getWeight());
+									tempReport.setCategory(donations.get(i).getCategory());
+									tempReport.setTimeRange(donations.get(i).getTs().substring(0,4));
+									reportList.add(tempReport);
+								}
 							}
 							else
 							{
 								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
 								tempCategory = donations.get(i).getCategory();
 								currentOrgsWeight = donations.get(i).getWeight();
+
+								reportListIndex++;
+								tempReport.setOrg(donations.get(i).getOrgName());
+								tempReport.setWeight(donations.get(i).getWeight());
+								tempReport.setCategory(donations.get(i).getCategory());
+								tempReport.setTimeRange(donations.get(i).getTs().substring(0,4));
+								reportList.add(tempReport);
 							}
 
 						} else {
@@ -235,9 +241,19 @@ public class DonationDAO implements IntDonationDAO {
 							temp = donations.get(i).getOrgName().toString();
 							currentOrgsWeight = donations.get(i).getWeight();
 							tempCategory = donations.get(i).getCategory();
+
+							reportListIndex++;
+							tempReport.setOrg(donations.get(i).getOrgName());
+							tempReport.setWeight(donations.get(i).getWeight());
+							tempReport.setCategory(donations.get(i).getCategory());
+							tempReport.setTimeRange(donations.get(i).getTs().substring(0,4));
+							reportList.add(tempReport);
 						}
 					}
 
+				}
+				for (int j = 0; j < reportList.size();j++){
+					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " Category: " + reportList.get(j).getCategory() + " temp Weight: " + reportList.get(j).getWeight());
 				}
 			}
 			else if(time == 1 && type == 1)
