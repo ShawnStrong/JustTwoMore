@@ -74,13 +74,14 @@ public class DonationController {
 	@GetMapping("report")
 	public @ResponseBody List<Donation> getReport(
 			@RequestParam int donation,
-			//@RequestParam int time,
+			@RequestParam int time,
+			@RequestParam int type,
 			@RequestParam String start_date,
 			@RequestParam String end_date) {
 
 		System.out.print(start_date);
 		
-		return donationDAO.getReport(donation, start_date, end_date);
+		return donationDAO.getReport(donation, time, type, start_date, end_date);
 		//return donationDAO.getReport(donation, time, start_date, end_date);
 	}
 }

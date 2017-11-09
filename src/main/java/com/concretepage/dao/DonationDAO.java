@@ -1,6 +1,7 @@
 package com.concretepage.dao;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.concretepage.entity.Donation;
+import com.concretepage.entity.SummaryReport;
+import com.concretepage.entity.DetailedReport;
 
 @Transactional
 @Repository
@@ -78,22 +81,41 @@ public class DonationDAO implements IntDonationDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Donation> getReport(int donation, String start_date, String end_date) {
-		
+	public List<Donation> getReport(int donation, int time, int type, String start_date, String end_date) {
+		//time == 2 means yearly report time == 1 means monthly report time == 0 means weekly report
+		//type == 1 means they want a summary report i.e no food categories, just total weight
+		//type == 0 means they want a descriptive report i.e they want to tsee food categories
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
 				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '" 
 				+ end_date + " 00:00:00') AND "
-				+ "donation=" + donation + " ORDER BY org_name;", Donation.class);
+				+ "donation=" + donation + " ORDER BY org_name, category;", Donation.class);
 
 
 		List<Donation> donations = query.getResultList();
 		int donationListSize = 0;
 		String temp;
+		String tempCategory = "";
+		String firstTs = "";
+		String lastTs ="";
 		int currentOrgsWeight = 0;
 		if(donations.get(0) != null)
 		{
 			donationListSize = donations.size();
+			//figure out the times
+
+			firstTs = donations.get(0).getTs();
+			String firstTsYear = firstTs.substring(0,4);
+			String firstTsMonth = firstTs.substring(5,7);
+			String firstTsDay = firstTs.substring(8,10);
+			lastTs = donations.get(donationListSize - 1).getTs();
+			String lastTsYear = lastTs.substring(0,4);
+			String lastTsMonth = lastTs.substring(5,7);
+			String lastTsDay = lastTs.substring(8,10);
+
+			System.out.println("\n" + "first Year " + firstTsYear + " first month " + firstTsMonth + " first day " + firstTsDay);
+			System.out.println("\n" + "last Year " + lastTsYear + " last month " + lastTsMonth + " last day " + lastTsDay);
+
 			System.out.println("\n" + "Donation Size: " + donationListSize);
 
 			temp = donations.get(0).getOrgName().toString();
@@ -101,31 +123,126 @@ public class DonationDAO implements IntDonationDAO {
 			currentOrgsWeight = donations.get(0).getWeight();
 			System.out.println("\n" + "Current Org's Weight: " + currentOrgsWeight);
 
-			for(int i=0; i<donationListSize;i++)
+			if(time == 2 && type == 1)
 			{
-				if(i == 0)
-				{
-					temp = donations.get(i).getOrgName().toString();
-					currentOrgsWeight = donations.get(i).getWeight();
-				}
-				else
-				{
-					if(temp.equals(donations.get(i).getOrgName().toString()))
+				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
+				//SummaryReport tempSummary = new SummaryReport();
+				int reportListIndex = 0;
+				int tempWeight = 0;
+				String currentOrgsTimeRange ="";
+				for (int i = 0; i < donationListSize; i++) {
+					SummaryReport tempSummary = new SummaryReport();
+					if (i == 0) {
+
+						currentOrgsTimeRange = donations.get(i).getTs();
+						currentOrgsTimeRange = currentOrgsTimeRange.substring(0,4);
+						tempSummary.setOrg(donations.get(i).getOrgName());
+						tempSummary.setWeight(donations.get(i).getWeight());
+						tempSummary.setTimeRange(currentOrgsTimeRange);
+						reportList.add(tempSummary);
+
+					}
+					else if (i == donationListSize - 1)
 					{
-						currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
+
+						if(reportList.get(reportListIndex).getOrg().equals(donations.get(i).getOrgName()))
+						{
+							tempWeight = reportList.get(reportListIndex).getWeight();
+							tempWeight += donations.get(i).getWeight();
+							reportList.get(reportListIndex).setWeight(tempWeight);
+						}
+						else
+						{
+							currentOrgsTimeRange = donations.get(i).getTs();
+							currentOrgsTimeRange = currentOrgsTimeRange.substring(0,4);
+							tempSummary.setOrg(donations.get(i).getOrgName());
+							tempSummary.setWeight(donations.get(i).getWeight());
+							tempSummary.setTimeRange(currentOrgsTimeRange);
+							reportList.add(tempSummary);
+						}
 					}
 					else
 					{
-						//write temp to csv, then write current weight to csv
-						System.out.println("\n" + "Org Name: " + temp + " Weight: " + currentOrgsWeight);
-						temp = donations.get(i).getOrgName().toString();
-						currentOrgsWeight = donations.get(i).getWeight();
+						if(reportList.get(reportListIndex).getOrg().equals(donations.get(i).getOrgName())){
+							tempWeight = reportList.get(reportListIndex).getWeight();
+							tempWeight += donations.get(i).getWeight();
+							reportList.get(reportListIndex).setWeight(tempWeight);
+						} else {
+
+							reportListIndex++;
+							currentOrgsTimeRange = donations.get(i).getTs();
+							currentOrgsTimeRange = currentOrgsTimeRange.substring(0,4);
+							tempSummary.setOrg(donations.get(i).getOrgName());
+							tempSummary.setWeight(donations.get(i).getWeight());
+							tempSummary.setTimeRange(currentOrgsTimeRange);
+							reportList.add(tempSummary);
+						}
 					}
 				}
-				if(i == donationListSize - 1)
-				{
-					System.out.println("\n" + "Org Name: " + temp + " Weight: " + currentOrgsWeight);
+				for (int j = 0; j < reportList.size();j++){
+					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " temp Weight: " + reportList.get(j).getWeight());
 				}
+			}
+			else if (time == 2 && type == 0)
+			{
+				for (int i = 0; i < donationListSize; i++) {
+					if (i == 0) {
+						temp = donations.get(i).getOrgName().toString();
+						currentOrgsWeight = donations.get(i).getWeight();
+						tempCategory = donations.get(i).getCategory();
+					}
+					else if (i == donationListSize - 1)
+					{
+						if (temp.equalsIgnoreCase(donations.get(i).getOrgName().toString())) {
+							if (tempCategory.equalsIgnoreCase(donations.get(i).getCategory()))
+							{
+								currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
+								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
+							}
+							else
+							{
+								tempCategory = donations.get(i).getCategory();
+								currentOrgsWeight = donations.get(i).getWeight();
+								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
+							}
+						}
+						else
+						{
+							System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
+							temp = donations.get(i).getOrgName().toString();
+							tempCategory = donations.get(i).getCategory();
+							currentOrgsWeight = donations.get(i).getWeight();
+							System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
+						}
+					}
+					else
+					{
+						if (temp.equalsIgnoreCase(donations.get(i).getOrgName().toString())) {
+							if (tempCategory.equals(donations.get(i).getCategory()))
+							{
+								currentOrgsWeight = currentOrgsWeight + donations.get(i).getWeight();
+							}
+							else
+							{
+								System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
+								tempCategory = donations.get(i).getCategory();
+								currentOrgsWeight = donations.get(i).getWeight();
+							}
+
+						} else {
+							//write temp to csv, then write current weight to csv
+							System.out.println("\n" + "Org Name: " + temp + "Category: " + tempCategory + " Weight: " + currentOrgsWeight);
+							temp = donations.get(i).getOrgName().toString();
+							currentOrgsWeight = donations.get(i).getWeight();
+							tempCategory = donations.get(i).getCategory();
+						}
+					}
+
+				}
+			}
+			else if(time == 1 && type == 1)
+			{
+
 			}
 
 		}
