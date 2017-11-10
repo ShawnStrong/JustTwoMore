@@ -2,6 +2,26 @@
 <html>
 <head>
     <title>JOM - Organizations</title>
+	
+	<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	
+	<script>
+		$(document).ready(function(){
+			
+			$("#showStuff").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/org/list",
+					type: 'GET',
+					success : function(result){
+						alert(JSON.stringify(result));
+					},
+					error : function(request,error) {
+						alert("Request: " + JSON.stringify(request));
+					}
+				});
+			})
+		});
+	</script>
 </head>
 <body>
 
@@ -30,16 +50,10 @@
         <input type="submit" value="Submit">
     </form>
     <a href='Console.html' class='button'>back</a>
+	<br>
+	<button id="showStuff">Click Me!</button>
 	
 	<br>
-	
-	<div id='root'></div>
-	
-	<script src="https://fb.me/react-15.0.1.js"></script>
-    <script src="https://fb.me/react-dom-15.0.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-    
-	<script src="partnerTable.js" type="text/babel"></script>
 	
 </body>
 </html>
