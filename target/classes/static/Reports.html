@@ -32,11 +32,18 @@
 <form method="get" action="/donation/report">
   <input type="radio" name="donation" value="1" checked> Incoming<br>
   <input type="radio" name="donation" value="0"> Outgoing<br>
+  <input type="radio" name="time" value="2" checked> Yearly<br>
+  <input type="radio" name="time" value="1"> Monthly<br>
+  <input type="radio" name="time" value="0"> Weekly<br>
+  <input type="radio" name="type" value="1" checked> Summary<br>
+  <input type="radio" name="type" value="0"> Descriptive<br>
   Enter a start date:<br>
   <input type="date" name="start_date"><br>
   Enter an end date:<br>
-  <input type="date" name="end_date"><br>
+  <input type="date" name="end_date"><br><br>
+  <br>
   <input type="submit" value="Submit"><br>
+
 </form>
 
 <a href='Console.html' class='button'>back</a>

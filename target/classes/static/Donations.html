@@ -44,24 +44,23 @@
             })
               // Code to run if the request succeeds (is done);
               // The response is passed to the function
-              .done(function( data ) {                
+            .done(function( data ) {                
                 $.each(data, function() {                    
                     $(document.createElement('option')).prop({text: this.name}).appendTo(".row #basic-place #base");
                 })
                 
                 $('.row #basic-place #base').editableSelect();
 
-              })
+            })
               // Code to run if the request fails; the raw request and
               // status codes are passed to the function
-              .fail(function( xhr, status, errorThrown ) {
+            .fail(function( xhr, status, errorThrown ) {
                 alert( "Sorry, there was a problem!" );
                 console.log( "Error: " + errorThrown );
                 console.log( "Status: " + status );
                 console.dir( xhr );
-              });
-            
             });
+        });
 
 	</script>
 </head>
@@ -82,17 +81,7 @@
                     </select>
                 </div>
             </div>
-            
-            
-<!--
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-6 col-md-6 col-sm-10">
-                    <label for="orgName">Organization Name:</label>
-                    <input type="org_name" class="form-control" id="orgName" placeholder="Enter organization" required>
-                </div>
-            </div>
--->
+
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-1"></div>
                 <div class="form-group col-lg-3 col-md-3 col-sm-5">
@@ -128,10 +117,10 @@
             </div>
 
           <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-primary active">
+            <label class="btn btn-success active">
                 <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
             </label>
-            <label class="btn btn-primary">
+            <label class="btn btn-danger">
                 <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
             </label>
           </div>
@@ -142,52 +131,5 @@
         
         <a href='Console.html' class='button'>back</a>
     </div>
-    
-    
-<!--
-    <form action="/donation/input">
-		Org's Name:<br>
-		<input type="text" id="getOrgs" list="orglist" placeholder="e.g. datalist" required>
-		<datalist id="orglist">
-			<option value="org1">
-			<option value="org2">
-			<option value="org3">
-			<option value="org4">
-		</datalist>
-		<br>
-        
-        Deli:<br>
-        <input type="number" min="0" name="deli" value="0">
-        <br>
-        Dairy:<br>
-        <input type="number" min="0" name="dairy" value="0">
-        <br>
-		Meat:<br>
-        <input type="number" min="0" name="meat" value="0">
-        <br>
-		Produce:<br>
-        <input type="number" min="0" name="produce" value="0">
-        <br>
-		Pantry:<br>
-        <input type="number" min="0" name="pantry" value="0">
-        <br>
-		Bakery:<br>
-        <input type="number" min="0" name="bakery" value="0">
-		<br><br>
-		
-		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary active">
-				<input type="radio" name="donation" value="1" id="incoming" checked> Incoming
-			</label>
-			<label class="btn btn-primary">
-				<input type="radio" name="donation" value="0" id="outgoing"> Outgoing
-			</label>
-		</div>
-
-        <br>
-        <input type="submit" value="Submit">
-    </form>
--->
-    
 </body>
 </html>
