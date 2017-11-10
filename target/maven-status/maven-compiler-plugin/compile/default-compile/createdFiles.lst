@@ -1,7 +1,5 @@
-com\concretepage\entity\DetailedReport.class
 com\concretepage\App.class
 com\concretepage\dao\UserDAO.class
 com\concretepage\dao\IntUserDAO.class
-com\concretepage\entity\SummaryReport.class
 com\concretepage\entity\User.class
 com\concretepage\controller\UserController.class
