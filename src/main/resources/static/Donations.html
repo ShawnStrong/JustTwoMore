@@ -4,31 +4,12 @@
     <title>Donations</title>
 	
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
     <script src="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
     <link href="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
-    
-    
-<!--
-	<style>
-		h1 {
-			color: green;
-			font-family: verdana;
-			font-size: 300%;
-		}
-		.btn-group {
-			background-color: #4CAF50;
-		}
-	</style>
--->
 	
 	<script>
-		// Get the <datalist> and <input> elements.
-//		var dataList = document.getElementById('orgList');
-//		var input = document.getElementById('getOrgs');
         $( document ).ready(function() {
             
             $.ajax({
@@ -66,6 +47,29 @@
 	</script>
 </head>
 <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="Console.html">Just One More Ministry</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="Organizations.html">Organizations</a></li>
+            <li><a href="Donations.html">Donations</a></li>
+            <li><a href="Reports.html">Reports</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    
     
 	<h1 align="center">Input a Donation</h1>
 	<br>
@@ -82,17 +86,6 @@
                     </select>
                 </div>
             </div>
-            
-            
-<!--
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-6 col-md-6 col-sm-10">
-                    <label for="orgName">Organization Name:</label>
-                    <input type="org_name" class="form-control" id="orgName" placeholder="Enter organization" required>
-                </div>
-            </div>
--->
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-1"></div>
                 <div class="form-group col-lg-3 col-md-3 col-sm-5">
@@ -142,52 +135,6 @@
         
         <a href='Console.html' class='button'>back</a>
     </div>
-    
-    
-<!--
-    <form action="/donation/input">
-		Org's Name:<br>
-		<input type="text" id="getOrgs" name="org_name" list="orglist" placeholder="e.g. datalist" required>
-		<datalist id="orglist">
-			<option value="org1">
-			<option value="org2">
-			<option value="org3">
-			<option value="org4">
-		</datalist>
-		<br>
-        
-        Deli:<br>
-        <input type="number" min="0" name="deli" value="0">
-        <br>
-        Dairy:<br>
-        <input type="number" min="0" name="dairy" value="0">
-        <br>
-		Meat:<br>
-        <input type="number" min="0" name="meat" value="0">
-        <br>
-		Produce:<br>
-        <input type="number" min="0" name="produce" value="0">
-        <br>
-		Pantry:<br>
-        <input type="number" min="0" name="pantry" value="0">
-        <br>
-		Bakery:<br>
-        <input type="number" min="0" name="bakery" value="0">
-		<br><br>
-		
-		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary active">
-				<input type="radio" name="donation" value="1" id="incoming" checked> Incoming
-			</label>
-			<label class="btn btn-primary">
-				<input type="radio" name="donation" value="0" id="outgoing"> Outgoing
-			</label>
-		</div>
-
-        <br>
-        <input type="submit" value="Submit">
-    </form>
--->
     
 </body>
 </html>
