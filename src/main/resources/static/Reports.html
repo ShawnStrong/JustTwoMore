@@ -56,11 +56,71 @@
     </nav>
     
     
+    <h1 align="center">Generate a report</h1>
+    <br><br>
     
     
-<h1 align="center">Generate a report</h1>
-<br>
+    <div class="container-fluid">
+        <form method="get" action="/donation/report">
+            <div class="btn-group col-lg-4" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
+                </label>
+            </div>
+            <div class="btn-group col-lg-4" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="time" value="2"autocomplete="off" id="yearly" checked> Yearly
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="time" value="1"autocomplete="off" id="monthly"> Monthly
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="time" value="0"autocomplete="off" id="weekly"> Weekly
+                </label>
+            </div>
+            <div class="btn-group col-lg-4" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="type" value="1"autocomplete="off" id="summary" checked> Summary
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
+                </label>
+            </div>
+            <br><br><br><br>
+            <div class="col-lg-3"></div>
+            <div class="row form-group col-lg-6">
+                <label for="startdate">Start Date:</label>
+                <input type="date" name="start_date">
+                
+                <label for="enddate">End Date:</label>
+                <input type="date" name="end_date">
+            </div>
+            <br/>
+            <br/>
+            <div class="row col-lg-4">
+                <button type="submit" class="btn btn-primary">Submit</button>
+<!--
+                <button>
+                    <a href='Console.html'>back</a>
+                </button>
+-->
+            </div>
+            
+        </form>
+<!--
+        <div class="row col-lg-4">
+            <button>
+                <a href='Console.html'>back</a>
+            </button>
+        </div>
+-->
+    </div>
+    
 
+<!--
 <form method="get" action="/donation/report">
   <input type="radio" name="donation" value="1" checked> Incoming<br>
   <input type="radio" name="donation" value="0"> Outgoing<br>
@@ -79,6 +139,7 @@
 </form>
 
 <a href='Console.html' class='button'>back</a>
+-->
 
 </body>
 </html>

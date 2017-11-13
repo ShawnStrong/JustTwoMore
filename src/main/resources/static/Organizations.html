@@ -47,6 +47,7 @@
 		
 		$(document).ready(function() {
 			$( "#button1" ).click(function() {
+                $('table').remove();
 				$.ajax({
 					url: "http://localhost:8080/org/list2",
 					type: "GET",
@@ -101,23 +102,23 @@
 	
     <form action="/org/create">
         Partner:<br>
-        <input type="text" name="org_name" value="">
+        <input type="text" name="org_name" value="" required>
         <br>
         Contact name:<br>
-        <input type="text" name="contact_name" value="">
+        <input type="text" name="contact_name" value="" required>
         <br>
         Contant phone:<br>
-        <input type="text" name="contact_number" value="">
+        <input type="text" name="contact_number" value="" required>
 		<br>
         Contant email:<br>
-        <input type="text" name="contact_email" value="">
+        <input type="text" name="contact_email" value="" required>
 		<br>
 		Description:<br>
-        <input type="text" name="notes" value="">
+        <input type="text" name="notes" value="" required>
         <br><br>
         <input type="submit" value="Submit">
     </form>
-    <a href='Console.html' class='button'>back</a><br>
+<!--    <a href='Console.html' class='button'>back</a><br>-->
 	
 	<button type="button" id="button1"> Click moi! </button><br>
 	
