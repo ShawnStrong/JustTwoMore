@@ -4,36 +4,22 @@
     <title>JOM - Organizations</title>
 	
 	<link rel="stylesheet" type="text/css" href="org.css">
-    
+	
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	
-
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
 	
 	<script>
-		// look at DataTable for good examples of implementing table libs
-		// https://datatables.net/examples/styling/jqueryUI.html
-		/*$(document).ready(function() {
-			$('#example').DataTable( {
-				"ajax": '../ajax/data/arrays.txt'
-			} );
-		} );*/
-		function makeTable(container, data) {
+		/*function makeTable(container, data) {
 			var table = $("<table>");
 			//var table = $("<tr>");
 			// need to figure out a way to dynamically add headers to table
 			table.append("<tr><th>org_id</th><th>org_name</th><th>contact_name</th><th>contact_number</th><th>contact_email</th><th>notes</th></tr>");
 			$.each(data, function(rowIndex, r) {
 				var row = $("<tr>");
-				/*$.each(r, function(colIndex, c) {
-					if (rowIndex == 0) {
-						row.append($("<th/>").text(colIndex));
-					}
-				});
-				row.append("</tr>");
-				row.append("<tr>");*/
 				$.each(r, function(colIndex, c) { 
 
 					row.append($("<td/>").text(c));
@@ -43,10 +29,10 @@
 			});
 			table.append("</table>");
 			return container.append(table);
-		}
-		
+		}*/
 		$(document).ready(function() {
-			$( "#button1" ).click(function() {
+			// this makes a jquery table
+			/*$( "#button1" ).click(function() {
                 $('table').remove();
 				$.ajax({
 					url: "http://localhost:8080/org/list2",
@@ -63,6 +49,24 @@
 					console.log( "Error: " + errorThrown );
 					console.log( "Status: " + status );
 					console.dir( xhr );
+				});
+			});*/
+			// this makes a dynatable
+			$( "#button2" ).click(function() {
+				var mytable = $("#table1");
+				$.ajax({
+					url: "http://localhost:8080/org/list2",
+					type: "GET",
+					dataType: "json",
+					success: function(data){
+						mytable.dynatable({
+							dataset: {
+								records: data
+							}
+						});
+						mytable.data('dynatable').settings.dataset.records = data;
+						mytable.data('dynatable').dom.update();
+					 }
 				});
 			});
 		});
@@ -121,6 +125,20 @@
 <!--    <a href='Console.html' class='button'>back</a><br>-->
 	
 	<button type="button" id="button1"> Click moi! </button><br>
+	<button type="button" id="button2"> Click for Dinotable </button><br>
+	
+	<table id="table1">
+		<thead>
+			<th>Org_id</th>
+			<th>Org_name</th>
+			<th>Contact_name</th>
+			<th>Contact_number</th>
+			<th>Contact_email</th>
+			<th>Notes</th>
+		</thead>
+		<tbody>
+		</tbody>
+	<table>
 	
 </body>
 </html>
