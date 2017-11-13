@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntOrgDAO;
 import com.concretepage.entity.Org;
+import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("org")
@@ -51,6 +52,19 @@ public class OrgController {
 	public @ResponseBody List<Org> listPartner() {
 		List<Org> lop = partnerDAO.listPartner();
 		return lop;
+	}
+	
+//	Still need to test but supposedly Spring converts Lists to json automatically (thanks Spring!)
+// 	
+//	@RequestMapping("/carlist.json")
+//	public @ResponseBody List<String> getCarList() {
+//	    return carService.getAllCars();
+//	}
+	@GetMapping("list2")
+	public @ResponseBody String listPartner2() {
+		List<Org> lop = partnerDAO.listPartner();
+		String json = new Gson().toJson(lop);
+		return json;
 	}
 	
 	@GetMapping("init")
