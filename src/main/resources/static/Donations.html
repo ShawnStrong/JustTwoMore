@@ -11,6 +11,7 @@
 	
 	<script>	
         $( document ).ready(function() {
+            $("button[type=submit]").hide();
             
             $.ajax({
 
@@ -42,7 +43,63 @@
                 console.dir( xhr );
               });
             
+            
+//            If the user clicks on an org with their mouse
+            $(document).on("click",".row #basic-place ul",function() {
+                if ($(".row #basic-place #base").val().length > 0) {
+//                  run query to update category array
+                        
+                    var category = ["deli", "dairy", "meat", "produce", "pantry", "bakery"];
+
+                    $(".row #test").children().remove();
+                    
+                    for (var i = 0; i < category.length; i++) {
+                        $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                        var label = category[i];
+                        label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                            return letter.toUpperCase();
+                        });
+                        $("label[for='" + category[i] + "']").html(label + ":");
+                        $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                    }
+                    
+                    $("button[type=submit]").show();
+                }
             });
+            
+//            If the user selects the org using arrow keys and hits the enter key or types out the name themselves
+            $(document).on("keydown", function(e) {
+                if(e.which == 13) {
+                    if ($(".row #basic-place #base").val().length > 0) {
+                        $('.row #basic-place ul li').each(function() {
+                            
+                            if($(this).hasClass("selected")) {
+                                // run query to update category array
+                                
+                                var category = ["deli", "dairy", "meat", "produce", "pantry", "bakery"];
+
+                                $(".row #test").children().remove();
+                                
+                                for (var i = 0; i < category.length; i++) {
+                                    $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                                    var label = category[i];
+                                    label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                        return letter.toUpperCase();
+                                    });
+                                    $("label[for='" + category[i] + "']").html(label + ":");
+                                    $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                                }
+                                
+                                $("button[type=submit]").show();
+                            }
+                        });    
+                    }
+                }
+            });
+            
+            
+
+        });
 
 	</script>
 </head>
@@ -86,40 +143,14 @@
                     </select>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="deli">Deli:</label>
-                    <input type="number" class="form-control" id="deliWeight" min="0" value="0" name="deli">
-                </div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="dairy">Dairy:</label>
-                    <input type="number" class="form-control" id="dairyWeight" min="0" value="0" name="dairy">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="meat">Meat:</label>
-                    <input type="number" class="form-control" id="meatWeight" min="0" value="0" name="meat">
-                </div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="produce">Produce:</label>
-                    <input type="number" class="form-control" id="produceWeight" min="0" value="0" name="produce">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="pantry">Pantry:</label>
-                    <input type="number" class="form-control" id="pantryWeight" min="0" value="0" name="pantry">
-                </div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="bakery">Bakery:</label>
-                    <input type="number" class="form-control" id="bakeryWeight" min="0" value="0" name="bakery">
-                </div>
-            </div>
+                <div id="test" class="form-group col-lg-6 col-md-6 col-sm-5">
 
+                </div>
+            </div>
+            
           <div class="btn-group" data-toggle="buttons">
             <label class="btn btn-primary active">
                 <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
@@ -132,8 +163,6 @@
             <br/>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        
-<!--        <a href='Console.html' class='button'>back</a>-->
     </div>
     
 </body>
