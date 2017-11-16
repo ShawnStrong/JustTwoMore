@@ -84,6 +84,8 @@ public class DonationDAO implements IntDonationDAO {
 	@Override
 	public List<String> getFrequency(String org_name)
 	{
+		org_name=org_name.replaceAll("%20"," ");
+		org_name=org_name.replaceAll("org_name=","");
 		Query query = entityManager.createNativeQuery(
 				"SELECT category, count(*) freq FROM donation_table"
 						+ " WHERE org_name='" + org_name + "' GROUP BY category ORDER BY freq DESC;", Frequency.class);
@@ -100,6 +102,7 @@ public class DonationDAO implements IntDonationDAO {
 		for (int i = 0; i < frequencyList.size(); i++)
 		{
 			categories.add(frequencyList.get(i).getCategory());
+			//System.out.println(frequencyList.get(i).getCategory());
 		}
 		boolean broken = false;
 		for (int i = 0; i<categoryNames.length;i++)
@@ -118,6 +121,8 @@ public class DonationDAO implements IntDonationDAO {
 				categories.add(categoryNames[i]);
 			}
 		}
+		System.out.println("Org Name Entered: " + org_name);
+		//System.out.println(categories.get(1));
 		return categories;
 	}
 
