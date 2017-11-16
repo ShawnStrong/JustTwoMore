@@ -70,7 +70,14 @@ public class DonationController {
 		
 		return "Donation table created";
 	}
-	
+
+	@GetMapping("frequency")
+	public @ResponseBody List<String> frequency(@RequestParam String org_name) {
+
+		List<String> categories = donationDAO.getFrequency(org_name);
+		return categories;
+	}
+
 	@GetMapping("report")
 	public @ResponseBody List<Donation> getReport(
 			@RequestParam int donation,

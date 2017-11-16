@@ -3,6 +3,7 @@ package com.concretepage.dao;
 import java.util.List;
 
 import com.concretepage.entity.Donation;
+import com.concretepage.entity.Frequency;
 
 /**
  * Stored procedures for donation_table:
@@ -31,6 +32,8 @@ public interface IntDonationDAO {
 	
 	public List<Donation> listInfo(String org_name,
 			int donation);
+
+	public List<String> getFrequency(String org_name);
 
 	void initDonationTable();
 
