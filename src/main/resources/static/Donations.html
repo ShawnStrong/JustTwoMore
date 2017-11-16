@@ -61,8 +61,24 @@
 
                     .done(function(data) {
                         $.each(data, function() {
-                            category.push(data[i])
+                            category.push(this);
                         })
+                        
+                        $(".row #test").children().remove();
+
+                        for (var i = 0; i < category.length; i++) {
+                            $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                            var label = category[i];
+                            label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                return letter.toUpperCase();
+                            });
+                            $("label[for='" + category[i] + "']").html(label + ":");
+                            $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                        }
+
+                        $("button[type=submit]").show();
+                        
+                        
                     })
 
                     .fail(function(jqXHR, textStatus) {
@@ -72,21 +88,21 @@
                         console.dir( xhr );
                     });
 
-                    category = [OrgsName];
+//                    category = [OrgsName];
 
-                    $(".row #test").children().remove();
-
-                    for (var i = 0; i < category.length; i++) {
-                        $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
-                        var label = category[i];
-                        label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
-                            return letter.toUpperCase();
-                        });
-                        $("label[for='" + category[i] + "']").html(label + ":");
-                        $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
-                    }
-
-                    $("button[type=submit]").show();
+//                    $(".row #test").children().remove();
+//
+//                    for (var i = 0; i < category.length; i++) {
+//                        $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+//                        var label = category[i];
+//                        label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+//                            return letter.toUpperCase();
+//                        });
+//                        $("label[for='" + category[i] + "']").html(label + ":");
+//                        $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+//                    }
+//
+//                    $("button[type=submit]").show();
                 }
             });
 
