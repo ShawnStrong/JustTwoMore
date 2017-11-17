@@ -80,6 +80,10 @@
                         })
                         
                         $(".row #test").children().remove();
+                        
+                        if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                        }
 
                         for (var i = 0; i < category.length; i++) {
                             $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
@@ -114,22 +118,50 @@
 
                             if($(this).hasClass("selected")) {
                                 // run query to update category array
+                                var category =[];
+                                var OrgsName = $("#basic-place #base").serialize().toString();
 
-                                var category = ["deli", "dairy", "meat", "produce", "pantry", "bakery"];
+                                $.ajax({
+                                    url: 'http://localhost:8080/donation/frequency',
+                                    type: 'GET',
+                                    data: {org_name:OrgsName} ,
+                                    dataType : "json",
+                                })
 
-                                $(".row #test").children().remove();
+                                .done(function(data) {
+                                    $.each(data, function() {
+                                        category.push(this);
+                                    })
 
-                                for (var i = 0; i < category.length; i++) {
-                                    $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
-                                    var label = category[i];
-                                    label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
-                                        return letter.toUpperCase();
-                                    });
-                                    $("label[for='" + category[i] + "']").html(label + ":");
-                                    $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
-                                }
+                                    $(".row #test").children().remove();
+                                    
+                                    if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                                        category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];     
+                                    }
 
-                                $("button[type=submit]").show();
+                                    for (var i = 0; i < category.length; i++) {
+                                        $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                                        var label = category[i];
+                                        label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                            return letter.toUpperCase();
+                                        });
+                                        $("label[for='" + category[i] + "']").html(label + ":");
+                                        $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                                    }
+
+                                    $("button[type=submit]").show();
+
+
+                                })
+
+                                .fail(function(jqXHR, textStatus) {
+                                    alert( "Sorry, there was a problem!" );
+                                    console.log( "Error: " + errorThrown );
+                                    console.log( "Status: " + status );
+                                    console.dir( xhr );
+                                });
+                                
+                                
                             }
                         });
                     }
