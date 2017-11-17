@@ -29,6 +29,34 @@
 			box-sizing: border-box;
 	}
 	</style>
+    
+    <script>
+        $(document).ready(function() {
+            
+            var name = localStorage.getItem("username");
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+            
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+            
+            
+            
+        });
+        
+
+        
+        
+    </script>
+    
+    
 </head>
 
 <body>
@@ -51,6 +79,14 @@
             <li><a href="Donations.html">Donations</a></li>
             <li><a href="Reports.html">Reports</a></li>
           </ul>
+            <ul class="nav navbar-nav navbar-right" id="userAbsent">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Register.html">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userPresent">
+                <li><a id="user"></a></li>
+                <li><a href="" id="signOut">Sign Out</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>

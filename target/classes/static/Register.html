@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-  <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 
   <script>
       $(document).ready(function() {
+            var name = localStorage.getItem("username");
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+            
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+          
+          
           $("#register").click(function() {
               var form = $("form").serialize();
 
@@ -17,7 +33,7 @@
                   dataType:'json',
                   success : function(data) {
                       if (data == 0) {
-                          alert("user has been successfully created");
+                          window.location.href = "Login.html";
                       } else {
                           alert("username already exists");
                       }
@@ -34,23 +50,54 @@
 </head>
 <body>
 
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="Console.html">Just One More Ministry</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="Organizations.html">Organizations</a></li>
+            <li><a href="Donations.html">Donations</a></li>
+            <li><a href="Reports.html">Reports</a></li>
+          </ul>
+            <ul class="nav navbar-nav navbar-right" id="userAbsent">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Register.html">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userPresent">
+                <li><a id="user"></a></li>
+                <li><a href="" id="signOut">Sign Out</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    
 <form class="form-horizontal" name="loginForm" method="post" action="">
-  <div class="form-group">
+  <div class="form-group col-lg-10 col-md-10 col-sm-10">
     <label for="inputUsername" class="col-sm-2 control-label">Username</label>
     <div class="col-sm-10">
-      <input type="username" name="username" class="form-control" id="inputUsername" placeholder="Username">
+      <input type="username" name="username" class="form-control" id="inputUsername" placeholder="Username" required>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group col-lg-10 col-md-10 col-sm-10">
     <label for="inputPassword" class="col-sm-2 control-label">Password</label>
     <div class="col-sm-10">
-      <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
+      <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" required>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group col-lg-10 col-md-10 col-sm-10">
     <label for="inputEmail" class="col-sm-2 control-label">Email</label>
     <div class="col-sm-10">
-      <input type="email" name="user_email" class="form-control" id="inputEmail" placeholder="Email">
+      <input type="email" name="user_email" class="form-control" id="inputEmail" placeholder="Email" required>
     </div>
   </div>
   <div class="form-group">

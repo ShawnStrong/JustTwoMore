@@ -12,6 +12,21 @@
     <script>
         $( document ).ready(function() {
             $("button[type=submit]").hide();
+            
+            var name = localStorage.getItem("username");
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+            
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+            
 
             $.ajax({
 
@@ -88,21 +103,6 @@
                         console.dir( xhr );
                     });
 
-//                    category = [OrgsName];
-
-//                    $(".row #test").children().remove();
-//
-//                    for (var i = 0; i < category.length; i++) {
-//                        $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
-//                        var label = category[i];
-//                        label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
-//                            return letter.toUpperCase();
-//                        });
-//                        $("label[for='" + category[i] + "']").html(label + ":");
-//                        $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
-//                    }
-//
-//                    $("button[type=submit]").show();
                 }
             });
 
@@ -161,6 +161,14 @@
                 <li><a href="Organizations.html">Organizations</a></li>
                 <li><a href="Donations.html">Donations</a></li>
                 <li><a href="Reports.html">Reports</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userAbsent">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Register.html">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userPresent">
+                <li><a id="user"></a></li>
+                <li><a href="" id="signOut">Sign Out</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

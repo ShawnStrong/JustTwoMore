@@ -7,39 +7,32 @@
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     
+    <script>
+        $(document).ready(function() {
+            
+            var name = localStorage.getItem("username");
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+            
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+            
+            
+            
+        });
+        
+
+        
+        
+    </script>
     
-    
-<!--
-	<style>
-		.button {
-			background-color: #4CAF50;
-			background: #3498db;
-			background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-			background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-			background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-			background-image: -o-linear-gradient(top, #3498db, #2980b9);
-			background-image: linear-gradient(to bottom, #3498db, #2980b9);
-			border: none;
-			color: white;
-			padding: 15px 32px;
-			text-align: center;
-			text-decoration: none;
-			display: inline-block;
-			font-size: 28px;
-			margin: 4px 2px;
-			cursor: pointer;
-		}
-		.button:hover {
-			background: #3cb0fd;
-			background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
-			background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
-			background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
-			background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
-			background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
-			text-decoration: none;
-		}
-	</style>
--->
 </head>
 <body>
     <nav class="navbar navbar-inverse">
@@ -61,19 +54,19 @@
             <li><a href="Donations.html">Donations</a></li>
             <li><a href="Reports.html">Reports</a></li>
           </ul>
+            <ul class="nav navbar-nav navbar-right" id="userAbsent">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Register.html">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userPresent">
+                <li><a id="user"></a></li>
+                <li><a href="" id="signOut">Sign Out</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
     
     
     
-<!--
-<h1 align="center">Just One More Ministry</h1>
-<a href='Organizations.html' class='button'>Organizations</a>
-<br>
-<a href='Donations.html' class='button'>Donations</a>
-<br>
-<a href='Reports.html' class='button'>Reports</a>
--->
 </body>
 </html>
