@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
     
     
 	<style>
@@ -46,6 +47,99 @@
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });
+            
+            
+            
+            if (annyang) {
+              // Let's define our first command. First the text we expect, and then the function it should call
+              var commands = {
+                'open organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                  
+                'show organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                  
+                'go to organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                  
+                'open donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'show donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'go to donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'select incoming': function() {
+                    $("#incoming").prop("checked", true);
+                    $("#outgoing").prop("checked", false);
+                    $("#incomingLabel").addClass("active");
+                    $("#outgoingLabel").removeClass("active");
+                },
+                
+                'select outgoing': function() {
+                    $("#outgoing").prop("checked", true);
+                    $("#incoming").prop("checked", false);
+                    $("#outgoingLabel").addClass("active");
+                    $("#incomingLabel").removeClass("active");
+                },
+                  
+                'select yearly': function() {
+                    $("#yearly").prop("checked", true);
+                    $("#monthly").prop("cheked", false);
+                    $("#weekly").prop("checked", false);
+                    $("#yearlyLabel").addClass("active");
+                    $("#monthlyLabel").removeClass("active");
+                    $("#weeklyLabel").removeClass("active");
+                },
+                  
+                'select monthly': function() {
+                    $("#yearly").prop("checked", false);
+                    $("#monthly").prop("cheked", true);
+                    $("#weekly").prop("checked", false);
+                    $("#yearlyLabel").removeClass("active");
+                    $("#monthlyLabel").addClass("active");
+                    $("#weeklyLabel").removeClass("active");
+                },
+                  
+                'select weekly': function() {
+                    $("#yearly").prop("checked", false);
+                    $("#monthly").prop("cheked", false);
+                    $("#weekly").prop("checked", true);
+                    $("#yearlyLabel").removeClass("active");
+                    $("#monthlyLabel").removeClass("active");
+                    $("#weeklyLabel").addClass("active");
+                },
+                  
+                'select summary': function() {
+                    $("#summary").prop("checked", true);
+                    $("#descriptive").prop("checked", false);
+                    $("#summaryLabel").addClass("active");
+                    $("#descriptiveLabel").removeClass("active");
+                },
+                
+                'select descriptive': function() {
+                    $("#summary").prop("checked", false);
+                    $("#descriptive").prop("checked", true);
+                    $("#summaryLabel").removeClass("active");
+                    $("#descriptiveLabel").addClass("active");
+                }
+                  
+              };
+
+              // Add our commands to annyang
+              annyang.addCommands(commands);
+
+              // Start listening. You can call this here, or attach this call to an event, button, etc.
+              annyang.start();
+            }
             
             
             
@@ -99,29 +193,29 @@
     <div class="container-fluid">
         <form method="get" action="/donation/report">
             <div class="btn-group col-lg-4" data-toggle="buttons">
-                <label class="btn btn-primary active">
+                <label class="btn btn-primary active" id="incomingLabel">
                     <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
                 </label>
-                <label class="btn btn-primary">
+                <label class="btn btn-primary" id="outgoingLabel">
                     <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
                 </label>
             </div>
             <div class="btn-group col-lg-4" data-toggle="buttons">
-                <label class="btn btn-primary active">
+                <label class="btn btn-primary active" id="yearlyLabel">
                     <input type="radio" name="time" value="2"autocomplete="off" id="yearly" checked> Yearly
                 </label>
-                <label class="btn btn-primary">
+                <label class="btn btn-primary" id="monthlyLabel">
                     <input type="radio" name="time" value="1"autocomplete="off" id="monthly"> Monthly
                 </label>
-                <label class="btn btn-primary">
+                <label class="btn btn-primary" id="weeklyLabel">
                     <input type="radio" name="time" value="0"autocomplete="off" id="weekly"> Weekly
                 </label>
             </div>
             <div class="btn-group col-lg-4" data-toggle="buttons">
-                <label class="btn btn-primary active">
+                <label class="btn btn-primary active" id="summaryLabel">
                     <input type="radio" name="type" value="1"autocomplete="off" id="summary" checked> Summary
                 </label>
-                <label class="btn btn-primary">
+                <label class="btn btn-primary" id="descriptiveLabel">
                     <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
                 </label>
             </div>

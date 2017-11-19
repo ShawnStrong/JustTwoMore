@@ -11,6 +11,7 @@
 	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
 	
 	<script>
 		/*function makeTable(container, data) {
@@ -87,6 +88,47 @@
 					 }
 				});
 			});
+            
+            
+            
+            
+            if (annyang) {
+              // Let's define our first command. First the text we expect, and then the function it should call
+              var commands = {                  
+                'open donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'show donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'go to donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                
+                'open reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'show reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'go to reports': function() {
+                  window.location.href = "Reports.html";
+                }
+                  
+              };
+
+              // Add our commands to annyang
+              annyang.addCommands(commands);
+
+              // Start listening. You can call this here, or attach this call to an event, button, etc.
+              annyang.start();
+            }
+            
+            
 		});
 				
     </script>
