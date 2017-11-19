@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
     
     <script>
         $(document).ready(function() {
@@ -23,6 +24,41 @@
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });
+            
+            
+            
+            
+            if (annyang) {
+              // Let's define our first command. First the text we expect, and then the function it should call
+              var commands = {
+                'open organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                  
+                'open donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                
+                'open reports': function() {
+                  window.location.href = "Reports.html";
+                }
+                  
+              };
+
+              // Add our commands to annyang
+              annyang.addCommands(commands);
+
+              // Start listening. You can call this here, or attach this call to an event, button, etc.
+              annyang.start();
+            }
+            
+            
+            
+            
+           
+
+            
+
             
             
             
