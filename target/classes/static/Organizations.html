@@ -1,20 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JOM - Organizations</title>
+    <title>Organizations</title>
 	
+	<!-- table looks -->
 	<link rel="stylesheet" type="text/css" href="org.css">
 	
+	<!-- bootstrap css -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	
+	<!-- jquery -->
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	
+	<!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	
+	<!-- dynatable css and js -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
 	
+	<!-- jQuery Tabledit plugin
+	<script src="jquery.tabledit.js"></script> -->
+	
 	<script>
-		/*function makeTable(container, data) {
+		/* function to make jquery table
+		function makeTable(container, data) {
 			var table = $("<table>");
 			//var table = $("<tr>");
 			// need to figure out a way to dynamically add headers to table
@@ -31,9 +42,10 @@
 			table.append("</table>");
 			return container.append(table);
 		}*/
+		
 		$(document).ready(function() {
-            var name = localStorage.getItem("username");
-            
+			/* this makes a jquery table
+			$( "#button1" ).click(function() {
             if (name != null && name.length > 0) {
                 $(".navbar .container-fluid #userAbsent").hide();
                 $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
@@ -50,8 +62,6 @@
             
             
             
-			// this makes a jquery table
-			/*$( "#button1" ).click(function() {
                 $('table').remove();
 				$.ajax({
 					url: "http://localhost:8080/org/list2",
@@ -70,7 +80,8 @@
 					console.dir( xhr );
 				});
 			});*/
-			// this makes a dynatable
+			
+			/* this makes a dynatable */
 			$( "#button2" ).click(function() {
 				var mytable = $("#table1");
 				$.ajax({
@@ -87,7 +98,7 @@
 						mytable.data('dynatable').dom.update();
 					 }
 				});
-			});
+			}); 
             
             
             
@@ -129,8 +140,34 @@
             }
             
             
+			
+			/* this makes a jQuery-Tabledit plugin table 
+			$('#tabledit').Tabledit({
+				url: 'http://localhost:8080/org/list2',
+				columns: {
+					editable: [[0, 'org_id'], [1, 'org_name'], [2, 'contact_name'], [3, 'contact_number'], [4, 'contact_email'], [5, 'notes']]
+				}
+			});*/
+			
+			/* another try to make jQuery-Tabledit to work
+			$( "#button3" ).click(function() {
+				var mytable = $("#tabledit");
+				$.ajax({
+					url: "http://localhost:8080/org/list",
+					type: "GET",
+					dataType: "json",
+					success: function(data){
+						alert(data);
+						mytable.Tabledit({
+							columns: {
+								identifier: [0, 'org_name'],
+								editable: [[1, 'contact_name'], [2, 'contact_number'], [3, 'contact_email'], [4, 'notes']]
+							}
+						});
+					 }
+				});
+			});*/
 		});
-				
     </script>
     
 </head>
@@ -167,11 +204,12 @@
       </div><!-- /.container-fluid -->
     </nav>
     
-
+	<!-- lol -->
 	<form method="get" action="/org/list">
 		<button type="submit">List yo doods</button>
 	</form><br>
 	
+	<!-- org create form -->
     <form action="/org/create">
         Partner:<br>
         <input type="text" name="org_name" value="" required>
@@ -190,23 +228,44 @@
         <br><br>
         <input type="submit" value="Submit">
     </form>
-<!--    <a href='Console.html' class='button'>back</a><br>-->
+	<br><br>
 	
-	<button type="button" id="button1"> Click moi! </button><br>
+	<!-- Button for loading jquery table
+	<button type="button" id="button1"> Click moi! </button><br> -->
+	
+	<!-- Button for loading tabledit table 
+	<button type="button" id="button3"> Get Tabledit </button><br> -->
+	
+	<!-- Button for loading Dynatable. Need tablebox below as well -->
 	<button type="button" id="button2"> Click for Dinotable </button><br>
 	
-	<table id="table1">
-		<thead>
-			<th>Org_id</th>
-			<th>Org_name</th>
-			<th>Contact_name</th>
-			<th>Contact_number</th>
-			<th>Contact_email</th>
-			<th>Notes</th>
-		</thead>
+	<div id="tablebox">
+		<table id="table1" align="center">
+			<thead>
+				<th data-dynatable-column="org_name">Organization</th>
+				<th data-dynatable-column="contact_name">Contact</th>
+				<th data-dynatable-column="contact_number">Number</th>
+				<th data-dynatable-column="contact_email">Email</th>
+				<th>Notes</th>
+			</thead>
+			<tbody>
+			</tbody>
+		<table>
+	</div> 
+	
+	<!-- jQuery-Tabledit plugin 
+	<table id="tabledit">
+        <thead>
+            <tr>
+                <th>Organization</th>
+                <th>Contact</th>
+                <th>Number</th>
+                <th>Email</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
 		<tbody>
 		</tbody>
-	<table>
-	
+    </table>-->
 </body>
 </html>

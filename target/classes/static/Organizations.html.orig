@@ -1,36 +1,190 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JOM - Organizations</title>
-<<<<<<< HEAD
-    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
-    
-=======
+    <title>Organizations</title>
 	
-	<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<!-- table looks -->
+	<link rel="stylesheet" type="text/css" href="org.css">
+	
+	<!-- bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	
+	<!-- jquery -->
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	
+	<!-- bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+	<!-- dynatable css and js -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+<<<<<<< HEAD
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+=======
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> 
+	
+	<!-- jQuery Tabledit plugin
+	<script src="jquery.tabledit.js"></script> -->
+>>>>>>> 8cd18d60b370a160cd75ab6c9173ea14c87674f5
 	
 	<script>
-		$(document).ready(function(){
+		/* function to make jquery table
+		function makeTable(container, data) {
+			var table = $("<table>");
+			//var table = $("<tr>");
+			// need to figure out a way to dynamically add headers to table
+			table.append("<tr><th>org_id</th><th>org_name</th><th>contact_name</th><th>contact_number</th><th>contact_email</th><th>notes</th></tr>");
+			$.each(data, function(rowIndex, r) {
+				var row = $("<tr>");
+				$.each(r, function(colIndex, c) { 
+
+					row.append($("<td/>").text(c));
+				});
+				row.append("</tr>");
+				table.append(row);
+			});
+			table.append("</table>");
+			return container.append(table);
+		}*/
+		
+		$(document).ready(function() {
+<<<<<<< HEAD
+            var name = localStorage.getItem("username");
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+            
+            
+            
+            
+            
+			// this makes a jquery table
+			/*$( "#button1" ).click(function() {
+=======
+			/* this makes a jquery table
+			$( "#button1" ).click(function() {
+>>>>>>> 8cd18d60b370a160cd75ab6c9173ea14c87674f5
+                $('table').remove();
+				$.ajax({
+					url: "http://localhost:8080/org/list2",
+					type: "GET",
+					dataType: "json"
+				})
+				.done(function(data) {
+					//alert( "Data: " + JSON.stringify(data) );
+					var orgTable = makeTable($(document.body) , data);
+					//$(document.body).append(JSON.stringify(data));
+				})
+				.fail(function(xhr, status, errorThrown) {
+					alert( "Sorry, there was a problem!" );
+					console.log( "Error: " + errorThrown );
+					console.log( "Status: " + status );
+					console.dir( xhr );
+				});
+			});*/
 			
-			$("#showStuff").click(function() {
+			/* this makes a dynatable */
+			$( "#button2" ).click(function() {
+				var mytable = $("#table1");
+				$.ajax({
+					url: "http://localhost:8080/org/list2",
+					type: "GET",
+					dataType: "json",
+					success: function(data){
+						mytable.dynatable({
+							dataset: {
+								records: data
+							}
+						});
+						mytable.data('dynatable').settings.dataset.records = data;
+						mytable.data('dynatable').dom.update();
+					 }
+				});
+<<<<<<< HEAD
+			});
+            
+            
+            
+            
+            if (annyang) {
+              // Let's define our first command. First the text we expect, and then the function it should call
+              var commands = {                  
+                'open donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'show donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                  
+                'go to donations': function() {
+                  window.location.href = "Donations.html";
+                },
+                
+                'open reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'show reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'go to reports': function() {
+                  window.location.href = "Reports.html";
+                }
+                  
+              };
+
+              // Add our commands to annyang
+              annyang.addCommands(commands);
+
+              // Start listening. You can call this here, or attach this call to an event, button, etc.
+              annyang.start();
+            }
+            
+            
+=======
+			}); 
+			
+			/* this makes a jQuery-Tabledit plugin table 
+			$('#tabledit').Tabledit({
+				url: 'http://localhost:8080/org/list2',
+				columns: {
+					editable: [[0, 'org_id'], [1, 'org_name'], [2, 'contact_name'], [3, 'contact_number'], [4, 'contact_email'], [5, 'notes']]
+				}
+			});*/
+			
+			/* another try to make jQuery-Tabledit to work
+			$( "#button3" ).click(function() {
+				var mytable = $("#tabledit");
 				$.ajax({
 					url: "http://localhost:8080/org/list",
-					type: 'GET',
-					success : function(result){
-						alert(JSON.stringify(result));
-					},
-					error : function(request,error) {
-						alert("Request: " + JSON.stringify(request));
-					}
+					type: "GET",
+					dataType: "json",
+					success: function(data){
+						alert(data);
+						mytable.Tabledit({
+							columns: {
+								identifier: [0, 'org_name'],
+								editable: [[1, 'contact_name'], [2, 'contact_number'], [3, 'contact_email'], [4, 'notes']]
+							}
+						});
+					 }
 				});
-			})
+			});*/
+>>>>>>> 8cd18d60b370a160cd75ab6c9173ea14c87674f5
 		});
-	</script>
->>>>>>> a3b65e2f4aab9ab04416137a67c986d61e8042bf
+    </script>
+    
 </head>
 <body>
     
@@ -53,40 +207,80 @@
             <li><a href="Donations.html">Donations</a></li>
             <li><a href="Reports.html">Reports</a></li>
           </ul>
+            <ul class="nav navbar-nav navbar-right" id="userAbsent">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Register.html">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userPresent">
+                <li><a id="user"></a></li>
+                <li><a href="" id="signOut">Sign Out</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
     
-
+	<!-- lol -->
 	<form method="get" action="/org/list">
 		<button type="submit">List yo doods</button>
-	</form>
+	</form><br>
 	
-	<br>
-	
+	<!-- org create form -->
     <form action="/org/create">
         Partner:<br>
-        <input type="text" name="org_name" value="">
+        <input type="text" name="org_name" value="" required>
         <br>
         Contact name:<br>
-        <input type="text" name="contact_name" value="">
+        <input type="text" name="contact_name" value="" required>
         <br>
         Contant phone:<br>
-        <input type="text" name="contact_number" value="">
+        <input type="text" name="contact_number" value="" required>
 		<br>
         Contant email:<br>
-        <input type="text" name="contact_email" value="">
+        <input type="text" name="contact_email" value="" required>
 		<br>
 		Description:<br>
-        <input type="text" name="notes" value="">
+        <input type="text" name="notes" value="" required>
         <br><br>
         <input type="submit" value="Submit">
     </form>
-    <a href='Console.html' class='button'>back</a>
-	<br>
-	<button id="showStuff">Click Me!</button>
+	<br><br>
 	
-	<br>
+	<!-- Button for loading jquery table
+	<button type="button" id="button1"> Click moi! </button><br> -->
 	
+	<!-- Button for loading tabledit table 
+	<button type="button" id="button3"> Get Tabledit </button><br> -->
+	
+	<!-- Button for loading Dynatable. Need tablebox below as well -->
+	<button type="button" id="button2"> Click for Dinotable </button><br>
+	
+	<div id="tablebox">
+		<table id="table1" align="center">
+			<thead>
+				<th data-dynatable-column="org_name">Organization</th>
+				<th data-dynatable-column="contact_name">Contact</th>
+				<th data-dynatable-column="contact_number">Number</th>
+				<th data-dynatable-column="contact_email">Email</th>
+				<th>Notes</th>
+			</thead>
+			<tbody>
+			</tbody>
+		<table>
+	</div> 
+	
+	<!-- jQuery-Tabledit plugin 
+	<table id="tabledit">
+        <thead>
+            <tr>
+                <th>Organization</th>
+                <th>Contact</th>
+                <th>Number</th>
+                <th>Email</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+		<tbody>
+		</tbody>
+    </table>-->
 </body>
 </html>
