@@ -2,6 +2,10 @@ package com.concretepage.dao;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -84,6 +88,7 @@ public class DonationDAO implements IntDonationDAO {
 	@Override
 	public List<String> getFrequency(String org_name)
 	{
+
 		org_name=org_name.replaceAll("%20"," ");
 		org_name=org_name.replaceAll("org_name=","");
 		Query query = entityManager.createNativeQuery(
@@ -138,6 +143,11 @@ public class DonationDAO implements IntDonationDAO {
 				+ end_date + " 00:00:00') AND "
 				+ "donation=" + donation + " ORDER BY org_name, category;", Donation.class);
 
+		Query querySummary = entityManager.createNativeQuery(
+				"SELECT * FROM `donation_table`"
+						+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
+						+ end_date + " 00:00:00') AND "
+						+ "donation=" + donation + " ORDER BY org_name, ts;", Donation.class);
 
 		Query queryTimeSorted = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
@@ -146,6 +156,7 @@ public class DonationDAO implements IntDonationDAO {
 						+ "donation=" + donation + " ORDER BY ts;", Donation.class);
 
 		List<Donation> donations = query.getResultList();
+		List<Donation> donationsSummary = querySummary.getResultList();
 		List<Donation> donationsTimeSorted = queryTimeSorted.getResultList();
 		int donationListSize = 0;
 		int dontationTSListSize = 0;
@@ -327,16 +338,16 @@ public class DonationDAO implements IntDonationDAO {
 				for (int i = 0; i < donationListSize; i++) {
 					SummaryReport tempSummary = new SummaryReport();
 					if (i == 0) {
-						currentOrgsTimeRange = donations.get(i).getTs();
+						currentOrgsTimeRange = donationsSummary.get(i).getTs();
 						currentOrgsTimeRange = currentOrgsTimeRange.substring(0,7);
-						tempSummary.setOrg(donations.get(i).getOrgName());
-						tempSummary.setWeight(donations.get(i).getWeight());
+						tempSummary.setOrg(donationsSummary.get(i).getOrgName());
+						tempSummary.setWeight(donationsSummary.get(i).getWeight());
 						tempSummary.setTimeRange(currentOrgsTimeRange);
 						reportList.add(tempSummary);
 					}
 					else
 					{
-						if(reportList.get(reportListIndex).getOrg().equals(donations.get(i).getOrgName()) && reportList.get(reportListIndex).getTimeRange().equals(donations.get(i).getTs().substring(0,7)))
+						if(reportList.get(reportListIndex).getOrg().equalsIgnoreCase(donationsSummary.get(i).getOrgName()) && reportList.get(reportListIndex).getTimeRange().equals(donationsSummary.get(i).getTs().substring(0,7)))
 						{
 							tempWeight = reportList.get(reportListIndex).getWeight();
 							tempWeight += donations.get(i).getWeight();
@@ -345,10 +356,10 @@ public class DonationDAO implements IntDonationDAO {
 						else
 						{
 							reportListIndex++;
-							currentOrgsTimeRange = donations.get(i).getTs();
+							currentOrgsTimeRange = donationsSummary.get(i).getTs();
 							currentOrgsTimeRange = currentOrgsTimeRange.substring(0,7);
-							tempSummary.setOrg(donations.get(i).getOrgName());
-							tempSummary.setWeight(donations.get(i).getWeight());
+							tempSummary.setOrg(donationsSummary.get(i).getOrgName());
+							tempSummary.setWeight(donationsSummary.get(i).getWeight());
 							tempSummary.setTimeRange(currentOrgsTimeRange);
 							reportList.add(tempSummary);
 						}
@@ -466,8 +477,8 @@ public class DonationDAO implements IntDonationDAO {
 						{
 							if (tempReport.getTimeRange().equals(timeRangeArray[j]))
 							{
-								System.out.print("Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " Category: " + reportList.get(j).getCategory() + " temp Weight: " + reportList.get(j).getWeight() + ",");
-								timeArrayIndex = j;
+								System.out.print("Temp Org Name: " + reportList.get(i).getOrg() + " Temp Time Range: " + reportList.get(i).getTimeRange() + " Category: " + reportList.get(i).getCategory() + " temp Weight: " + reportList.get(i).getWeight() + ",");
+								timeArrayIndex = j+1;
 								break;
 							}
 							else
@@ -484,8 +495,8 @@ public class DonationDAO implements IntDonationDAO {
 							{
 								if (tempReport.getTimeRange().equals(timeRangeArray[j]))
 								{
-									System.out.print("Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " Category: " + reportList.get(j).getCategory() + " temp Weight: " + reportList.get(j).getWeight() + ",");
-									timeArrayIndex = j;
+									System.out.print("Temp Org Name: " + reportList.get(i).getOrg() + " Temp Time Range: " + reportList.get(i).getTimeRange() + " Category: " + reportList.get(i).getCategory() + " temp Weight: " + reportList.get(i).getWeight() + ",");
+									timeArrayIndex = j+1;
 									break;
 								}
 								else
@@ -501,8 +512,8 @@ public class DonationDAO implements IntDonationDAO {
 							{
 								if (tempReport.getTimeRange().equals(timeRangeArray[j]))
 								{
-									System.out.print("Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " Category: " + reportList.get(j).getCategory() + " temp Weight: " + reportList.get(j).getWeight() + ",");
-									timeArrayIndex = j;
+									System.out.print("Temp Org Name: " + reportList.get(i).getOrg() + " Temp Time Range: " + reportList.get(i).getTimeRange() + " Category: " + reportList.get(i).getCategory() + " temp Weight: " + reportList.get(i).getWeight() + ",");
+									timeArrayIndex = j+1;
 									break;
 								}
 								else
@@ -517,13 +528,137 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Org Name: " + reportList.get(i).getOrg() + " Category: " + reportList.get(i).getCategory() + " Date: " + reportList.get(i).getTimeRange() + " Weight: " + reportList.get(i).getWeight());
 				}
+				for (int i = 0; i< timeRangeArray.length;i++)
+				{
+					System.out.println("\n"+ timeRangeArray[i]);
+				}
 			}
 			else if(time == 0 && type == 1)
 			{
+				Calendar cStart = Calendar.getInstance();
+				cStart.set(Integer.parseInt(firstTsYear), Integer.parseInt(firstTsMonth)-1, Integer.parseInt(firstTsDay));
+				int dayOfWeek = cStart.get(Calendar.DAY_OF_WEEK);
+				Calendar cFinish = Calendar.getInstance();
+				cFinish.set(Integer.parseInt(lastTsYear), Integer.parseInt(lastTsMonth)-1, Integer.parseInt(lastTsDay));
+				SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedBeginning = format1.format(cStart.getTime());
+				String formattedEnd ="";
+				String toAdd="";
+				String timePrintStart ="";
+				List<String> timeList = new ArrayList<String>();
+				timePrintStart = format1.format(cStart.getTime());
+				System.out.println(timePrintStart);
+				System.out.println(format1.format(cFinish.getTime()));
+				int count = 0;
+				while (!cStart.equals(cFinish))
+				{
+					cStart.add(Calendar.DATE, 1);
+					timePrintStart = format1.format(cStart.getTime());
+					System.out.println(timePrintStart);
+					if (cStart.get(Calendar.DAY_OF_WEEK) == 7)
+					{
+						formattedEnd = format1.format(cStart.getTime());
+						toAdd = formattedBeginning + " - " + formattedEnd;
+						timeList.add(toAdd);
+					}
+					if (cStart.get(Calendar.DAY_OF_WEEK) == 1)
+					{
+						formattedBeginning = format1.format(cStart.getTime());
+					}
+					else if (cStart.equals(cFinish))
+					{
+						formattedEnd = format1.format(cStart.getTime());
+						toAdd = formattedBeginning + " - " + formattedEnd;
+						timeList.add(toAdd);
+						break;
+					}
+					count++;
+					if(count > 1000)
+					{
+						break;
+					}
+				}
+				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
+				String currentOrgsTimeRangeYear = "";
+				String currentOrgsTimeRangeMonth = "";
+				String currentOrgsTimeRangeDay = "";
+				String timeListYear = "";
+				String timeListMonth = "";
+				String timeListDay = "";
+				Calendar cTimeList = Calendar.getInstance();
+				int tempWeight = 0;
+				int reportListIndex = 0;
+				for (int i = 0; i < donationListSize; i++)
+				{
+					SummaryReport tempSummary = new SummaryReport();
+					currentOrgsTimeRangeYear = donationsSummary.get(i).getTs();
+					currentOrgsTimeRangeYear = currentOrgsTimeRangeYear.substring(0,4);
+					currentOrgsTimeRangeMonth = donationsSummary.get(i).getTs();
+					currentOrgsTimeRangeMonth = currentOrgsTimeRangeMonth.substring(5,7);
+					currentOrgsTimeRangeDay = donationsSummary.get(i).getTs();
+					currentOrgsTimeRangeDay = currentOrgsTimeRangeDay.substring(8,10);
+					Calendar cTemp = Calendar.getInstance();
+					cTemp.set(Integer.parseInt(currentOrgsTimeRangeYear), Integer.parseInt(currentOrgsTimeRangeMonth)-1, Integer.parseInt(currentOrgsTimeRangeDay));
+					int tempIdx = 0;
+					for (tempIdx = 0; tempIdx < timeList.size(); tempIdx++)
+					{
+						timeListYear = timeList.get(tempIdx);
+						timeListYear = timeListYear.substring(0,4);
+						timeListMonth = timeList.get(tempIdx);
+						timeListMonth = timeListMonth.substring(5,7);
+						timeListDay = timeList.get(tempIdx);
+						timeListDay = timeListDay.substring(8,10);
+						cTimeList.set(Integer.parseInt(timeListYear), Integer.parseInt(timeListMonth)-1, Integer.parseInt(timeListDay));
+						if (cTimeList.get(Calendar.WEEK_OF_YEAR) == cTemp.get(Calendar.WEEK_OF_YEAR))
+						{
+							tempSummary.setTimeRange(timeList.get(tempIdx));
+							break;
+						}
+					}
+					if (i == 0)
+					{
+						tempSummary.setOrg(donationsSummary.get(i).getOrgName());
+						tempSummary.setWeight(donationsSummary.get(i).getWeight());
+						reportList.add(tempSummary);
+					}
+					else
+					{
+						if (donationsSummary.get(i).getOrgName().equals(reportList.get(reportListIndex).getOrg()) && tempSummary.getTimeRange().equals(reportList.get(reportListIndex).getTimeRange()))
+						{
+							tempWeight = reportList.get(reportListIndex).getWeight();
+							tempWeight += donations.get(i).getWeight();
+							reportList.get(reportListIndex).setWeight(tempWeight);
+						}
+						else
+						{
+							reportListIndex++;
+							tempSummary.setOrg(donationsSummary.get(i).getOrgName());
+							tempSummary.setWeight(donationsSummary.get(i).getWeight());
+							reportList.add(tempSummary);
+						}
+					}
+				}
+				//check for week dates
+				for (int i = 0; i < timeList.size();i++)
+				{
+					System.out.println("\n" + timeList.get(i));
+				}
+				for (int j = 0; j < reportList.size(); j++)
+				{
+					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " temp Weight: " + reportList.get(j).getWeight());
+				}
 
+
+				Calendar cTest1 = Calendar.getInstance();
+				Calendar cTest2 = Calendar.getInstance();
+				cTest1.set(2017, 8, 24);
+				cTest2.set(2017, 8, 28);
+				int weekYear = cTest1.get(Calendar.WEEK_OF_YEAR);
+				int weekYear1 = cTest2.get(Calendar.WEEK_OF_YEAR);
+				System.out.println("\nTest 1: " + weekYear + " Test 2: "+ weekYear1);
 			}
 		}
 
-		return donations;
+		return donationsSummary;
 	}
 }
