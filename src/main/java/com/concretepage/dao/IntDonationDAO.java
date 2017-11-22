@@ -24,9 +24,6 @@ import com.concretepage.entity.Frequency;
  */
 
 public interface IntDonationDAO {
-
-	public int inputDonation(String org_name,
-			String category, int weight, int donation);
 	
 	public List<String> listOrg(int donation);
 	
@@ -38,4 +35,6 @@ public interface IntDonationDAO {
 	void initDonationTable();
 
 	List<Donation> getReport(int donation, int time, int type, String start_date, String end_date);
+
+	public int inputDonation(String org_name, String user_name, String category, int weight, int donation);
 }

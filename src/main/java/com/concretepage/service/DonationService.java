@@ -17,7 +17,7 @@ public class DonationService implements IntDonationService {
 	 * Create separate donations from bulk donation payload from UI
 	 */
 	@Override
-	public String separateDonations(int donation, String org_name,
+	public String separateDonations(int donation, String org_name, String user_name,
 			int deli, int dairy, int meat, int produce, int pantry, int bakery)
 	{
 		
@@ -33,7 +33,7 @@ public class DonationService implements IntDonationService {
 		for (String category : mp.keySet()){
 			int weight = mp.get(category);
 			if (weight > 0) {
-				donationDAO.inputDonation(org_name, category, weight, donation);
+				donationDAO.inputDonation(org_name, user_name, category, weight, donation);
 			}
         }
 		return "ok";

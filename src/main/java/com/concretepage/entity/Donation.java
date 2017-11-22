@@ -22,6 +22,8 @@ public class Donation {
 	
 	private int donation;
 	
+	private String user_name;
+	
 	private String ts;
 	
 	public Donation() {}
@@ -35,6 +37,7 @@ public class Donation {
 		this.category = category;
 		this.weight = weight;
 		this.donation = donation;
+		this.user_name = user_name;
 	}
 	
 	public int getOrderId() {
@@ -81,6 +84,14 @@ public class Donation {
 	
 	public void setDonation(int donation) {
 		this.donation = donation;
+	}
+	
+	public String getUserName() {
+		return user_name;
+	}
+	
+	public void setUserName(String user_name) {
+		this.user_name = user_name;
 	}
 	
 	public String getTs() {

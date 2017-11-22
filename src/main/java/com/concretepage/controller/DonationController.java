@@ -29,6 +29,7 @@ public class DonationController {
 	public @ResponseBody String inputDonation (
 			@RequestParam int donation,
 			@RequestParam String org_name,
+			@RequestParam String user_name,
 			@RequestParam int deli,
 			@RequestParam int dairy,
 			@RequestParam int meat,
@@ -36,7 +37,7 @@ public class DonationController {
 			@RequestParam int pantry,
 			@RequestParam int bakery) {
 		
-		return donationService.separateDonations(donation, org_name, deli, dairy, meat, produce, pantry, bakery);
+		return donationService.separateDonations(donation, org_name, user_name, deli, dairy, meat, produce, pantry, bakery);
 	}
 	
 //	@GetMapping("input")

@@ -15,7 +15,7 @@
             $("button[type=submit]").hide();
             
             var name = localStorage.getItem("username");
-            $("#username").html(name);
+            $("#username").prop("value",name);
             
             if (name != null && name.length > 0) {
                 $(".navbar .container-fluid #userAbsent").hide();
@@ -294,7 +294,7 @@
         </div>
         <br/>
         <br/>
-        <input hidden="hidden" id="username" name="user_name">
+        <input type="hidden" id="username" name="user_name">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
