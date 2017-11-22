@@ -30,7 +30,8 @@ public class Donation {
 	
 	public Donation(int order_id, int org_id, 
 			String org_name, String category,
-			int weight, int donation) {
+			int weight, int donation, 
+			String user_name) {
 		this.order_id = order_id;
 		this.org_id = org_id;
 		this.org_name = org_name;
