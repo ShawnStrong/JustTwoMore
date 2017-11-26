@@ -138,22 +138,29 @@ public class DonationDAO implements IntDonationDAO {
 		//time == 2 means yearly report time == 1 means monthly report time == 0 means weekly report
 		//type == 1 means they want a summary report i.e no food categories, just total weight
 		//type == 0 means they want a descriptive report i.e they want to tsee food categories
+		System.out.println("\n" + "Start Date: " + start_date);
+		System.out.println("\n" + "end Date: " + end_date);
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '" 
-				+ end_date + " 00:00:00') AND "
+				+ " WHERE (ts BETWEEN '" + end_date + " 00:00:00' AND '"
+				+ start_date + " 00:00:00') AND "
 				+ "donation=" + donation + " ORDER BY org_name, category;", Donation.class);
+		/*Query query = entityManager.createNativeQuery(
+				"SELECT * FROM `donation_table`"
+				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
+				+ end_date + " 00:00:00') AND "
+				+ "donation=" + donation + " ORDER BY org_name, category;", Donation.class);*/
 
 		Query querySummary = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-						+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
-						+ end_date + " 00:00:00') AND "
+						+ " WHERE (ts BETWEEN '" + end_date + " 00:00:00' AND '"
+						+ start_date + " 00:00:00') AND "
 						+ "donation=" + donation + " ORDER BY org_name, ts;", Donation.class);
 
 		Query queryTimeSorted = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-						+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
-						+ end_date + " 00:00:00') AND "
+						+ " WHERE (ts BETWEEN '" + end_date + " 00:00:00' AND '"
+						+ start_date + " 00:00:00') AND "
 						+ "donation=" + donation + " ORDER BY ts;", Donation.class);
 
 		List<Donation> donations = query.getResultList();
@@ -166,6 +173,7 @@ public class DonationDAO implements IntDonationDAO {
 		String firstTs = "";
 		String lastTs ="";
 		int currentOrgsWeight = 0;
+
 		if(donations.get(0) != null)
 		{
 			donationListSize = donations.size();
@@ -624,6 +632,7 @@ public class DonationDAO implements IntDonationDAO {
 					}
 					else
 					{
+						System.out.print(1);
 						if (donationsSummary.get(i).getOrgName().equals(reportList.get(reportListIndex).getOrg()) && tempSummary.getTimeRange().equals(reportList.get(reportListIndex).getTimeRange()))
 						{
 							tempWeight = reportList.get(reportListIndex).getWeight();
