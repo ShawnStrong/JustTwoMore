@@ -20,6 +20,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
     <script src="bootstable.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	
 	<!-- jQuery Tabledit plugin
 	<script src="jquery.tabledit.js"></script> -->
@@ -45,6 +47,26 @@
 		}*/
 		
 		$(document).ready(function() {
+            //Add username to the navbar if it exists in local storage
+            var name = localStorage.getItem("username");
+            $("#username").prop("value",name);
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+            
+            //Clear username on signout and go to the console page
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+            
+            
+            
+            
 			/* this makes a jquery table
 			$( "#button1" ).click(function() {
             if (name != null && name.length > 0) {
@@ -168,6 +190,71 @@
 					 }
 				});
 			});*/
+            
+            // Submit the form
+            $("#submit").click(function() {
+              var form = $("form").serialize();
+
+              if ($("#inputOrg").val() == "" || $("#inputContactName").val() == "" || 
+                  $("#inputContactPhone").val() == "" || $("#inputContactEmail").val() == "") {
+                  alert("Please fill out all the information before submitting.");
+              } else {
+                
+                  $.ajax({
+                      url : 'http://localhost:8080/org/create',
+                      type : 'GET',
+                      data : form,
+                      dataType:'json',
+                      success : function(data) {
+                          if (data == 0) {
+                              $( "#successfulOrgCreation" ).dialog({
+                                  modal: true,
+                                  buttons: {
+                                    Ok: function() {
+                                        window.location.href = "Organizations.html";
+                                    }
+                                  }
+                                });
+                          } else {
+                              $( "#failedOrgCreation" ).dialog({
+                                  modal: true,
+                                  buttons: {
+                                    Ok: function() {
+                                      $( this ).dialog( "close" );
+                                    }
+                                  }
+                                });
+                          }
+                      },
+                      error : function(request,error) {
+                          alert("Request: " + JSON.stringify(request));
+    //                      if (request.responseText == 0) {
+    //                          $( "#successfulOrgCreation" ).dialog({
+    //                              modal: true,
+    //                              buttons: {
+    //                                Ok: function() {
+    //                                    window.location.href = "Organizations.html";
+    //                                }
+    //                              }
+    //                            });
+    //                      } else {
+    //                          $( "#failedOrgCreation" ).dialog({
+    //                              modal: true,
+    //                              buttons: {
+    //                                Ok: function() {
+    //                                  $( this ).dialog( "close" );
+    //                                }
+    //                              }
+    //                            });
+    //                      }
+                      }
+                    });
+                }
+            });
+            
+            
+            
+            
 		});
     </script>
     
@@ -206,11 +293,70 @@
     </nav>
     
 	<!-- lol -->
+<!--
 	<form method="get" action="/org/list">
 		<button type="submit">List yo doods</button>
 	</form><br>
+-->
 	
+    
+    
+    <div class="container-fluid">
+        <form class="form-horizontal" name="orgForm">
+          <div class="form-group col-lg-10 col-md-10 col-sm-10">
+            <label for="inputOrg" class="col-sm-2 control-label">Organization:</label>
+            <div class="col-sm-10">
+              <input type="text" name="org_name" class="form-control" id="inputOrg" placeholder="Organization Name" required>
+            </div>
+          </div>
+          <div class="form-group col-lg-10 col-md-10 col-sm-10">
+            <label for="inputContactName" class="col-sm-2 control-label">Contact:</label>
+            <div class="col-sm-10">
+              <input type="text" name="contact_name" class="form-control" id="inputContactName" placeholder="Contact Name" required>
+            </div>
+          </div>
+          <div class="form-group col-lg-10 col-md-10 col-sm-10">
+            <label for="inputContactPhone" class="col-sm-2 control-label">Phone Number:</label>
+            <div class="col-sm-10">
+              <input type="text" name="contact_number" class="form-control" id="inputContactPhone" placeholder="Contact Phone Number" required>
+            </div>
+          </div>
+          <div class="form-group col-lg-10 col-md-10 col-sm-10">
+            <label for="inputContactEmail" class="col-sm-2 control-label">Email:</label>
+            <div class="col-sm-10">
+              <input type="text" name="contact_email" class="form-control" id="inputContactEmail" placeholder="Contact Email Address" required>
+            </div>
+          </div>
+          <div class="form-group col-lg-10 col-md-10 col-sm-10">
+            <label for="inputOrgNotes" class="col-sm-2 control-label">Description:</label>
+            <div class="col-sm-10">
+                <textarea type="text" name="notes" class="form-control" id="inputOrgNotes" placeholder="Organization Description" style="height: 100px"></textarea>
+            </div>
+          </div>
+        </form>
+        
+        <div class="col-sm-10">
+          <button id="submit" type="button" class="btn btn-default">Submit</button>
+        </div>
+        
+        <div id="successfulOrgCreation" title="Organization Created" hidden="hidden">
+          <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            Your organization has been successfully added.
+          </p>
+        </div>
+
+        <div id="failedOrgCreation" title="Organization Not Created" hidden="hidden">
+          <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            Your organization was not created. Please try again.
+          </p>
+        </div>
+    </div>
+    
+    
 	<!-- org create form -->
+<!--
     <form action="/org/create">
         Partner:<br>
         <input type="text" name="org_name" value="" required>
@@ -229,6 +375,7 @@
         <br><br>
         <input type="submit" value="Submit">
     </form>
+-->
 	<br><br>
 	
 	<!-- Button for loading jquery table
@@ -251,8 +398,8 @@
 			</thead>
 			<tbody>
 			</tbody>
-		<table>
-	</div> 
+        </table>
+	</div>
 	
 	<!-- jQuery-Tabledit plugin 
 	<table id="tabledit">
