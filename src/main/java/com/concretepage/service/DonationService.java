@@ -81,6 +81,12 @@ public class DonationService implements IntDonationService {
 			UON = getUniqueOrgs(UON, uniqueOrgs.get(i));
 		}
 
+		List<String> addedToday = new ArrayList<String>();
+		String today ="";
+		today = format1.format(todaysDate.getTime());
+		addedToday = donationDAO.getWidgetOrgs(today, username);
+		System.out.println("Today List: " + addedToday);
+
 		int[][] orgRanks = new int[UON.size()][4];
 		orgRanks = getOrgRanks(uniqueOrgs, UON);
 
@@ -160,7 +166,16 @@ public class DonationService implements IntDonationService {
 			listToReturn.add(orgStatsList.get(i).getOrgName());
 		}
 
-
+		//cross reference lists
+		for (int i = 0 ; i < addedToday.size();i++)
+		{
+			int index = 0;
+			if (listToReturn.contains(addedToday.get(i)))
+			{
+				index = listToReturn.indexOf(addedToday.get(i));
+				listToReturn.remove(index);
+			}
+		}
 
 
 		return listToReturn;
