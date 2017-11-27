@@ -1,6 +1,7 @@
 package com.concretepage.controller;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.concretepage.dao.IntDonationDAO;
 import com.concretepage.entity.Donation;
 import com.concretepage.service.IntDonationService;
+import com.concretepage.service.DonationService;
 
 
 @Controller
@@ -91,5 +93,15 @@ public class DonationController {
 		
 		return donationDAO.getReport(donation, time, type, start_date, end_date);
 		//return donationDAO.getReport(donation, time, start_date, end_date);
+	}
+
+	@GetMapping("widget")
+	public @ResponseBody List<String> widget(
+			@RequestParam String username) {
+		List<String> widgetTimes = donationService.findWidgetTimes(username);
+		//widgetTimes = DonationService.findWidgetTimes(username);
+
+		return widgetTimes;
+		//return null;
 	}
 }

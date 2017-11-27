@@ -42,6 +42,19 @@ public class DonationDAO implements IntDonationDAO {
 		query.executeUpdate();
 		return 0;
 	}
+//select distinct org_name from donation_table where (ts between '2017-10-15 00:00:00' and '2017-10-15 23:59:59') and user_name = 'Adam';
+	@Override
+	public List<String> getWidgetOrgs(String date, String username)
+	{
+		Query query = entityManager.createNativeQuery(
+				"SELECT DISTINCT org_name FROM donation_table WHERE " +
+						"(ts between '" + date + " 00:00:00' and '" + date + " 23:59:59') " +
+						"and user_name = '" + username +"';");
+
+		List<String> orgs = query.getResultList();
+		return orgs;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -142,8 +155,8 @@ public class DonationDAO implements IntDonationDAO {
 		System.out.println("\n" + "end Date: " + end_date);
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-				+ " WHERE (ts BETWEEN '" + end_date + " 00:00:00' AND '"
-				+ start_date + " 00:00:00') AND "
+				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
+				+ end_date + " 00:00:00') AND "
 				+ "donation=" + donation + " ORDER BY org_name, category;", Donation.class);
 		/*Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
@@ -153,14 +166,14 @@ public class DonationDAO implements IntDonationDAO {
 
 		Query querySummary = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-						+ " WHERE (ts BETWEEN '" + end_date + " 00:00:00' AND '"
-						+ start_date + " 00:00:00') AND "
+						+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
+						+ end_date + " 00:00:00') AND "
 						+ "donation=" + donation + " ORDER BY org_name, ts;", Donation.class);
 
 		Query queryTimeSorted = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-						+ " WHERE (ts BETWEEN '" + end_date + " 00:00:00' AND '"
-						+ start_date + " 00:00:00') AND "
+						+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
+						+ end_date + " 00:00:00') AND "
 						+ "donation=" + donation + " ORDER BY ts;", Donation.class);
 
 		List<Donation> donations = query.getResultList();
@@ -632,7 +645,8 @@ public class DonationDAO implements IntDonationDAO {
 					}
 					else
 					{
-						System.out.print(1);
+						System.out.println(i);
+						System.out.println("Report List Index: " + reportListIndex);
 						if (donationsSummary.get(i).getOrgName().equals(reportList.get(reportListIndex).getOrg()) && tempSummary.getTimeRange().equals(reportList.get(reportListIndex).getTimeRange()))
 						{
 							tempWeight = reportList.get(reportListIndex).getWeight();
