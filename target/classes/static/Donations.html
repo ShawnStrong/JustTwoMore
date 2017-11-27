@@ -280,23 +280,53 @@
             
             
             //set up ajax request to grab generated list for widget
+            var widgetList = [];
+            $.ajax({
+                url: 'http://localhost:8080/donation/widget',
+                type: 'GET',
+                data: {username:name} ,
+                dataType : "json",
+            })
+
+            .done(function(data) {
+                $.each(data, function() {
+                    widgetList.push(this);
+                })
+                
+                
+                for (var i = 0; i < 3; i++) {
+                    var temp = $(document.createElement('p')).prop({align: "center"});
+                    temp.html(widgetList[i]);
+                    temp.appendTo("#suggestionWidget ." + i +"");
+                }
+
+                
+            })
+
+            .fail(function(jqXHR, textStatus) {
+                alert( "Sorry, there was a problem!" );
+                console.log( "Error: " + errorThrown );
+                console.log( "Status: " + status );
+                console.dir( xhr );
+            });
             
-            var widgetList = ["test org", "test org 2"];
             
             
-            for (var i = 0; i < widgetList.length; i++) {
-//                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
-                var temp = $(document.createElement('p')).prop({align: "center"});
-                temp.html(widgetList[i]);
-                temp.appendTo("#suggestionWidget ." + i +"");
-            }
+//            var widgetList = ["test org", "test org 2"];
+            
+            
+//            for (var i = 0; i < widgetList.length; i++) {
+////                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
+//                var temp = $(document.createElement('p')).prop({align: "center"});
+//                temp.html(widgetList[i]);
+//                temp.appendTo("#suggestionWidget ." + i +"");
+//            }
             
             if (name != null && name.length > 0) {
                 $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
                 $("#suggestionWidget").addClass("col-lg-2 col-md-2 col-sm-2");
                 $("#suggestionWidget").prop({"hidden": false});
             } 
-            
             
             
             $(document).on("click", "#suggestionWidget p", function(e) {
