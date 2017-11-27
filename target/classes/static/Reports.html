@@ -143,11 +143,58 @@
             
             
             
+            // Submit the form
+            $("#submit").click(function() {
+              var form = $("form").serialize();
+                
+              if ($("#startDate").val() == "" || $("#endDate").val() == "") {
+                  alert("Please enter a date before generating the report.");
+              } else {
+                  $.ajax({
+                      url : 'http://localhost:8080/donation/report',
+                      type : 'GET',
+                      data : form,
+                      dataType:'json',
+                      success : function(data) {
+                          if (data != ""){
+                              alert(data.toString());
+                              // REMOVE THE ALERT AND ADD WHATEVER TABLE/CHART IS NECESSARY TO DISPLAY THE INFORMATION
+                          }
+                      },
+                      error : function(request,error) {
+    //                      alert("Request: " + JSON.stringify(request));
+                          if (request.status == 500) {
+                              alert("No report available. Please adjust parameters and try again.")
+                          }
+//                          if (request.responseText == "ok") {
+//                              $( "#successfulDonation" ).dialog({
+//                                  modal: true,
+//                                  buttons: {
+//                                    Ok: function() {
+//                                        window.location.href = "Donations.html";
+//                                    }
+//                                  }
+//                                });
+//                          } else {
+//                              $( "#failedDonation" ).dialog({
+//                                  modal: true,
+//                                  buttons: {
+//                                    Ok: function() {
+//                                      $( this ).dialog( "close" );
+//                                    }
+//                                  }
+//                                });
+//                            }
+                        }
+                    });
+                }
+            });
+            
+            
+            
+            
+            
         });
-        
-
-        
-        
     </script>
     
     
@@ -223,16 +270,16 @@
             <div class="col-lg-3"></div>
             <div class="row form-group col-lg-6">
                 <label for="startdate">Start Date:</label>
-                <input type="date" name="start_date">
+                <input type="date" name="start_date" id="startDate">
                 
                 <label for="enddate">End Date:</label>
-                <input type="date" name="end_date">
+                <input type="date" name="end_date" id="endDate">
             </div>
             <br/>
             <br/>
         </form>
         <div class="row col-lg-4">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
         </div>
     </div>
     
