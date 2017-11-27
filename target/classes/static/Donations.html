@@ -9,11 +9,21 @@
     <script src="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
     <link href="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+    <style>
+        #suggestionWidget p:hover{
+            cursor: pointer;
+        }
+    </style>
+    
     <script>
         $( document ).ready(function() {
+            //Hide submit button until an org is selected
             $("button[type=submit]").hide();
             
+            //Add username to the navbar if it exists in local storage
             var name = localStorage.getItem("username");
             $("#username").prop("value",name);
             
@@ -24,14 +34,14 @@
                 $(".navbar .container-fluid #userPresent").hide();
             }
             
+            //Clear username on signout and go to the console page
             $("#signOut").click(function() {
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });
             
-
+            //Generate the list of organizations
             $.ajax({
-
                 // The URL for the request
                 url: "http://localhost:8080/org/list",
 
@@ -61,11 +71,9 @@
                 });
 
 
-//            If the user clicks on an org with their mouse
+            //If the user clicks on an org with their mouse
             $(document).on("click",".row #basic-place ul",function() {
                 if ($(".row #basic-place #base").val().length > 0) {
-//                  run query to update category array
-
                     var category =[];
                     var OrgsName = $("#basic-place #base").serialize().toString();
 
@@ -112,14 +120,14 @@
                 }
             });
 
-//            If the user selects the org using arrow keys and hits the enter key or types out the name themselves
+            
+            //If the user selects the org using arrow keys and hits the enter key or types out the name themselves
             $(document).on("keydown", function(e) {
                 if(e.which == 13) {
                     if ($(".row #basic-place #base").val().length > 0) {
                         $('.row #basic-place ul li').each(function() {
 
                             if($(this).hasClass("selected")) {
-                                // run query to update category array
                                 var category =[];
                                 var OrgsName = $("#basic-place #base").serialize().toString();
 
@@ -172,7 +180,7 @@
 
             
             
-            
+            // Voice commands
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
               var commands = {
@@ -222,10 +230,124 @@
               // Start listening. You can call this here, or attach this call to an event, button, etc.
               annyang.start();
             }
+            
+            
+            
+            // Submit the form
+            $("#submit").click(function() {
+              var form = $("form").serialize();
+                
+              if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
+                 $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0) {
+                  alert("Please enter a weight before submitting the donation.");
+              } else {
+                  $.ajax({
+                      url : 'http://localhost:8080/donation/input',
+                      type : 'GET',
+                      data : form,
+                      dataType:'json',
+                      success : function(data) {
+                          if (data == "ok"){
+                              window.location.href = "Donations.html";
+                          }
+                      },
+                      error : function(request,error) {
+    //                      alert("Request: " + JSON.stringify(request));
+                          if (request.responseText == "ok") {
+                              $( "#successfulDonation" ).dialog({
+                                  modal: true,
+                                  buttons: {
+                                    Ok: function() {
+                                        window.location.href = "Donations.html";
+                                    }
+                                  }
+                                });
+                          } else {
+                              $( "#failedDonation" ).dialog({
+                                  modal: true,
+                                  buttons: {
+                                    Ok: function() {
+                                      $( this ).dialog( "close" );
+                                    }
+                                  }
+                                });
+                          }
+                      }
+                    });
+                }
+            });
+            
+            
+            
+            //set up ajax request to grab generated list for widget
+            
+            var widgetList = ["test org", "test org 2"];
+            
+            
+            for (var i = 0; i < widgetList.length; i++) {
+//                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
+                var temp = $(document.createElement('p')).prop({align: "center"});
+                temp.html(widgetList[i]);
+                temp.appendTo("#suggestionWidget ." + i +"");
+            }
+            
+            if (name != null && name.length > 0) {
+                $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
+                $("#suggestionWidget").addClass("col-lg-2 col-md-2 col-sm-2");
+                $("#suggestionWidget").prop({"hidden": false});
+            } 
+            
+            
+            
+            $(document).on("click", "#suggestionWidget p", function(e) {
+                e.preventDefault;
+                $(".row #basic-place #base").val(e.currentTarget.innerHTML);
+                var category =[];
+                $.ajax({
+                        url: 'http://localhost:8080/donation/frequency',
+                        type: 'GET',
+                        data: {org_name:e.currentTarget.innerHTML} ,
+                        dataType : "json",
+                    })
 
+                    .done(function(data) {
+                        $.each(data, function() {
+                            category.push(this);
+                        })
+                        
+                        $(".row #test").children().remove();
+                        
+                        if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                        }
+
+                        for (var i = 0; i < category.length; i++) {
+                            $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                            var label = category[i];
+                            label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                return letter.toUpperCase();
+                            });
+                            $("label[for='" + category[i] + "']").html(label + ":");
+                            $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                        }
+
+                        $("button[type=submit]").show();
+                        
+                        
+                    })
+
+                    .fail(function(jqXHR, textStatus) {
+                        alert( "Sorry, there was a problem!" );
+                        console.log( "Error: " + errorThrown );
+                        console.log( "Status: " + status );
+                        console.dir( xhr );
+                    });
+            });
+            
+            
+            
 
         });
-
     </script>
 </head>
 <body>
@@ -263,8 +385,8 @@
 
 <h1 align="center">Input a Donation</h1>
 <br>
-
-<div class="container-fluid">
+    
+<div class="container-fluid" id="pageInfo">
     <form action="/donation/input">
 
         <div class="row form-group">
@@ -295,9 +417,32 @@
         <br/>
         <br/>
         <input type="hidden" id="username" name="user_name">
-        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+    
+    
+    <div id="successfulDonation" title="Donation complete" hidden="hidden">
+      <p>
+        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+        Your donation has been successfully added.
+      </p>
+    </div>
+    
+    <div id="failedDonation" title="Donation complete" hidden="hidden">
+      <p>
+        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+        Your donation has been unsuccessful. Please try again.
+      </p>
+    </div>
 </div>
+    
+<div id="suggestionWidget" title="Suggestion Widget" hidden="hidden" style="border:1px solid black">
+    <h5 align = "center"><u>Suggested Organizations</u></h5>
+    <a class="0"></a>
+    <a class="1"></a>
+    <a class="2"></a>
+</div>
+    
 
 </body>
 </html>
