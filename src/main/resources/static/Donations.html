@@ -311,22 +311,17 @@
             });
             
             
-            
-//            var widgetList = ["test org", "test org 2"];
-            
-            
-//            for (var i = 0; i < widgetList.length; i++) {
-////                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
-//                var temp = $(document.createElement('p')).prop({align: "center"});
-//                temp.html(widgetList[i]);
-//                temp.appendTo("#suggestionWidget ." + i +"");
-//            }
-            
-            if (name != null && name.length > 0 && widgetList.length > 0) {
+            if (name != null && name.length > 0) {
                 $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
                 $("#suggestionWidget").addClass("col-lg-2 col-md-2 col-sm-2");
-                $("#suggestionWidget").prop({"hidden": false});
+                if ($("#suggestionWidget .0 p").html() == "") {
+                    $("#suggestionWidget").prop({"hidden": true});
+                } else{
+                    $("#suggestionWidget").prop({"hidden": false});
+                }
             } 
+            
+            
             
             
             $(document).on("click", "#suggestionWidget p", function(e) {

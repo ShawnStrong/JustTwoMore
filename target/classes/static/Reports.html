@@ -157,8 +157,10 @@
                       dataType:'json',
                       success : function(data) {
                           if (data != ""){
-                              alert(data.toString());
-                              // REMOVE THE ALERT AND ADD WHATEVER TABLE/CHART IS NECESSARY TO DISPLAY THE INFORMATION
+                              alert("endpoint has returned ");
+                              // ***************************************************************************************
+                              // *REMOVE THE ALERT AND ADD WHATEVER TABLE/CHART IS NECESSARY TO DISPLAY THE INFORMATION*
+                              // ***************************************************************************************
                           }
                       },
                       error : function(request,error) {
@@ -166,25 +168,6 @@
                           if (request.status == 500) {
                               alert("No report available. Please adjust parameters and try again.")
                           }
-//                          if (request.responseText == "ok") {
-//                              $( "#successfulDonation" ).dialog({
-//                                  modal: true,
-//                                  buttons: {
-//                                    Ok: function() {
-//                                        window.location.href = "Donations.html";
-//                                    }
-//                                  }
-//                                });
-//                          } else {
-//                              $( "#failedDonation" ).dialog({
-//                                  modal: true,
-//                                  buttons: {
-//                                    Ok: function() {
-//                                      $( this ).dialog( "close" );
-//                                    }
-//                                  }
-//                                });
-//                            }
                         }
                     });
                 }
