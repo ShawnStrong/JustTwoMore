@@ -29,3 +29,17 @@ CREATE TABLE IF NOT EXISTS `donation_table` (
 	PRIMARY KEY (`order_id`),
 	FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `redirection_table` (
+  `user_name` TINYTEXT NOT NULL,
+  `page` TINYTEXT NOT NULL,
+  `ts` TIMESTAMP
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `reports_table` (
+  `user_name` TINYTEXT NOT NULL,
+  `tr_tab` TINYTEXT NOT NULL,
+  `io_tab` TINYTEXT NOT NULL,
+  `sd_tab` TINYTEXT NOT NULL,
+  `ts` TIMESTAMP
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
