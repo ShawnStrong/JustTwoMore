@@ -220,6 +220,45 @@
                     $("#incoming").prop("checked", false);
                     $("#outgoingLabel").addClass("active");
                     $("#incomingLabel").removeClass("active");
+                },
+                  
+                'select first suggestion': function() {
+                    var orgName = $("#suggestionWidget .0 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                },
+                  
+                'select second suggestion': function() {
+                    var orgName = $("#suggestionWidget .1 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                },
+                  
+                'select third suggestion': function() {
+                    var orgName = $("#suggestionWidget .2 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                },
+                  
+                "enter :weight pounds of bakery": function(weight) {
+                    $("#test input[name=bakery]").val(weight);
+                },
+                  
+                "enter :weight pounds of dairy": function(weight) {
+                    $("#test input[name=dairy]").val(weight);
+                },
+                  
+                "enter :weight pounds of deli": function(weight) {
+                    $("#test input[name=deli]").val(weight);
+                },
+                  
+                "enter :weight pounds of meat": function(weight) {
+                    $("#test input[name=meat]").val(weight);
+                },
+                  
+                "enter :weight pounds of pantry": function(weight) {
+                    $("#test input[name=pantry]").val(weight);
+                },
+                  
+                "enter :weight pounds of produce": function(weight) {
+                    $("#test input[name=produce]").val(weight);
                 }
                   
               };

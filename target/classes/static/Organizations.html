@@ -107,9 +107,11 @@
 			/* this makes a dynatable */
 			$( "#button2" ).click(function() {
 				var mytable = $("#table1");
+                var form = $("#redirection").serialize();
 				$.ajax({
 					url: "http://localhost:8080/org/list2",
 					type: "GET",
+					data: form,
 					dataType: "json",
 					success: function(data){
 						mytable.dynatable({
@@ -121,6 +123,7 @@
 						mytable.data('dynatable').dom.update();
 					 }
 				});
+
 			}); 
             
             
@@ -385,6 +388,9 @@
 	<button type="button" id="button3"> Get Tabledit </button><br> -->
 	
 	<!-- Button for loading Dynatable. Need tablebox below as well -->
+    <form id="redirection">
+        <input type="hidden" id="username" name="user_name">
+    </form>
 	<button type="button" id="button2"> Click for Dinotable </button><br>
 	
 	<div id="tablebox">
