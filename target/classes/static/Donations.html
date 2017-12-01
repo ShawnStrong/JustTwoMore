@@ -222,23 +222,143 @@
                     $("#incomingLabel").removeClass("active");
                 },
                   
-                'select first suggestion': function() {
+                'select first organization': function() {
                     var orgName = $("#suggestionWidget .0 p").html();
                     $(".row #basic-place #base").val(orgName);
+                    categories(orgName);
                 },
                   
-                'select second suggestion': function() {
+                'select second organization': function() {
                     var orgName = $("#suggestionWidget .1 p").html();
                     $(".row #basic-place #base").val(orgName);
+                    categories(orgName);
                 },
                   
-                'select third suggestion': function() {
+                'select third organization': function() {
                     var orgName = $("#suggestionWidget .2 p").html();
                     $(".row #basic-place #base").val(orgName);
+                    categories(orgName);
+                },
+                  
+                "enter :weight pounds of bakery": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=bakery]").val(weight);
+                },
+                  
+                "enter :weight pounds of dairy": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=dairy]").val(weight);
                 },
                   
                 "enter :weight pounds of deli": function(weight) {
-                    
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=deli]").val(weight);
+                },
+                  
+                "enter :weight pounds of meat": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=meat]").val(weight);
+                },
+                  
+                "enter :weight pounds of pantry": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=pantry]").val(weight);
+                },
+                  
+                "enter :weight pounds of produce": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=produce]").val(weight);
+                },
+                  
+                "submit the donation": function() {
+                    // Submit the form
+                      var form = $("form").serialize();
+
+                      if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
+                         $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0) {
+                          alert("Please enter a weight before submitting the donation.");
+                      } else {
+                          $.ajax({
+                              url : 'http://localhost:8080/donation/input',
+                              type : 'GET',
+                              data : form,
+                              dataType:'json',
+                              success : function(data) {
+                                  if (data == "ok"){
+                                      window.location.href = "Donations.html";
+                                  }
+                              },
+                              error : function(request,error) {
+                                  if (request.responseText == "ok") {
+                                      $( "#successfulDonation" ).dialog({
+                                          modal: true,
+                                          buttons: {
+                                            Ok: function() {
+                                                window.location.href = "Donations.html";
+                                            }
+                                          }
+                                        });
+                                  } else {
+                                      $( "#failedDonation" ).dialog({
+                                          modal: true,
+                                          buttons: {
+                                            Ok: function() {
+                                              $( this ).dialog( "close" );
+                                            }
+                                          }
+                                        });
+                                  }
+                              }
+                            });
+                        }
                 }
                   
               };
@@ -398,6 +518,50 @@
                         console.dir( xhr );
                     });
             });
+            
+            
+            function categories(orgName) {
+                var category =[];
+                $.ajax({
+                        url: 'http://localhost:8080/donation/frequency',
+                        type: 'GET',
+                        data: {org_name:orgName} ,
+                        dataType : "json",
+                    })
+
+                    .done(function(data) {
+                        $.each(data, function() {
+                            category.push(this);
+                        })
+                        
+                        $(".row #test").children().remove();
+                        
+                        if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                        }
+
+                        for (var i = 0; i < category.length; i++) {
+                            $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                            var label = category[i];
+                            label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                return letter.toUpperCase();
+                            });
+                            $("label[for='" + category[i] + "']").html(label + ":");
+                            $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                        }
+
+                        $("button[type=submit]").show();
+                        
+                        
+                    })
+
+                    .fail(function(jqXHR, textStatus) {
+                        alert( "Sorry, there was a problem!" );
+                        console.log( "Error: " + errorThrown );
+                        console.log( "Status: " + status );
+                        console.dir( xhr );
+                    });
+            };
             
             
             
