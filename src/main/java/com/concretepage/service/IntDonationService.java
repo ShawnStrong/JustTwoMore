@@ -11,4 +11,6 @@ public interface IntDonationService {
 	List<String> findWidgetTimes(String username);
 
 	int reportTabPrediction(String user_name, int timeRange, int inOut, int sumDisDick);
+	
+	String findUserPage(String username);
 }

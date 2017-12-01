@@ -15,23 +15,24 @@
 	<!-- bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	
-	<!-- dynatable css and js -->
+	<!-- dynatable css and js 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
     <script src="bootstable.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
 	
 	<!-- jQuery Tabledit plugin
 	<script src="jquery.tabledit.js"></script> -->
 	
 	<script>
-		/* function to make jquery table
+		/* function to make jquery table */
 		function makeTable(container, data) {
-			var table = $("<table>");
+			//var table = $("<table>");
 			//var table = $("<tr>");
 			// need to figure out a way to dynamically add headers to table
+			var table = $("");
 			table.append("<tr><th>org_id</th><th>org_name</th><th>contact_name</th><th>contact_number</th><th>contact_email</th><th>notes</th></tr>");
 			$.each(data, function(rowIndex, r) {
 				var row = $("<tr>");
@@ -42,9 +43,10 @@
 				row.append("</tr>");
 				table.append(row);
 			});
-			table.append("</table>");
-			return container.append(table);
-		}*/
+			//table.append("</table>");
+			$("#jqueryTable").append(table);
+			//return container.append(table);
+		}
 		
 		$(document).ready(function() {
             //Add username to the navbar if it exists in local storage
@@ -65,11 +67,7 @@
             });
             
             
-            
-            
-			/* this makes a jquery table
-			$( "#button1" ).click(function() {
-            if (name != null && name.length > 0) {
+            /*if (name != null && name.length > 0) {
                 $(".navbar .container-fluid #userAbsent").hide();
                 $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
             } else {
@@ -79,13 +77,11 @@
             $("#signOut").click(function() {
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
-            });
+            });*/
             
-            
-            
-            
-            
-                $('table').remove();
+			/* this makes a jquery table */
+			$( "#button1" ).click(function() {
+                //$('table').remove();
 				$.ajax({
 					url: "http://localhost:8080/org/list2",
 					type: "GET",
@@ -93,7 +89,7 @@
 				})
 				.done(function(data) {
 					//alert( "Data: " + JSON.stringify(data) );
-					var orgTable = makeTable($(document.body) , data);
+					makeTable($("#jqueryTable") , data);
 					//$(document.body).append(JSON.stringify(data));
 				})
 				.fail(function(xhr, status, errorThrown) {
@@ -102,9 +98,9 @@
 					console.log( "Status: " + status );
 					console.dir( xhr );
 				});
-			});*/
+			});
 			
-			/* this makes a dynatable */
+			/* this makes a dynatable 
 			$( "#button2" ).click(function() {
 				var mytable = $("#table1");
                 var form = $("#redirection").serialize();
@@ -123,12 +119,21 @@
 						mytable.data('dynatable').dom.update();
 					 }
 				});
-
-			}); 
+			}); */
+			
             
-            
-            
-            
+			/* Start of second jQuery table
+            $("#tableButton").click(function() {
+				var mytable = $("#tablebox");
+				$.ajax({
+					url: "http://localhost:8080/org/list2",
+					type: "GET",
+					dataType: "json",
+					success: function(data){
+						var trHTML = '';
+						$.each(data.
+            */
+			
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
               var commands = {                  
@@ -381,13 +386,13 @@
 -->
 	<br><br>
 	
-	<!-- Button for loading jquery table
-	<button type="button" id="button1"> Click moi! </button><br> -->
+	<!-- Button for loading jquery table -->
+	<button type="button" id="button1"> Click moi! </button><br> 
 	
 	<!-- Button for loading tabledit table 
 	<button type="button" id="button3"> Get Tabledit </button><br> -->
 	
-	<!-- Button for loading Dynatable. Need tablebox below as well -->
+	<!-- Button for loading Dynatable. Need tablebox below as well 
     <form id="redirection">
         <input type="hidden" id="username" name="user_name">
     </form>
@@ -405,7 +410,7 @@
 			<tbody>
 			</tbody>
         </table>
-	</div>
+	</div> -->
 	
 	<!-- jQuery-Tabledit plugin 
 	<table id="tabledit">
@@ -421,5 +426,30 @@
 		<tbody>
 		</tbody>
     </table>-->
+	
+	<!-- Second jQuery table 
+	<button type="button" id="tableButton"> Show and Edit Orgs </button><br>
+	
+	<table id="tablebox">
+		<tr>
+			<th>Organization</th>
+			<th>Contact</th>
+			<th>Number</th>
+			<th>Email</th>
+			<th>Notes</th>
+		</tr>
+	</table> -->
+	
+	<table id="jqueryTable">
+	<!--
+		<tr>
+			<th>org_id</th>
+			<th>org_name</th>
+			<th>contact_name</th>
+			<th>contact_number</th>
+			<th>contact_email</th>
+			<th>notes</th>
+		</tr> -->
+	</table>
 </body>
 </html>

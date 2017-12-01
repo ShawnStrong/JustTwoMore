@@ -43,4 +43,6 @@ public interface IntDonationDAO {
 	public int inputPage(String user_name, String page);
 
 	public int inputReportPrediction(String user_name, String tr, String io, String sd);
+
+	String getUserPage(String user_name, String ts);
 }

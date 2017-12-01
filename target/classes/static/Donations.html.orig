@@ -2,18 +2,46 @@
 <html>
 <head>
     <title>Donations</title>
-	
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
     <link href="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
-	
-	<script>
-        $( document ).ready(function() {
-            
-            $.ajax({
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+    <style>
+        #suggestionWidget p:hover{
+            cursor: pointer;
+        }
+    </style>
+    
+    <script>
+        $( document ).ready(function() {
+            //Hide submit button until an org is selected
+            $("button[type=submit]").hide();
+            
+            //Add username to the navbar if it exists in local storage
+            var name = localStorage.getItem("username");
+            $("#username").prop("value",name);
+            
+            if (name != null && name.length > 0) {
+                $(".navbar .container-fluid #userAbsent").hide();
+                $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
+            } else {
+                $(".navbar .container-fluid #userPresent").hide();
+            }
+            
+            //Clear username on signout and go to the console page
+            $("#signOut").click(function() {
+               localStorage.removeItem("username");
+                window.location.href = "Console.html";
+            });
+            
+            //Generate the list of organizations
+            $.ajax({
                 // The URL for the request
                 url: "http://localhost:8080/org/list",
 
@@ -23,124 +51,639 @@
                 // The type of data we expect back
                 dataType : "json",
             })
-              // Code to run if the request succeeds (is done);
-              // The response is passed to the function
-            .done(function( data ) {                
-                $.each(data, function() {                    
-                    $(document.createElement('option')).prop({text: this.name}).appendTo(".row #basic-place #base");
-                })
-                
-                $('.row #basic-place #base').editableSelect();
+            // Code to run if the request succeeds (is done);
+            // The response is passed to the function
+                .done(function( data ) {
+                    $.each(data, function() {
+                        $(document.createElement('option')).prop({text: this.name}).appendTo(".row #basic-place #base");
+                    })
 
+                    $('.row #basic-place #base').editableSelect();
+
+                })
+                // Code to run if the request fails; the raw request and
+                // status codes are passed to the function
+                .fail(function( xhr, status, errorThrown ) {
+                    alert( "Sorry, there was a problem!" );
+                    console.log( "Error: " + errorThrown );
+                    console.log( "Status: " + status );
+                    console.dir( xhr );
+                });
+
+
+            //If the user clicks on an org with their mouse
+            $(document).on("click",".row #basic-place ul",function() {
+                if ($(".row #basic-place #base").val().length > 0) {
+                    var category =[];
+                    var OrgsName = $("#basic-place #base").serialize().toString();
+
+                    $.ajax({
+                        url: 'http://localhost:8080/donation/frequency',
+                        type: 'GET',
+                        data: {org_name:OrgsName} ,
+                        dataType : "json",
+                    })
+
+                    .done(function(data) {
+                        $.each(data, function() {
+                            category.push(this);
+                        })
+                        
+                        $(".row #test").children().remove();
+                        
+                        if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                        }
+
+                        for (var i = 0; i < category.length; i++) {
+                            $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                            var label = category[i];
+                            label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                return letter.toUpperCase();
+                            });
+                            $("label[for='" + category[i] + "']").html(label + ":");
+                            $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                        }
+
+                        $("button[type=submit]").show();
+                        
+                        
+                    })
+
+                    .fail(function(jqXHR, textStatus) {
+                        alert( "Sorry, there was a problem!" );
+                        console.log( "Error: " + errorThrown );
+                        console.log( "Status: " + status );
+                        console.dir( xhr );
+                    });
+
+                }
+            });
+
+            
+            //If the user selects the org using arrow keys and hits the enter key or types out the name themselves
+            $(document).on("keydown", function(e) {
+                if(e.which == 13) {
+                    if ($(".row #basic-place #base").val().length > 0) {
+                        $('.row #basic-place ul li').each(function() {
+
+                            if($(this).hasClass("selected")) {
+                                var category =[];
+                                var OrgsName = $("#basic-place #base").serialize().toString();
+
+                                $.ajax({
+                                    url: 'http://localhost:8080/donation/frequency',
+                                    type: 'GET',
+                                    data: {org_name:OrgsName} ,
+                                    dataType : "json",
+                                })
+
+                                .done(function(data) {
+                                    $.each(data, function() {
+                                        category.push(this);
+                                    })
+
+                                    $(".row #test").children().remove();
+                                    
+                                    if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                                        category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];     
+                                    }
+
+                                    for (var i = 0; i < category.length; i++) {
+                                        $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                                        var label = category[i];
+                                        label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                            return letter.toUpperCase();
+                                        });
+                                        $("label[for='" + category[i] + "']").html(label + ":");
+                                        $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                                    }
+
+                                    $("button[type=submit]").show();
+
+
+                                })
+
+                                .fail(function(jqXHR, textStatus) {
+                                    alert( "Sorry, there was a problem!" );
+                                    console.log( "Error: " + errorThrown );
+                                    console.log( "Status: " + status );
+                                    console.dir( xhr );
+                                });
+                                
+                                
+                            }
+                        });
+                    }
+                }
+            });
+
+            
+            
+            // Voice commands
+            if (annyang) {
+              // Let's define our first command. First the text we expect, and then the function it should call
+              var commands = {
+                'open organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                  
+                'show organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                  
+                'go to organizations': function() {
+                  window.location.href = "Organizations.html";
+                },
+                
+                'open reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'show reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'go to reports': function() {
+                  window.location.href = "Reports.html";
+                },
+                  
+                'select incoming': function() {
+                    $("#incoming").prop("checked", true);
+                    $("#outgoing").prop("checked", false);
+                    $("#incomingLabel").addClass("active");
+                    $("#outgoingLabel").removeClass("active");
+                },
+                
+                'select outgoing': function() {
+                    $("#outgoing").prop("checked", true);
+                    $("#incoming").prop("checked", false);
+                    $("#outgoingLabel").addClass("active");
+                    $("#incomingLabel").removeClass("active");
+                },
+                  
+                'select first organization': function() {
+                    var orgName = $("#suggestionWidget .0 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                    categories(orgName);
+                },
+                  
+                'select second organization': function() {
+                    var orgName = $("#suggestionWidget .1 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                    categories(orgName);
+                },
+                  
+                'select third organization': function() {
+                    var orgName = $("#suggestionWidget .2 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                    categories(orgName);
+                },
+                  
+                "enter :weight pounds of bakery": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=bakery]").val(weight);
+                },
+                  
+                "enter :weight pounds of dairy": function(weight) {
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=dairy]").val(weight);
+                },
+                  
+                "enter :weight pounds of bakery": function(weight) {
+                    $("#test input[name=bakery]").val(weight);
+                },
+                  
+                "enter :weight pounds of dairy": function(weight) {
+                    $("#test input[name=dairy]").val(weight);
+                },
+                  
+                "enter :weight pounds of deli": function(weight) {
+<<<<<<< HEAD
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+=======
+>>>>>>> 708016fd0e62e45a8e4140f1176ab0a7f30d5ab5
+                    $("#test input[name=deli]").val(weight);
+                },
+                  
+                "enter :weight pounds of meat": function(weight) {
+<<<<<<< HEAD
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+=======
+>>>>>>> 708016fd0e62e45a8e4140f1176ab0a7f30d5ab5
+                    $("#test input[name=meat]").val(weight);
+                },
+                  
+                "enter :weight pounds of pantry": function(weight) {
+<<<<<<< HEAD
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+=======
+>>>>>>> 708016fd0e62e45a8e4140f1176ab0a7f30d5ab5
+                    $("#test input[name=pantry]").val(weight);
+                },
+                  
+                "enter :weight pounds of produce": function(weight) {
+<<<<<<< HEAD
+                    if (weight == "two"){
+                        weight = 2;
+                    } else if (weight == "four") {
+                        weight = 4;
+                    } else if (weight == "seven") {
+                        weight = 7;
+                    } else if (weight == "eight") {
+                        weight = 8;
+                    }
+                    $("#test input[name=produce]").val(weight);
+                },
+                  
+                "submit the donation": function() {
+                    // Submit the form
+                      var form = $("form").serialize();
+
+                      if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
+                         $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0) {
+                          alert("Please enter a weight before submitting the donation.");
+                      } else {
+                          $.ajax({
+                              url : 'http://localhost:8080/donation/input',
+                              type : 'GET',
+                              data : form,
+                              dataType:'json',
+                              success : function(data) {
+                                  if (data == "ok"){
+                                      window.location.href = "Donations.html";
+                                  }
+                              },
+                              error : function(request,error) {
+                                  if (request.responseText == "ok") {
+                                      $( "#successfulDonation" ).dialog({
+                                          modal: true,
+                                          buttons: {
+                                            Ok: function() {
+                                                window.location.href = "Donations.html";
+                                            }
+                                          }
+                                        });
+                                  } else {
+                                      $( "#failedDonation" ).dialog({
+                                          modal: true,
+                                          buttons: {
+                                            Ok: function() {
+                                              $( this ).dialog( "close" );
+                                            }
+                                          }
+                                        });
+                                  }
+                              }
+                            });
+                        }
+=======
+                    $("#test input[name=produce]").val(weight);
+>>>>>>> 708016fd0e62e45a8e4140f1176ab0a7f30d5ab5
+                }
+                  
+              };
+
+              // Add our commands to annyang
+              annyang.addCommands(commands);
+
+              // Start listening. You can call this here, or attach this call to an event, button, etc.
+              annyang.start();
+            }
+            
+            
+            
+            // Submit the form
+            $("#submit").click(function() {
+              var form = $("form").serialize();
+                
+              if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
+                 $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0) {
+                  alert("Please enter a weight before submitting the donation.");
+              } else {
+                  $.ajax({
+                      url : 'http://localhost:8080/donation/input',
+                      type : 'GET',
+                      data : form,
+                      dataType:'json',
+                      success : function(data) {
+                          if (data == "ok"){
+                              window.location.href = "Donations.html";
+                          }
+                      },
+                      error : function(request,error) {
+    //                      alert("Request: " + JSON.stringify(request));
+                          if (request.responseText == "ok") {
+                              $( "#successfulDonation" ).dialog({
+                                  modal: true,
+                                  buttons: {
+                                    Ok: function() {
+                                        window.location.href = "Donations.html";
+                                    }
+                                  }
+                                });
+                          } else {
+                              $( "#failedDonation" ).dialog({
+                                  modal: true,
+                                  buttons: {
+                                    Ok: function() {
+                                      $( this ).dialog( "close" );
+                                    }
+                                  }
+                                });
+                          }
+                      }
+                    });
+                }
+            });
+            
+            
+            
+            //set up ajax request to grab generated list for widget
+            var widgetList = [];
+            $.ajax({
+                url: 'http://localhost:8080/donation/widget',
+                type: 'GET',
+                data: {username:name} ,
+                dataType : "json",
             })
-              // Code to run if the request fails; the raw request and
-              // status codes are passed to the function
-            .fail(function( xhr, status, errorThrown ) {
+
+            .done(function(data) {
+                $.each(data, function() {
+                    widgetList.push(this);
+                });
+                
+                
+                for (var i = 0; i < 3; i++) {
+                    var temp = $(document.createElement('p')).prop({align: "center"});
+                    temp.html(widgetList[i]);
+                    temp.appendTo("#suggestionWidget ." + i +"");
+                }
+
+                
+            })
+
+            .fail(function(jqXHR, textStatus) {
                 alert( "Sorry, there was a problem!" );
                 console.log( "Error: " + errorThrown );
                 console.log( "Status: " + status );
                 console.dir( xhr );
             });
-        });
+            
+            
+            
+//            var widgetList = ["test org", "test org 2"];
+            
+            
+//            for (var i = 0; i < widgetList.length; i++) {
+////                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
+//                var temp = $(document.createElement('p')).prop({align: "center"});
+//                temp.html(widgetList[i]);
+//                temp.appendTo("#suggestionWidget ." + i +"");
+//            }
 
-	</script>
+            if (name != null && name.length > 0) {
+                $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
+                $("#suggestionWidget").addClass("col-lg-2 col-md-2 col-sm-2");
+                if ($("#suggestionWidget .0 p").html() == "") {
+                    $("#suggestionWidget").prop({"hidden": true});
+                } else{
+                    $("#suggestionWidget").prop({"hidden": false});
+                }
+            } 
+            
+            
+            
+            
+            $(document).on("click", "#suggestionWidget p", function(e) {
+                e.preventDefault;
+                $(".row #basic-place #base").val(e.currentTarget.innerHTML);
+                var category =[];
+                $.ajax({
+                        url: 'http://localhost:8080/donation/frequency',
+                        type: 'GET',
+                        data: {org_name:e.currentTarget.innerHTML} ,
+                        dataType : "json",
+                    })
+
+                    .done(function(data) {
+                        $.each(data, function() {
+                            category.push(this);
+                        })
+                        
+                        $(".row #test").children().remove();
+                        
+                        if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                        }
+
+                        for (var i = 0; i < category.length; i++) {
+                            $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                            var label = category[i];
+                            label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                return letter.toUpperCase();
+                            });
+                            $("label[for='" + category[i] + "']").html(label + ":");
+                            $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                        }
+
+                        $("button[type=submit]").show();
+                        
+                        
+                    })
+
+                    .fail(function(jqXHR, textStatus) {
+                        alert( "Sorry, there was a problem!" );
+                        console.log( "Error: " + errorThrown );
+                        console.log( "Status: " + status );
+                        console.dir( xhr );
+                    });
+            });
+            
+            
+            function categories(orgName) {
+                var category =[];
+                $.ajax({
+                        url: 'http://localhost:8080/donation/frequency',
+                        type: 'GET',
+                        data: {org_name:orgName} ,
+                        dataType : "json",
+                    })
+
+                    .done(function(data) {
+                        $.each(data, function() {
+                            category.push(this);
+                        })
+                        
+                        $(".row #test").children().remove();
+                        
+                        if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                        }
+
+                        for (var i = 0; i < category.length; i++) {
+                            $(document.createElement('label')).prop({for: category[i]}).appendTo(".row #test");
+                            var label = category[i];
+                            label = label.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                                return letter.toUpperCase();
+                            });
+                            $("label[for='" + category[i] + "']").html(label + ":");
+                            $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
+                        }
+
+                        $("button[type=submit]").show();
+                        
+                        
+                    })
+
+                    .fail(function(jqXHR, textStatus) {
+                        alert( "Sorry, there was a problem!" );
+                        console.log( "Error: " + errorThrown );
+                        console.log( "Status: " + status );
+                        console.dir( xhr );
+                    });
+            };
+            
+            
+            
+
+        });
+    </script>
 </head>
 <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="Console.html">Just One More Ministry</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="Console.html">Just One More Ministry</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li><a href="Organizations.html">Organizations</a></li>
-            <li><a href="Donations.html">Donations</a></li>
-            <li><a href="Reports.html">Reports</a></li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="Organizations.html">Organizations</a></li>
+                <li><a href="Donations.html">Donations</a></li>
+                <li><a href="Reports.html">Reports</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userAbsent">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Register.html">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="userPresent">
+                <li><a id="user"></a></li>
+                <li><a href="" id="signOut">Sign Out</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<h1 align="center">Input a Donation</h1>
+<br>
     
-    
-	<h1 align="center">Input a Donation</h1>
-	<br>
+<div class="container-fluid" id="pageInfo">
+    <form action="/donation/input">
 
-    <div class="container-fluid">
-        <form action="/donation/input">
-            
-            <div class="row form-group">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="col-lg-6 col-md-6 col-sm-10" id="basic-place">
-                    <label for="orgName">Organization Name:</label>
-                    <select class="form-control" id="base" name="org_name" required>
-                        
-                    </select>
-                </div>
-            </div>
-<<<<<<< HEAD
-=======
+        <div class="row form-group">
+            <div class="col-lg-3 col-md-3 col-sm-1"></div>
+            <div class="col-lg-6 col-md-6 col-sm-10" id="basic-place">
+                <label for="orgName">Organization Name:</label>
+                <select class="form-control" id="base" name="org_name" required>
 
->>>>>>> a3b65e2f4aab9ab04416137a67c986d61e8042bf
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="deli">Deli:</label>
-                    <input type="number" class="form-control" id="deliWeight" min="0" value="0" name="deli">
-                </div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="dairy">Dairy:</label>
-                    <input type="number" class="form-control" id="dairyWeight" min="0" value="0" name="dairy">
-                </div>
+                </select>
             </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="meat">Meat:</label>
-                    <input type="number" class="form-control" id="meatWeight" min="0" value="0" name="meat">
-                </div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="produce">Produce:</label>
-                    <input type="number" class="form-control" id="produceWeight" min="0" value="0" name="produce">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-1"></div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="pantry">Pantry:</label>
-                    <input type="number" class="form-control" id="pantryWeight" min="0" value="0" name="pantry">
-                </div>
-                <div class="form-group col-lg-3 col-md-3 col-sm-5">
-                    <label for="bakery">Bakery:</label>
-                    <input type="number" class="form-control" id="bakeryWeight" min="0" value="0" name="bakery">
-                </div>
-            </div>
+        </div>
 
-          <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-success active">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-1"></div>
+            <div id="test" class="form-group col-lg-6 col-md-6 col-sm-5">
+
+            </div>
+        </div>
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary active" id="incomingLabel">
                 <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
             </label>
-            <label class="btn btn-danger">
+            <label class="btn btn-primary" id="outgoingLabel">
                 <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
             </label>
-          </div>
-            <br/>
-            <br/>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        
-        <a href='Console.html' class='button'>back</a>
-    </div>
-<<<<<<< HEAD
+        </div>
+        <br/>
+        <br/>
+        <input type="hidden" id="username" name="user_name">
+        <input type="hidden" value="donation" name="page">
+    </form>
+    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
     
-=======
->>>>>>> a3b65e2f4aab9ab04416137a67c986d61e8042bf
+    
+    <div id="successfulDonation" title="Donation complete" hidden="hidden">
+      <p>
+        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+        Your donation has been successfully added.
+      </p>
+    </div>
+    
+    <div id="failedDonation" title="Donation complete" hidden="hidden">
+      <p>
+        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+        Your donation has been unsuccessful. Please try again.
+      </p>
+    </div>
+</div>
+    
+<div id="suggestionWidget" title="Suggestion Widget" hidden="hidden" style="border:1px solid black">
+    <h5 align = "center"><u>Suggested Organizations</u></h5>
+    <a class="0"></a>
+    <a class="1"></a>
+    <a class="2"></a>
+</div>
+    
+
 </body>
 </html>

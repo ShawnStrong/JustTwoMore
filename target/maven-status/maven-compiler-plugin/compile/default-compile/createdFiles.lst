@@ -1,4 +1,5 @@
 com\concretepage\service\DonationService$2.class
+com\concretepage\entity\OrgStats.class
 com\concretepage\App.class
 com\concretepage\dao\UserDAO.class
 com\concretepage\dao\IntUserDAO.class

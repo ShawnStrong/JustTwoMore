@@ -145,7 +145,6 @@ public class DonationDAO implements IntDonationDAO {
 		return categories;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public int inputPage(String user_name, String page) {
 		Query query = entityManager.createNativeQuery(
@@ -157,8 +156,19 @@ public class DonationDAO implements IntDonationDAO {
 		query.executeUpdate();
 		return 0;
 	}
-
+	
 	@SuppressWarnings("unchecked")
+	@Override
+	public String getUserPage(String user_name, String date) {
+		Query query = entityManager.createNativeQuery(
+				"SELECT DISTINCT page FROM redirection_table WHERE " +
+				"(ts between '" + date + " 00:00:00' and '" + date + " 23:59:59') " +
+				"and user_name = '" + user_name +"';");
+		
+		List<String> pages = query.getResultList();
+		return pages.get(0);
+	}
+
 	@Override
 	public int inputReportPrediction(String user_name, String tr, String io, String sd) {
 		Query query = entityManager.createNativeQuery(
