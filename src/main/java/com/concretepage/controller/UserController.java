@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntUserDAO;
+import com.concretepage.service.DonationService;
+import com.concretepage.service.IntDonationService;
 
 @Controller
 @RequestMapping("user")
@@ -15,6 +17,9 @@ public class UserController {
 
 	@Autowired
 	private IntUserDAO userDAO;
+	
+	@Autowired
+	private IntDonationService donationService;
 	
 	@GetMapping("create")
 	public @ResponseBody String createUser (
@@ -27,11 +32,17 @@ public class UserController {
 	}
 	
 	@GetMapping("login")
-	public @ResponseBody int loginUser (
+	public @ResponseBody String loginUser (
 			@RequestParam String username,
 			@RequestParam String password) {
 		
-		return userDAO.login(username, password);
+		int success = userDAO.login(username, password);
+		if (success == 0) {
+			System.out.println(donationService.findUserPage(username));
+			return donationService.findUserPage(username);
+		} else {
+			return "";
+		}
 	}
 	
 	@GetMapping("changePassword")

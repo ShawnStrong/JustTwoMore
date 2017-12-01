@@ -220,6 +220,45 @@
                     $("#incoming").prop("checked", false);
                     $("#outgoingLabel").addClass("active");
                     $("#incomingLabel").removeClass("active");
+                },
+                  
+                'select first suggestion': function() {
+                    var orgName = $("#suggestionWidget .0 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                },
+                  
+                'select second suggestion': function() {
+                    var orgName = $("#suggestionWidget .1 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                },
+                  
+                'select third suggestion': function() {
+                    var orgName = $("#suggestionWidget .2 p").html();
+                    $(".row #basic-place #base").val(orgName);
+                },
+                  
+                "enter :weight pounds of bakery": function(weight) {
+                    $("#test input[name=bakery]").val(weight);
+                },
+                  
+                "enter :weight pounds of dairy": function(weight) {
+                    $("#test input[name=dairy]").val(weight);
+                },
+                  
+                "enter :weight pounds of deli": function(weight) {
+                    $("#test input[name=deli]").val(weight);
+                },
+                  
+                "enter :weight pounds of meat": function(weight) {
+                    $("#test input[name=meat]").val(weight);
+                },
+                  
+                "enter :weight pounds of pantry": function(weight) {
+                    $("#test input[name=pantry]").val(weight);
+                },
+                  
+                "enter :weight pounds of produce": function(weight) {
+                    $("#test input[name=produce]").val(weight);
                 }
                   
               };
@@ -291,7 +330,7 @@
             .done(function(data) {
                 $.each(data, function() {
                     widgetList.push(this);
-                })
+                });
                 
                 
                 for (var i = 0; i < 3; i++) {
@@ -311,6 +350,17 @@
             });
             
             
+            
+//            var widgetList = ["test org", "test org 2"];
+            
+            
+//            for (var i = 0; i < widgetList.length; i++) {
+////                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
+//                var temp = $(document.createElement('p')).prop({align: "center"});
+//                temp.html(widgetList[i]);
+//                temp.appendTo("#suggestionWidget ." + i +"");
+//            }
+
             if (name != null && name.length > 0) {
                 $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
                 $("#suggestionWidget").addClass("col-lg-2 col-md-2 col-sm-2");
@@ -442,6 +492,7 @@
         <br/>
         <br/>
         <input type="hidden" id="username" name="user_name">
+        <input type="hidden" value="donation" name="page">
     </form>
     <button type="submit" class="btn btn-primary" id="submit">Submit</button>
     

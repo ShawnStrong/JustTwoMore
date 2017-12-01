@@ -39,4 +39,10 @@ public interface IntDonationDAO {
 	public int inputDonation(String org_name, String user_name, String category, int weight, int donation);
 
 	public List<String> getWidgetOrgs(String date, String username);
+
+	public int inputPage(String user_name, String page);
+
+	public int inputReportPrediction(String user_name, String tr, String io, String sd);
+
+	String getUserPage(String user_name, String ts);
 }

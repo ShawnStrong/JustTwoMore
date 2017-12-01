@@ -145,6 +145,44 @@ public class DonationDAO implements IntDonationDAO {
 		return categories;
 	}
 
+	@Override
+	public int inputPage(String user_name, String page) {
+		Query query = entityManager.createNativeQuery(
+				"INSERT INTO redirection_table SET "
+						+ "user_name = '" + user_name
+						+ "', page = '" + page
+						+ "';");
+
+		query.executeUpdate();
+		return 0;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public String getUserPage(String user_name, String date) {
+		Query query = entityManager.createNativeQuery(
+				"SELECT DISTINCT page FROM redirection_table WHERE " +
+				"(ts between '" + date + " 00:00:00' and '" + date + " 23:59:59') " +
+				"and user_name = '" + user_name +"';");
+		
+		List<String> pages = query.getResultList();
+		return pages.get(0);
+	}
+
+	@Override
+	public int inputReportPrediction(String user_name, String tr, String io, String sd) {
+		Query query = entityManager.createNativeQuery(
+				"INSERT INTO reports_table SET "
+						+ "user_name = '" + user_name
+						+ "', tr_tab = '" + tr
+						+ "', io_tab = '" + io
+						+ "', sd_tab = '" + sd
+						+ "';");
+
+		query.executeUpdate();
+		return 0;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Donation> getReport(int donation, int time, int type, String start_date, String end_date) {
@@ -570,9 +608,10 @@ public class DonationDAO implements IntDonationDAO {
 				List<String> timeList = new ArrayList<String>();
 				timePrintStart = format1.format(cStart.getTime());
 				System.out.println(timePrintStart);
-				System.out.println(format1.format(cFinish.getTime()));
+				String timePrintFinish = format1.format(cFinish.getTime());
+				System.out.println(timePrintFinish);
 				int count = 0;
-				while (!cStart.equals(cFinish))
+				while (!timePrintStart.equals(timePrintFinish))
 				{
 					cStart.add(Calendar.DATE, 1);
 					timePrintStart = format1.format(cStart.getTime());
@@ -587,19 +626,15 @@ public class DonationDAO implements IntDonationDAO {
 					{
 						formattedBeginning = format1.format(cStart.getTime());
 					}
-					else if (cStart.equals(cFinish))
+					if (timePrintStart.equals(timePrintFinish))
 					{
 						formattedEnd = format1.format(cStart.getTime());
 						toAdd = formattedBeginning + " - " + formattedEnd;
 						timeList.add(toAdd);
-						break;
 					}
-					count++;
-					if(count > 1000)
-					{
-						break;
-					}
+
 				}
+				System.out.println(timeList);
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
 				String currentOrgsTimeRangeYear = "";
 				String currentOrgsTimeRangeMonth = "";
@@ -612,6 +647,7 @@ public class DonationDAO implements IntDonationDAO {
 				int reportListIndex = 0;
 				for (int i = 0; i < donationListSize; i++)
 				{
+					SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 					SummaryReport tempSummary = new SummaryReport();
 					currentOrgsTimeRangeYear = donationsSummary.get(i).getTs();
 					currentOrgsTimeRangeYear = currentOrgsTimeRangeYear.substring(0,4);
@@ -621,6 +657,7 @@ public class DonationDAO implements IntDonationDAO {
 					currentOrgsTimeRangeDay = currentOrgsTimeRangeDay.substring(8,10);
 					Calendar cTemp = Calendar.getInstance();
 					cTemp.set(Integer.parseInt(currentOrgsTimeRangeYear), Integer.parseInt(currentOrgsTimeRangeMonth)-1, Integer.parseInt(currentOrgsTimeRangeDay));
+					System.out.println("cTemp time: " + format2.format(cTemp.getTime()));
 					int tempIdx = 0;
 					for (tempIdx = 0; tempIdx < timeList.size(); tempIdx++)
 					{
@@ -647,6 +684,7 @@ public class DonationDAO implements IntDonationDAO {
 					{
 						System.out.println(i);
 						System.out.println("Report List Index: " + reportListIndex);
+						System.out.println("Temp Summary Time Range: " + tempSummary.getTimeRange());
 						if (donationsSummary.get(i).getOrgName().equals(reportList.get(reportListIndex).getOrg()) && tempSummary.getTimeRange().equals(reportList.get(reportListIndex).getTimeRange()))
 						{
 							tempWeight = reportList.get(reportListIndex).getWeight();

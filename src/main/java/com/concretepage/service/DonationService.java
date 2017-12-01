@@ -2,6 +2,8 @@ package com.concretepage.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,9 +33,10 @@ public class DonationService implements IntDonationService {
 	 */
 	@Override
 	public String separateDonations(int donation, String org_name, String user_name,
-			int deli, int dairy, int meat, int produce, int pantry, int bakery)
+			int deli, int dairy, int meat, int produce, int pantry, int bakery, String page)
 	{
-		
+		boolean enteredInfo = false;
+		// separate donations
 		Map<String, Integer> mp = new HashMap<String, Integer>();
 		mp.put("deli", deli);
 		mp.put("dairy", dairy);
@@ -47,10 +50,18 @@ public class DonationService implements IntDonationService {
 			int weight = mp.get(category);
 			if (weight > 0) {
 				donationDAO.inputDonation(org_name, user_name, category, weight, donation);
+				enteredInfo = true;
 			}
         }
+        if (enteredInfo && user_name != "")
+		{
+			donationDAO.inputPage(user_name, page);
+		}
+
 		return "ok";
 	}
+
+
 
 	@Override
 	public List<String> findWidgetTimes(String username) {
@@ -177,8 +188,53 @@ public class DonationService implements IntDonationService {
 			}
 		}
 
-
+		System.out.println("List To Return" + listToReturn);
 		return listToReturn;
+	}
+
+	@Override
+	public int reportTabPrediction(String user_name, int timeRange, int inOut, int sumDisDick)
+	{
+		if (user_name == "")
+		{
+			return 0;
+		}
+		String tr ="";
+		String io ="";
+		String sd ="";
+		if (timeRange == 2)
+		{
+			tr = "year";
+		}
+		else if(timeRange == 1)
+		{
+			tr = "month";
+		}
+		else if(timeRange == 0)
+		{
+			tr ="week";
+		}
+
+		if (inOut == 1)
+		{
+			io = "incoming";
+		}
+		else if (inOut == 0)
+		{
+			io = "outgoing";
+		}
+
+		if (sumDisDick == 1)
+		{
+			sd = "summary";
+		}
+		else if (sumDisDick == 0)
+		{
+			sd = "descriptive";
+		}
+
+		return donationDAO.inputReportPrediction(user_name, tr, io, sd);
+
 	}
 
 	private List<String> getUniqueOrgs(List<String> UON, List<String> uniqueOrgsAtWeekI)
@@ -234,5 +290,59 @@ public class DonationService implements IntDonationService {
 			sum += orgRanksAtI[i];
 		}
 		return (sum/t);
+	}
+
+	public String findUserPage(String username) {
+		int reports = 0;
+		int donations = 0;
+		int orgs = 0;
+		
+		Calendar temp = Calendar.getInstance();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+
+		List<String> datesToQuery = new ArrayList<String>();
+		String dateToAdd = "";
+		
+		for (int i = 0; i < 4; i++) {
+			temp.add(Calendar.DATE, -7);//last week
+			dateToAdd = format1.format(temp.getTime());
+			datesToQuery.add(dateToAdd);
+		}
+		
+		List<String> pages = new ArrayList<String>();
+		
+		for (int i = 0; i < 4; i++)
+		{
+			pages.add(donationDAO.getUserPage(username, datesToQuery.get(i)));
+		}
+		
+		for (int i = 0; i < 4; i++) {
+			String page = pages.get(i);
+			if (page.equals("reports")) {
+				reports += 4 - i;
+			} else if (page.equals("donations")) {
+				donations += 4 - i;
+			} else if (page.equals("orgs")) {
+				orgs += 4 - i;
+			}
+		}
+		
+		// some crazy unneccessary sorting to find the highest weighted page
+		Map<String, Integer> mp = new HashMap<String, Integer>();
+		mp.put("reports", reports);
+		mp.put("donations", donations);
+		mp.put("orgs", orgs);
+		
+		Set<Entry<String, Integer>> set = mp.entrySet();
+        List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(
+                set);
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> o1,
+                    Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        
+        return list.get(0).getKey();
 	}
 }

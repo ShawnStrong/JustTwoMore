@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntOrgDAO;
+import com.concretepage.dao.IntDonationDAO;
 import com.concretepage.entity.Org;
 import com.google.gson.Gson;
 
@@ -25,6 +26,9 @@ public class OrgController {
 	// https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html
 	@Autowired
 	private IntOrgDAO partnerDAO;
+
+	@Autowired
+	private IntDonationDAO donationDAO;
 	
 	@GetMapping("create")
 	public @ResponseBody int createOrg (
@@ -50,6 +54,8 @@ public class OrgController {
 	
 	@GetMapping("list")
 	public @ResponseBody List<Org> listPartner() {
+
+
 		List<Org> lop = partnerDAO.listPartner();
 		return lop;
 	}
@@ -61,7 +67,10 @@ public class OrgController {
 //	    return carService.getAllCars();
 //	}
 	@GetMapping("list2")
-	public @ResponseBody String listPartner2() {
+	public @ResponseBody String listPartner2(@RequestParam String user_name) {
+		if (user_name != "") {
+			donationDAO.inputPage(user_name, "orgs");
+		}
 		List<Org> lop = partnerDAO.listPartner();
 		String json = new Gson().toJson(lop);
 		return json;

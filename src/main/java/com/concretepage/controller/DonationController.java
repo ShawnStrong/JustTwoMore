@@ -37,9 +37,10 @@ public class DonationController {
 			@RequestParam int meat,
 			@RequestParam int produce,
 			@RequestParam int pantry,
-			@RequestParam int bakery) {
+			@RequestParam int bakery,
+			@RequestParam String page) {
 		
-		return donationService.separateDonations(donation, org_name, user_name, deli, dairy, meat, produce, pantry, bakery);
+		return donationService.separateDonations(donation, org_name, user_name, deli, dairy, meat, produce, pantry, bakery, page);
 	}
 	
 //	@GetMapping("input")
@@ -87,10 +88,15 @@ public class DonationController {
 			@RequestParam int time,
 			@RequestParam int type,
 			@RequestParam String start_date,
-			@RequestParam String end_date) {
+			@RequestParam String end_date,
+			@RequestParam String page,
+			@RequestParam String user_name) {
 
-		System.out.print(start_date);
-		
+		if (user_name != "")
+		{
+			donationDAO.inputPage(user_name, page);
+			donationService.reportTabPrediction(user_name, time, donation, type);
+		}
 		return donationDAO.getReport(donation, time, type, start_date, end_date);
 		//return donationDAO.getReport(donation, time, start_date, end_date);
 	}
