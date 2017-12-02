@@ -262,8 +262,22 @@ public class DonationDAO implements IntDonationDAO {
 
 			if(time == 2 && type == 1)
 			{
+				int YearsSpanned = Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear);
+				String timeRangeArray[] = new String[YearsSpanned+1];
+				if (YearsSpanned == 0)
+				{
+					timeRangeArray[0] = lastTsYear;
+				}
+				else
+				{
+					int tempYear = Integer.parseInt(firstTsYear);
+					for (int i = 0; i<= YearsSpanned;i++)
+					{
+						tempYear += i;
+						timeRangeArray[i] = Integer.toString(tempYear);
+					}
+				}
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
-				//SummaryReport tempSummary = new SummaryReport();
 				int reportListIndex = 0;
 				int tempWeight = 0;
 				String currentOrgsTimeRange ="";
@@ -300,15 +314,6 @@ public class DonationDAO implements IntDonationDAO {
 				for (int j = 0; j < reportList.size();j++){
 					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " temp Weight: " + reportList.get(j).getWeight());
 				}
-				/*
-				USED TO TEST getFrequency()
-				List<String> cats = new ArrayList<String>();
-				cats = getFrequency("Org A");
-				for (String temp1: cats)
-				{
-					System.out.println(temp1);
-				}
-				*/
 			}
 			else if (time == 2 && type == 0)
 			{
@@ -556,12 +561,7 @@ public class DonationDAO implements IntDonationDAO {
 
 		return donationsSummary;
 	}
-/*
-	private List<String> getYearTimeRange()
-	{
 
-	}
-*/
 	private String[] getMonthTimeRange(int MonthsSpanned, String firstTsYear, String firstTsMonth, String firstTs, String lastTs)
 	{
 		String timeRangeArray[] = new String[MonthsSpanned+1];
