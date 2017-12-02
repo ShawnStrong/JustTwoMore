@@ -311,8 +311,7 @@ public class DonationService implements IntDonationService {
 		
 		List<String> pages = new ArrayList<String>();
 		
-		for (int i = 0; i < 4; i++)
-		{
+		for (int i = 0; i < 4; i++) {
 			pages.add(donationDAO.getUserPage(username, datesToQuery.get(i)));
 		}
 		
