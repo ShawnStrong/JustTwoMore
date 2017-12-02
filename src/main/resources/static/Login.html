@@ -33,9 +33,9 @@
                   data : form,
                   dataType:'json',
                   success : function(data) {
-                      if (data == 0) {
+                      if (data.length > 0) {
                           localStorage.setItem("username", $("#inputUsername").val());
-                          window.location.href = "Console.html";
+                          window.location.href = "" + data + ".html";
                       } else {
                           alert("incorrect username or password");
                       }
