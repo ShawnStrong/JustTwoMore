@@ -17,11 +17,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.concretepage.dao.IntDonationDAO;
+import com.concretepage.entity.Donation;
 import com.concretepage.entity.OrgStats;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Service
 public class DonationService implements IntDonationService {
@@ -60,8 +66,6 @@ public class DonationService implements IntDonationService {
 
 		return "ok";
 	}
-
-
 
 	@Override
 	public List<String> findWidgetTimes(String username) {
@@ -343,5 +347,65 @@ public class DonationService implements IntDonationService {
         });
         
         return list.get(0).getKey();
+	}
+
+	@Override
+	public JSONObject convertToJSON(int reportType, List<Donation> donationList, String[] timeArray) throws JSONException {
+		JSONArray array = new JSONArray();
+		String name = "";
+		String category = "";
+		String timeRange = "";
+		JSONObject item = null;
+		int timeArrayPos = timeArray.length;
+		for (Donation x: donationList) {
+			// descriptive type, includes category
+			if (reportType == 0) {
+				// check if need to make new JSONObject
+				if (name != x.getOrgName() || category != x.getCategory()) {
+					// checks for first org
+					if (item != null) {
+						array.put(item);
+					}
+					item = new JSONObject();
+					name = x.getOrgName();
+					category = x.getCategory();
+					timeRange = x.getTs();
+					item.put("org_name", name);
+					item.put("category", category);
+					timeArrayPos = 0;
+					item.put(timeArray[timeArrayPos], timeRange);
+					timeArrayPos++;
+				} else {
+					timeRange = x.getTs();
+					item.put(timeArray[timeArrayPos], timeRange);
+					timeArrayPos++;
+				}
+			// summary type
+			} else {
+				if (name != x.getOrgName()) {
+					if (name != x.getOrgName()) {
+						array.put(item);
+					}
+					item = new JSONObject();
+					name = x.getOrgName();
+					timeRange = x.getTs();
+					item.put("org_name", name);
+					timeArrayPos = 0;
+					item.put(timeArray[timeArrayPos], timeRange);
+					timeArrayPos++;
+				} else {
+					timeRange = x.getTs();
+					item.put(timeArray[timeArrayPos], timeRange);
+					timeArrayPos++;
+				}
+			}
+
+		}
+		
+		JSONObject allData = new JSONObject();
+		allData.put("columns", timeArray);
+		allData.put("data", array);
+		
+		return allData;
 	}
 }

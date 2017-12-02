@@ -8,6 +8,10 @@
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+	
+	<!-- dynatable css and js -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> 
     
     
 	<style>
@@ -176,7 +180,27 @@
             
             
             
-            
+            /* this makes a dynatable */
+			$( "#button2" ).click(function() {
+				var mytable = $("#table1");
+                var form = $("#redirection").serialize();
+				$.ajax({
+					url: "http://localhost:8080/org/list2",
+					type: "GET",
+					data: form,
+					dataType: "json",
+					success: function(data){
+                        //create columns dynamically
+						mytable.dynatable({
+							dataset: {
+								records: data
+							}
+						});
+						mytable.data('dynatable').settings.dataset.records = data;
+						mytable.data('dynatable').dom.update();
+					 }
+				});
+			}); 
             
         });
     </script>
@@ -269,6 +293,13 @@
         </div>
     </div>
     
+	<!-- Button for loading Dynatable. Need tablebox below as well -->
+	<button type="button" id="button2"> Click for Dinotable </button><br>
+	
+	<div id="tablebox">
+		<table id="table1" align="center">
+        </table>
+	</div>
 
 <!--
 <form method="get" action="/donation/report">

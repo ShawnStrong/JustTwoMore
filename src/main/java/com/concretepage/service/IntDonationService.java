@@ -2,6 +2,11 @@ package com.concretepage.service;
 
 import java.util.List;
 
+import org.json.JSONObject;
+import org.json.JSONException;
+
+import com.concretepage.entity.Donation;
+
 public interface IntDonationService {
 
 	String separateDonations(int donation, String org_name, String user_name, int deli, int dairy, int meat,
@@ -13,4 +18,6 @@ public interface IntDonationService {
 	int reportTabPrediction(String user_name, int timeRange, int inOut, int sumDisDick);
 	
 	String findUserPage(String username);
+
+	JSONObject convertToJSON(int reportType, List<Donation> donationList, String[] timeArray) throws JSONException;
 }

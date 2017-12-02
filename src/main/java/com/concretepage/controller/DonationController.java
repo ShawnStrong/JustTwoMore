@@ -97,7 +97,10 @@ public class DonationController {
 			donationDAO.inputPage(user_name, page);
 			donationService.reportTabPrediction(user_name, time, donation, type);
 		}
-		return donationDAO.getReport(donation, time, type, start_date, end_date);
+		List<Donation> donationList	= new ArrayList<Donation>();
+		donationList = donationDAO.getReport(donation, time, type, start_date, end_date);
+		return null;
+		
 		//return donationDAO.getReport(donation, time, start_date, end_date);
 	}
 
