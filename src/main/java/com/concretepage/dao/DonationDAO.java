@@ -224,7 +224,10 @@ public class DonationDAO implements IntDonationDAO {
 		String firstTs = "";
 		String lastTs ="";
 		int currentOrgsWeight = 0;
-
+		if (donations.isEmpty())
+		{
+			return null;
+		}
 		if(donations.get(0) != null)
 		{
 			donationListSize = donations.size();
@@ -311,9 +314,22 @@ public class DonationDAO implements IntDonationDAO {
 						}
 					}
 				}
+				List<Donation> donationListToReturn = new ArrayList<Donation>();
 				for (int j = 0; j < reportList.size();j++){
+					Donation tempDonation = new Donation();
 					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " temp Weight: " + reportList.get(j).getWeight());
+					tempDonation.setOrgName(reportList.get(j).getOrg());
+					tempDonation.setTs(reportList.get(j).getTimeRange());
+					tempDonation.setWeight(reportList.get(j).getWeight());
+					tempDonation.setCategory("");
+					donationListToReturn.add(tempDonation);
 				}
+				donationListToReturn = insertZeros(donationListToReturn, timeRangeArray);
+				for (int i = 0; i< donationListToReturn.size();i++)
+				{
+					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getTs() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
+				}
+				return donationListToReturn;
 			}
 			else if (time == 2 && type == 0)
 			{
@@ -389,16 +405,50 @@ public class DonationDAO implements IntDonationDAO {
 					}
 
 				}
+				List<Donation> donationListToReturn = new ArrayList<Donation>();
 				for (int j = 0; j < reportList.size();j++){
+					Donation tempDonation = new Donation();
 					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " Category: " + reportList.get(j).getCategory() + " temp Weight: " + reportList.get(j).getWeight());
+					tempDonation.setOrgName(reportList.get(j).getOrg());
+					tempDonation.setTs(reportList.get(j).getTimeRange());
+					tempDonation.setWeight(reportList.get(j).getWeight());
+					tempDonation.setCategory(reportList.get(j).getCategory());
+					donationListToReturn.add(tempDonation);
 				}
+				donationListToReturn = insertZeros(donationListToReturn, timeRangeArray);
+				for (int i = 0; i< donationListToReturn.size();i++)
+				{
+					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getTs() + " Donation List Category: "+donationListToReturn.get(i).getCategory() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
+				}
+				return donationListToReturn;
 			}
 			else if(time == 1 && type == 1)
 			{
+				int MonthsSpanned = 0;
+				int lastYear = Integer.parseInt(lastTsYear);
+				int firstYear = Integer.parseInt(firstTsYear);
+				int tempWeight =0;
+				if(Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear)<0)
+				{
+					return null;
+				}
+				if(Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear) !=0)
+				{
+					MonthsSpanned = Integer.parseInt(lastTsMonth) + (Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear) - 1)*12;
+				}
+				if (Integer.parseInt(lastTsMonth) - Integer.parseInt(firstTsMonth) < 0)
+				{
+					MonthsSpanned += (12 - Integer.parseInt(firstTsMonth));
+				}
+				else
+				{
+					MonthsSpanned += (Integer.parseInt(lastTsMonth) - Integer.parseInt(firstTsMonth));
+				}
+				String timeRangeArray[] = new String[MonthsSpanned+1];//timeRangeArray is used to check which year to put weights into.
+				timeRangeArray = getMonthTimeRange(MonthsSpanned, firstTsYear, firstTsMonth, firstTs, lastTs);
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
 				//SummaryReport tempSummary = new SummaryReport();
 				int reportListIndex = 0;
-				int tempWeight = 0;
 				String currentOrgsTimeRange ="";
 				for (int i = 0; i < donationListSize; i++) {
 					SummaryReport tempSummary = new SummaryReport();
@@ -430,9 +480,22 @@ public class DonationDAO implements IntDonationDAO {
 						}
 					}
 				}
+				List<Donation> donationListToReturn = new ArrayList<Donation>();
 				for (int j = 0; j < reportList.size();j++){
+					Donation tempDonation = new Donation();
 					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " temp Weight: " + reportList.get(j).getWeight());
+					tempDonation.setOrgName(reportList.get(j).getOrg());
+					tempDonation.setTs(reportList.get(j).getTimeRange());
+					tempDonation.setWeight(reportList.get(j).getWeight());
+					tempDonation.setCategory("");
+					donationListToReturn.add(tempDonation);
 				}
+				donationListToReturn = insertZeros(donationListToReturn, timeRangeArray);
+				for (int i = 0; i< donationListToReturn.size();i++)
+				{
+					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getTs() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
+				}
+				return donationListToReturn;
 				//print csv code here
 			}
 			else if(time == 1 && type == 0)
@@ -496,14 +559,27 @@ public class DonationDAO implements IntDonationDAO {
 				}
 				int timeArrayIndex = 0;
 				String tempTimeRange = "";
+				List<Donation> donationListToReturn = new ArrayList<Donation>();
 				for (int i =0;i<reportList.size();i++)
 				{
+					Donation tempDonation = new Donation();
 					System.out.println("Report List Org Name: " + reportList.get(i).getOrg() + " Category: " + reportList.get(i).getCategory() + " Date: " + reportList.get(i).getTimeRange() + " Weight: " + reportList.get(i).getWeight());
+					tempDonation.setOrgName(reportList.get(i).getOrg());
+					tempDonation.setTs(reportList.get(i).getTimeRange());
+					tempDonation.setWeight(reportList.get(i).getWeight());
+					tempDonation.setCategory(reportList.get(i).getCategory());
+					donationListToReturn.add(tempDonation);
 				}
 				for (int i = 0; i< timeRangeArray.length;i++)
 				{
 					System.out.println("\n"+ timeRangeArray[i]);
 				}
+				donationListToReturn = insertZeros(donationListToReturn, timeRangeArray);
+				for (int i = 0; i< donationListToReturn.size();i++)
+				{
+					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getTs() + " Donation List Category: "+donationListToReturn.get(i).getCategory() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
+				}
+				return donationListToReturn;
 				//print csv code here
 			}
 			else if(time == 0 && type == 1)
@@ -516,6 +592,11 @@ public class DonationDAO implements IntDonationDAO {
 				List<String> timeList = new ArrayList<String>();
 				timeList = getWeeklyTimeRange(cStart, cFinish);
 				System.out.println(timeList);
+				String timeRangeArray[] = new String[timeList.size()];
+				for (int i = 0; i < timeList.size(); i++)
+				{
+					timeRangeArray[i] = timeList.get(i);
+				}
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
 				reportList = fillWeeklySummaryList(timeList, donationsSummary);
 				//check for week dates
@@ -523,9 +604,16 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("\n" + timeList.get(i));
 				}
+				List<Donation> donationListToReturn = new ArrayList<Donation>();
 				for (int j = 0; j < reportList.size(); j++)
 				{
+					Donation tempDonation = new Donation();
 					System.out.println("\n" + "Temp Org Name: " + reportList.get(j).getOrg() + " Temp Time Range: " + reportList.get(j).getTimeRange() + " temp Weight: " + reportList.get(j).getWeight());
+					tempDonation.setOrgName(reportList.get(j).getOrg());
+					tempDonation.setTs(reportList.get(j).getTimeRange());
+					tempDonation.setWeight(reportList.get(j).getWeight());
+					tempDonation.setCategory("");
+					donationListToReturn.add(tempDonation);
 				}
 
 
@@ -536,6 +624,12 @@ public class DonationDAO implements IntDonationDAO {
 				int weekYear = cTest1.get(Calendar.WEEK_OF_YEAR);
 				int weekYear1 = cTest2.get(Calendar.WEEK_OF_YEAR);
 				System.out.println("\nTest 1: " + weekYear + " Test 2: "+ weekYear1);
+				donationListToReturn = insertZeros(donationListToReturn, timeRangeArray);
+				for (int i = 0; i< donationListToReturn.size();i++)
+				{
+					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getTs() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
+				}
+				return donationListToReturn;
 			}
 			else if(time == 0 && type == 0)
 			{
@@ -546,16 +640,33 @@ public class DonationDAO implements IntDonationDAO {
 				cFinish.set(Integer.parseInt(lastTsYear), Integer.parseInt(lastTsMonth)-1, Integer.parseInt(lastTsDay));
 				List<String> timeList = new ArrayList<String>();
 				timeList = getWeeklyTimeRange(cStart, cFinish);
-				System.out.println(timeList);
+				System.out.println("Time List: " + timeList);
+				String timeRangeArray[] = new String[timeList.size()];
+				for (int i = 0; i < timeList.size(); i++)
+				{
+					timeRangeArray[i] = timeList.get(i);
+				}
 				List<DetailedReport> reportList = new ArrayList<DetailedReport>();
 				reportList = fillWeeklyDetailedList(timeList, donations);
+				List<Donation> donationListToReturn = new ArrayList<Donation>();
 				for (int k = 0; k < reportList.size(); k++)
 				{
+					Donation tempDonation = new Donation();
 					System.out.println("Report List Org Name: " + reportList.get(k).getOrg() + " Category: "
 							+ reportList.get(k).getCategory() + " Weight: " + reportList.get(k).getWeight() +
 							" time range: " + reportList.get(k).getTimeRange());
+					tempDonation.setOrgName(reportList.get(k).getOrg());
+					tempDonation.setTs(reportList.get(k).getTimeRange());
+					tempDonation.setWeight(reportList.get(k).getWeight());
+					tempDonation.setCategory(reportList.get(k).getCategory());
+					donationListToReturn.add(tempDonation);
 				}
-
+				donationListToReturn = insertZeros(donationListToReturn, timeRangeArray);
+				for (int i = 0; i< donationListToReturn.size();i++)
+				{
+					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getTs() + " Donation List Category: "+donationListToReturn.get(i).getCategory() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
+				}
+				return donationListToReturn;
 			}
 		}
 
@@ -789,5 +900,83 @@ public class DonationDAO implements IntDonationDAO {
 			}
 		}
 		return reportList;
+	}
+
+	private List<Donation> insertZeros(List<Donation> donationListToReturn, String[] timeRangeArray)
+	{
+		for (int i = 0; i < timeRangeArray.length; i++)
+		{
+			System.out.println("Time Range Array Passed into insert Zeros" + timeRangeArray[i]);
+		}
+		int donationListSize = donationListToReturn.size();
+		int donationListIdx = 0;
+		int timeRangeArrayIdx = 0;
+		int timeRangeArrayIdxLength = timeRangeArray.length;
+		Donation lastElem = new Donation();
+		lastElem = donationListToReturn.get(donationListSize-1);
+		Donation lastObjectUsed = new Donation();
+		lastObjectUsed = donationListToReturn.get(0);
+		while (!donationListToReturn.get(donationListIdx).equals(lastElem))
+		{
+			if (!(lastObjectUsed.getOrgName().equals(donationListToReturn.get(donationListIdx).getOrgName())) || !(lastObjectUsed.getCategory().equals(donationListToReturn.get(donationListIdx).getCategory())))
+			{
+				for (int i = timeRangeArrayIdx; i< timeRangeArrayIdxLength; i++)
+				{
+					Donation tempDonation = new Donation();
+					tempDonation.setOrgName(lastObjectUsed.getOrgName());
+					tempDonation.setTs(timeRangeArray[timeRangeArrayIdx]);
+					tempDonation.setCategory(lastObjectUsed.getCategory());
+					tempDonation.setWeight(0);
+					donationListToReturn.add(donationListIdx, tempDonation);
+					timeRangeArrayIdx++;
+					lastObjectUsed = donationListToReturn.get(donationListIdx);
+					donationListIdx++;
+				}
+			}
+			if (timeRangeArrayIdx == timeRangeArrayIdxLength)
+			{
+				timeRangeArrayIdx = 0;
+			}
+			boolean foundTime = false;
+			while (!foundTime)
+			{
+				if(donationListToReturn.get(donationListIdx).getTs().equals(timeRangeArray[timeRangeArrayIdx]))
+				{
+					lastObjectUsed = donationListToReturn.get(donationListIdx);
+					foundTime = true;
+					timeRangeArrayIdx++;
+					donationListIdx++;
+				}
+				else
+				{
+					Donation tempDonation = new Donation();
+					tempDonation.setOrgName(donationListToReturn.get(donationListIdx).getOrgName());
+					tempDonation.setTs(timeRangeArray[timeRangeArrayIdx]);
+					tempDonation.setCategory(donationListToReturn.get(donationListIdx).getCategory());
+					tempDonation.setWeight(0);
+					donationListToReturn.add(donationListIdx, tempDonation);
+					timeRangeArrayIdx++;
+					lastObjectUsed = donationListToReturn.get(donationListIdx);
+					donationListIdx++;
+				}
+			}
+		}
+		for (int i = timeRangeArrayIdx; i< timeRangeArrayIdxLength; i++)
+		{
+			Donation tempDonation = new Donation();
+			tempDonation.setOrgName(lastObjectUsed.getOrgName());
+			tempDonation.setTs(timeRangeArray[timeRangeArrayIdx]);
+			if (tempDonation.getTs().equals(lastElem.getTs()))
+			{
+				break;
+			}
+			tempDonation.setCategory(lastObjectUsed.getCategory());
+			tempDonation.setWeight(0);
+			donationListToReturn.add(donationListIdx, tempDonation);
+			timeRangeArrayIdx++;
+			lastObjectUsed = donationListToReturn.get(donationListIdx);
+			donationListIdx++;
+		}
+		return donationListToReturn;
 	}
 }
