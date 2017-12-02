@@ -4,12 +4,13 @@
 {"org name":"org b","category":"dairy","date range 1":"120 lbs" ...,"last date range":"33 lbs"}
 ]
 
-
-
-
+{
+column: [org_name, org_id,...],
+data:
 [
 {"org_id":1,"org_name":"test org","contact_name":"test contact","contact_number":"0000000000","contact_email":"test@test.com","notes":"no notes"},
 {"org_id":2,"org_name":"test org 2","contact_name":"testcontact 2","contact_number":"0009998888","contact_email":"test2@test.com","notes":"no notes"},
 {"org_id":3,"org_name":"test org 3","contact_name":"test","contact_number":"test","contact_email":"test","notes":"no notes"},{"org_id":6,"org_name":"test","contact_name":"test","contact_number":"test","contact_email":"test","notes":""},
 {"org_id":7,"org_name":"test org 4","contact_name":"test","contact_number":"test","contact_email":"test","notes":""}
 ]
+}
