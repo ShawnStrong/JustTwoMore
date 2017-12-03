@@ -234,7 +234,7 @@ public class DonationDAO implements IntDonationDAO {
 		String firstTs = "";
 		String lastTs ="";
 		int currentOrgsWeight = 0;
-		if (donations.isEmpty())
+		if (donations.isEmpty() || donationsSummary.isEmpty())
 		{
 			return null;
 		}
