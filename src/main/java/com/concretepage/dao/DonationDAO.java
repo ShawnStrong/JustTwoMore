@@ -998,6 +998,8 @@ public class DonationDAO implements IntDonationDAO {
 			boolean foundTime = false;
 			while (!foundTime)
 			{
+				//test for Shawn breaking my code
+				System.out.println("Donation List To return Size: " + donationListToReturn.size() + " Donation List IDX = " + donationListIdx + " TimeRange Array Length = " + timeRangeArray.length + "Time Range Array IDX = " + timeRangeArrayIdx);
 				if(donationListToReturn.get(donationListIdx).getTs().equals(timeRangeArray[timeRangeArrayIdx]))
 				{
 					lastObjectUsed = donationListToReturn.get(donationListIdx);
