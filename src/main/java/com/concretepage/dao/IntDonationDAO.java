@@ -34,7 +34,7 @@ public interface IntDonationDAO {
 
 	void initDonationTable();
 
-	List<Donation> getReport(int donation, int time, int type, String start_date, String end_date);
+	List<Object> getReport(int donation, int time, int type, String start_date, String end_date);
 
 	public int inputDonation(String org_name, String user_name, String category, int weight, int donation);
 

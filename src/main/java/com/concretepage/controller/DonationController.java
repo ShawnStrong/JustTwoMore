@@ -3,6 +3,8 @@ package com.concretepage.controller;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,26 +84,45 @@ public class DonationController {
 		return categories;
 	}
 
+	@SuppressWarnings("unchecked")
 	@GetMapping("report")
-	public @ResponseBody List<Donation> getReport(
+	public @ResponseBody JSONObject getReport(
 			@RequestParam int donation,
 			@RequestParam int time,
 			@RequestParam int type,
 			@RequestParam String start_date,
 			@RequestParam String end_date,
 			@RequestParam String page,
-			@RequestParam String user_name) {
+			@RequestParam String user_name) throws JSONException {
 
 		if (user_name != "")
 		{
 			donationDAO.inputPage(user_name, page);
 			donationService.reportTabPrediction(user_name, time, donation, type);
 		}
-		List<Donation> donationList	= new ArrayList<Donation>();
-		donationList = donationDAO.getReport(donation, time, type, start_date, end_date);
-		return null;
+		//List<Donation> donationList = new ArrayList<Donation>();
+		//donationList = donationDAO.getReport(donation, time, type, start_date, end_date);
+		//return DonationService.convertToJson(type, donationList);
+		List<Object> ListOfReportStuff = donationDAO.getReport(donation, time, type, start_date, end_date);
 		
-		//return donationDAO.getReport(donation, time, start_date, end_date);
+		List<Object> donationObjectList = (List<Object>) ListOfReportStuff.get(1);
+		List<Object> timeList = (List<Object>) ListOfReportStuff.get(0);
+		
+		List<Donation> donations = new ArrayList<>(donationObjectList.size());
+		for (Object object : donationObjectList) {
+			donations.add((Donation) object);
+		}
+		
+		String[] timeArray = new String[timeList.size()];
+		int index = 0;
+		for (Object value : timeList) {
+		  timeArray[index] = (String) value;
+		  index++;
+		}
+		
+		JSONObject report = donationService.convertToJSON(type, donations, timeArray);
+		System.out.println(report.toString());
+		return null;
 	}
 
 	@GetMapping("widget")

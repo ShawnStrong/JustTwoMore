@@ -354,7 +354,7 @@ public class DonationService implements IntDonationService {
 		JSONArray array = new JSONArray();
 		String name = "";
 		String category = "";
-		String timeRange = "";
+		int weight = 0;
 		JSONObject item = null;
 		int timeArrayPos = timeArray.length;
 		for (Donation x: donationList) {
@@ -362,46 +362,65 @@ public class DonationService implements IntDonationService {
 			if (reportType == 0) {
 				// check if need to make new JSONObject
 				if (name != x.getOrgName() || category != x.getCategory()) {
-					// checks for first org
+					// checks for first org. if not, put it into array
+					if (item != null) {
+						array.put(item);
+					}
+					// make a new jsonobject
+					item = new JSONObject();
+					name = x.getOrgName();
+					category = x.getCategory();
+					weight = x.getWeight();
+					item.put("org_name", name);
+					item.put("category", category);
+					timeArrayPos = 0;
+					item.put(timeArray[timeArrayPos], weight);
+					timeArrayPos++;
+					// check if x is last item of list. if so, put it in array
+					if (x.equals(donationList.get(donationList.size() - 1))) {
+						array.put(item);
+					}
+				} else {
+					weight = x.getWeight();
+					item.put(timeArray[timeArrayPos], weight);
+					timeArrayPos++;
+					// check if x is last item of list. if so, put it in array
+					if (x.equals(donationList.get(donationList.size() - 1))) {
+						array.put(item);
+					}
+				}
+			// summary type
+			} else {
+				if (name != x.getOrgName()) {
 					if (item != null) {
 						array.put(item);
 					}
 					item = new JSONObject();
 					name = x.getOrgName();
-					category = x.getCategory();
-					timeRange = x.getTs();
+					weight = x.getWeight();
+					System.out.println("Org name: " + name + " weight: " + weight + " ArrayIndex: " + timeArrayPos);
 					item.put("org_name", name);
-					item.put("category", category);
 					timeArrayPos = 0;
-					item.put(timeArray[timeArrayPos], timeRange);
+					item.put(timeArray[timeArrayPos], weight);
 					timeArrayPos++;
-				} else {
-					timeRange = x.getTs();
-					item.put(timeArray[timeArrayPos], timeRange);
-					timeArrayPos++;
-				}
-			// summary type
-			} else {
-				if (name != x.getOrgName()) {
-					if (name != x.getOrgName()) {
+					// check if x is last item of list. if so, put it in array
+					if (x.equals(donationList.get(donationList.size() - 1))) {
 						array.put(item);
 					}
-					item = new JSONObject();
-					name = x.getOrgName();
-					timeRange = x.getTs();
-					item.put("org_name", name);
-					timeArrayPos = 0;
-					item.put(timeArray[timeArrayPos], timeRange);
-					timeArrayPos++;
 				} else {
-					timeRange = x.getTs();
-					item.put(timeArray[timeArrayPos], timeRange);
+					weight = x.getWeight();
+					System.out.println("Org name: " + name + " weight: " + weight + " ArrayIndex: " + timeArrayPos);
+					item.put(timeArray[timeArrayPos], weight);
 					timeArrayPos++;
+					// check if x is last item of list. if so, put it in array
+					if (x.equals(donationList.get(donationList.size() - 1))) {
+						array.put(item);
+					}
 				}
 			}
-
 		}
 		
+		System.out.println(array.toString());
 		JSONObject allData = new JSONObject();
 		allData.put("columns", timeArray);
 		allData.put("data", array);
