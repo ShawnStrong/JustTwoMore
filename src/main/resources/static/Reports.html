@@ -160,29 +160,34 @@
                       type : 'GET',
                       data : form,
                       dataType:'json',
-                      success : function(data) {
-                          if (data != ""){
-                              alert("endpoint has returned " + JSON.stringify(data));
+                      success : function(json) {
+                          if (json != ""){
+                              alert("endpoint has returned " + JSON.stringify(json));
 							  
 							  // dynamically make the headers
-							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
-							  $.each(data.columns, function(rowIndex, r) {
-								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
-							  });
-							  headers.append("</thead><tbody></tbody>");
-							  $("#table1").append(headers);
+//							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
+//							  $.each(json.columns, function(rowIndex, r) {
+//								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
+//							  });
+//							  headers.append("</thead><tbody></tbody>");
+//							  $("#table1").append(headers);
+                              var header = $(document.createElement("thead"));
+                              $.each(json.columns, function(rowIndex, r) {
+                                  header.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
+                              });
+                              var body = $(document.createElement("tbody"));
+                              
+                              $("#table1").append(header);
+                              $("#table1").append(body);
 							  
 							  var mytable = $("#table1");
 							  mytable.dynatable({
 								dataset: {
-									records: data
+									records: json.data
 								}
 							  });
-							  mytable.data('dynatable').settings.dataset.records = data;
+							  mytable.data('dynatable').settings.dataset.records = json.data;
 							  mytable.data('dynatable').dom.update();
-                              // ***************************************************************************************
-                              // *REMOVE THE ALERT AND ADD WHATEVER TABLE/CHART IS NECESSARY TO DISPLAY THE INFORMATION*
-                              // ***************************************************************************************
                           }
                       },
                       error : function(request,error) {
@@ -195,29 +200,6 @@
                 }
             });
             
-            
-            
-            /* this makes a dynatable */
-			$( "#button2" ).click(function() {
-				var mytable = $("#table1");
-                var form = $("#redirection").serialize();
-				$.ajax({
-					url: "http://localhost:8080/org/list2",
-					type: "GET",
-					data: form,
-					dataType: "json",
-					success: function(data){
-                        //create columns dynamically
-						mytable.dynatable({
-							dataset: {
-								records: data
-							}
-						});
-						mytable.data('dynatable').settings.dataset.records = data;
-						mytable.data('dynatable').dom.update();
-					 }
-				});
-			}); 
             
         });
     </script>
@@ -310,8 +292,6 @@
         </div>
     </div>
     
-	<!-- Button for loading Dynatable. Need tablebox below as well -->
-	<button type="button" id="button2"> Click for Dinotable </button><br>
 	
 	<div id="tablebox">
 		<table id="table1" align="center">

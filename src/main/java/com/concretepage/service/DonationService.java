@@ -423,7 +423,24 @@ public class DonationService implements IntDonationService {
 		//System.out.println(array.toString());
 		
 		JSONObject allData = new JSONObject();
-		allData.put("columns", timeArray);
+		System.out.println("Time Array: " + timeArray[0]);
+		if (reportType == 0) {
+			String[] descriptive = new String[timeArray.length + 2];
+			for (int i = 2; i <= timeArray.length + 1; i++) {
+				descriptive[i] = timeArray[i-2];
+			} 
+			descriptive[0] = "org_name";
+			descriptive[1] = "category";
+			System.out.println("Time Array: " + descriptive[2]);
+			allData.put("columns", descriptive);
+		} else {
+			String[] summary = new String[timeArray.length + 1];
+			for (int i = 1; i <= timeArray.length; i++) {
+				summary[i] = timeArray[i-1];
+			} 
+			summary[0] = "org_name";
+			allData.put("columns", summary);
+		}
 		allData.put("data", array);
 		
 		return allData;

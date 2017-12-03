@@ -236,6 +236,7 @@ public class DonationDAO implements IntDonationDAO {
 		int currentOrgsWeight = 0;
 		if (donations.isEmpty() || donationsSummary.isEmpty())
 		{
+			System.out.println("returned null");
 			return null;
 		}
 		if(donations.get(0) != null)
@@ -789,8 +790,10 @@ public class DonationDAO implements IntDonationDAO {
 		String timePrintFinish = format1.format(cFinish.getTime());
 		System.out.println(timePrintFinish);
 		int count = 0;
+		boolean enteredWhile = false;
 		while (!timePrintStart.equals(timePrintFinish))
 		{
+			enteredWhile = true;
 			cStart.add(Calendar.DATE, 1);
 			timePrintStart = format1.format(cStart.getTime());
 			System.out.println(timePrintStart);
@@ -811,6 +814,12 @@ public class DonationDAO implements IntDonationDAO {
 				timeList.add(toAdd);
 			}
 
+		}
+		if (!enteredWhile)
+		{
+			formattedEnd = format1.format(cStart.getTime());
+			toAdd = formattedBeginning + " - " + formattedEnd;
+			timeList.add(toAdd);
 		}
 		return timeList;
 	}
@@ -999,6 +1008,7 @@ public class DonationDAO implements IntDonationDAO {
 			while (!foundTime)
 			{
 				//test for Shawn breaking my code
+				System.out.println("Ts: " + donationListToReturn.get(donationListIdx).getTs());
 				System.out.println("Donation List To return Size: " + donationListToReturn.size() + " Donation List IDX = " + donationListIdx + " TimeRange Array Length = " + timeRangeArray.length + "Time Range Array IDX = " + timeRangeArrayIdx);
 				if(donationListToReturn.get(donationListIdx).getTs().equals(timeRangeArray[timeRangeArrayIdx]))
 				{

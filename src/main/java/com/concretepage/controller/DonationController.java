@@ -121,7 +121,7 @@ public class DonationController {
 		}
 		
 		JSONObject report = donationService.convertToJSON(type, donations, timeArray);
-		//System.out.println(report.toString());
+		System.out.println(report.toString());
 		return report.toString();
 	}
 
