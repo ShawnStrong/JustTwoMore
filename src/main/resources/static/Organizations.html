@@ -218,44 +218,26 @@
                           if (data == 0) {
                               $( "#successfulOrgCreation" ).dialog({
                                   modal: true,
-                                  buttons: {
-                                    Ok: function() {
-                                        window.location.href = "Organizations.html";
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#successfulOrgCreation").dialog('close');
+                                            window.location.href = "Organizations.html";
+                                        }, 3000);
                                     }
-                                  }
                                 });
                           } else {
                               $( "#failedOrgCreation" ).dialog({
                                   modal: true,
-                                  buttons: {
-                                    Ok: function() {
-                                      $( this ).dialog( "close" );
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#failedOrgCreation").dialog('close');
+                                        }, 3000);
                                     }
-                                  }
                                 });
                           }
                       },
                       error : function(request,error) {
                           alert("Request: " + JSON.stringify(request));
-    //                      if (request.responseText == 0) {
-    //                          $( "#successfulOrgCreation" ).dialog({
-    //                              modal: true,
-    //                              buttons: {
-    //                                Ok: function() {
-    //                                    window.location.href = "Organizations.html";
-    //                                }
-    //                              }
-    //                            });
-    //                      } else {
-    //                          $( "#failedOrgCreation" ).dialog({
-    //                              modal: true,
-    //                              buttons: {
-    //                                Ok: function() {
-    //                                  $( this ).dialog( "close" );
-    //                                }
-    //                              }
-    //                            });
-    //                      }
                       }
                     });
                 }

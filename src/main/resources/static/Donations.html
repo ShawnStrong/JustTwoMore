@@ -395,20 +395,21 @@
                           if (request.responseText == "ok") {
                               $( "#successfulDonation" ).dialog({
                                   modal: true,
-                                  buttons: {
-                                    Ok: function() {
-                                        window.location.href = "Donations.html";
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#successfulDonation").dialog('close');
+                                            window.location.href = "Donations.html";
+                                        }, 3000);
                                     }
-                                  }
                                 });
                           } else {
                               $( "#failedDonation" ).dialog({
                                   modal: true,
-                                  buttons: {
-                                    Ok: function() {
-                                      $( this ).dialog( "close" );
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#failedDonation").dialog('close');
+                                        }, 3000);
                                     }
-                                  }
                                 });
                           }
                       }
@@ -449,17 +450,6 @@
                 console.dir( xhr );
             });
             
-            
-            
-//            var widgetList = ["test org", "test org 2"];
-            
-            
-//            for (var i = 0; i < widgetList.length; i++) {
-////                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
-//                var temp = $(document.createElement('p')).prop({align: "center"});
-//                temp.html(widgetList[i]);
-//                temp.appendTo("#suggestionWidget ." + i +"");
-//            }
 
             if (name != null && name.length > 0) {
                 $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
