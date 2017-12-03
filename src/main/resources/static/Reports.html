@@ -162,7 +162,24 @@
                       dataType:'json',
                       success : function(data) {
                           if (data != ""){
-                              alert("endpoint has returned ");
+                              alert("endpoint has returned " + JSON.stringify(data));
+							  
+							  // dynamically make the headers
+							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
+							  $.each(data.columns, function(rowIndex, r) {
+								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
+							  });
+							  headers.append("</thead><tbody></tbody>");
+							  $("#table1").append(headers);
+							  
+							  var mytable = $("#table1");
+							  mytable.dynatable({
+								dataset: {
+									records: data
+								}
+							  });
+							  mytable.data('dynatable').settings.dataset.records = data;
+							  mytable.data('dynatable').dom.update();
                               // ***************************************************************************************
                               // *REMOVE THE ALERT AND ADD WHATEVER TABLE/CHART IS NECESSARY TO DISPLAY THE INFORMATION*
                               // ***************************************************************************************

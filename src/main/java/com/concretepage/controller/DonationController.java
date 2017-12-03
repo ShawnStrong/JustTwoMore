@@ -86,7 +86,7 @@ public class DonationController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping("report")
-	public @ResponseBody JSONObject getReport(
+	public @ResponseBody String getReport(
 			@RequestParam int donation,
 			@RequestParam int time,
 			@RequestParam int type,
@@ -121,8 +121,8 @@ public class DonationController {
 		}
 		
 		JSONObject report = donationService.convertToJSON(type, donations, timeArray);
-		System.out.println(report.toString());
-		return null;
+		//System.out.println(report.toString());
+		return report.toString();
 	}
 
 	@GetMapping("widget")
