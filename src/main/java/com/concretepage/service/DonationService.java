@@ -421,6 +421,7 @@ public class DonationService implements IntDonationService {
 		}
 		
 		//System.out.println(array.toString());
+		
 		JSONObject allData = new JSONObject();
 		allData.put("columns", timeArray);
 		allData.put("data", array);

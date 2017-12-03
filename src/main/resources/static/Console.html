@@ -82,10 +82,25 @@
            
 
             
-
+			$("#initTest").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/init",
+					type: "GET",
+					success: function(){
+						alert("Initiated test orgs and user");
+					}
+				});
+			});
             
-            
-            
+            $("#test3").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/test3",
+					type: "GET",
+					success: function(){
+						alert("Test 3 activated");
+					}
+				});
+			});
         });
         
 
@@ -126,7 +141,16 @@
       </div><!-- /.container-fluid -->
     </nav>
     
-    
+	<br>
+	
+    <button type="button" id="initTest"> Initiate
+	</button><br><br>
+	
+	<button type="button" id="test2"> Test 2
+	</button><br><br>
+	
+	<button type="button" id="test3"> Test 3
+	</button>
     
 </body>
 </html>
