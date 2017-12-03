@@ -236,6 +236,7 @@ public class DonationDAO implements IntDonationDAO {
 		int currentOrgsWeight = 0;
 		if (donations.isEmpty() || donationsSummary.isEmpty())
 		{
+			System.out.println("returned null");
 			return null;
 		}
 		if(donations.get(0) != null)
@@ -999,6 +1000,7 @@ public class DonationDAO implements IntDonationDAO {
 			while (!foundTime)
 			{
 				//test for Shawn breaking my code
+				System.out.println("Ts: " + donationListToReturn.get(donationListIdx).getTs());
 				System.out.println("Donation List To return Size: " + donationListToReturn.size() + " Donation List IDX = " + donationListIdx + " TimeRange Array Length = " + timeRangeArray.length + "Time Range Array IDX = " + timeRangeArrayIdx);
 				if(donationListToReturn.get(donationListIdx).getTs().equals(timeRangeArray[timeRangeArrayIdx]))
 				{
