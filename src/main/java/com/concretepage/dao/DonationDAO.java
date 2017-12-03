@@ -790,8 +790,10 @@ public class DonationDAO implements IntDonationDAO {
 		String timePrintFinish = format1.format(cFinish.getTime());
 		System.out.println(timePrintFinish);
 		int count = 0;
+		boolean enteredWhile = false;
 		while (!timePrintStart.equals(timePrintFinish))
 		{
+			enteredWhile = true;
 			cStart.add(Calendar.DATE, 1);
 			timePrintStart = format1.format(cStart.getTime());
 			System.out.println(timePrintStart);
@@ -812,6 +814,12 @@ public class DonationDAO implements IntDonationDAO {
 				timeList.add(toAdd);
 			}
 
+		}
+		if (!enteredWhile)
+		{
+			formattedEnd = format1.format(cStart.getTime());
+			toAdd = formattedBeginning + " - " + formattedEnd;
+			timeList.add(toAdd);
 		}
 		return timeList;
 	}
