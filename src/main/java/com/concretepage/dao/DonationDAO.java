@@ -205,7 +205,7 @@ public class DonationDAO implements IntDonationDAO {
 				"SELECT * FROM `donation_table`"
 				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
 				+ end_date + " 23:59:00') AND "
-				+ "donation=" + donation + " ORDER BY org_name, category;", Donation.class);
+				+ "donation=" + donation + " ORDER BY org_name, category, ts;", Donation.class);
 		/*Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
 				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
