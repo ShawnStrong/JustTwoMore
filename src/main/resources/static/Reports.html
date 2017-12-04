@@ -162,26 +162,42 @@
                       dataType:'json',
                       success : function(json) {
                           if (json != ""){
-                              alert("endpoint has returned " + JSON.stringify(json));
+//                              alert("endpoint has returned " + JSON.stringify(json));
 							  
-							  // dynamically make the headers
+//							   dynamically make the headers
 //							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
 //							  $.each(json.columns, function(rowIndex, r) {
 //								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
 //							  });
 //							  headers.append("</thead><tbody></tbody>");
 //							  $("#table1").append(headers);
-                              var header = $(document.createElement("thead"));
-                              $.each(json.columns, function(rowIndex, r) {
-                                  header.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
-                              });
-                              var body = $(document.createElement("tbody"));
                               
-                              $("#table1").append(header);
-                              $("#table1").append(body);
+                              $("#tablebox").empty();
+                              
+                              $(document.createElement("table")).prop({id: "table1", align: "center"}).appendTo($("#tablebox"));
+                              $(document.createElement("thead")).prop({id: "header"}).appendTo($("#table1"));
+                              $(document.createElement("tbody")).prop({id: "body"}).appendTo($("#table1"));
+                              
+                              
+                              $.each(json.columns, function() {
+                                  var name = "";
+                                  if (this == "org_name"){
+                                      name = "Organization";
+                                  } else if (this == "category") {
+                                      name = "Category";
+                                  } else {
+                                      name = this;
+                                  }
+                                  $(document.createElement("th")).attr({"data-dynatable-column" : this}).html(name).appendTo($("#header"));
+                              })
+                              
+                              
 							  
 							  var mytable = $("#table1");
 							  mytable.dynatable({
+                                  table: {
+                                      headRowSelector: 'thead',
+                                  },
 								dataset: {
 									records: json.data
 								}
@@ -294,8 +310,14 @@
     
 	
 	<div id="tablebox">
+<!--
 		<table id="table1" align="center">
+            <thead id="header">
+            </thead>
+            <tbody id="body">
+            </tbody>
         </table>
+-->
 	</div>
 
 <!--
