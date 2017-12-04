@@ -421,6 +421,7 @@ public class DonationService implements IntDonationService {
 		}
 		
 		//System.out.println(array.toString());
+		
 		JSONObject allData = new JSONObject();
 		System.out.println("Time Array: " + timeArray[0]);
 		if (reportType == 0) {
