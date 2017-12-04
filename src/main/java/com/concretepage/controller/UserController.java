@@ -38,10 +38,12 @@ public class UserController {
 		
 		int success = userDAO.login(username, password);
 		if (success == 0) {
-			System.out.println(donationService.findUserPage(username));
-			return donationService.findUserPage(username);
+			//System.out.println(donationService.findUserPage(username));
+			String test = donationService.findUserPage(username);
+			System.out.println(test);
+			return test;
 		} else {
-			return "";
+			return "a";
 		}
 	}
 	
