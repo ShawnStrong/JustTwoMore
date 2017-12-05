@@ -111,6 +111,16 @@
 					}
 				});
 			});
+			
+			$("#pretest").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/pretest",
+					type: "GET",
+					success: function(){
+						alert("Pretest activated");
+					}
+				});
+			});
         });
         
 
@@ -153,14 +163,17 @@
     
 	<br>
 	
-    <button type="button" id="initTest"> Initiate
+    <button type="button" id="initTest"> Clean databases
 	</button><br><br>
 	
 	<button type="button" id="test2"> Test 2
 	</button><br><br>
 	
 	<button type="button" id="test3"> Test 3
-	</button>
+	</button><br><br>
     
+	<button type="button" id="pretest"> Pretest
+	</button>
+	
 </body>
 </html>

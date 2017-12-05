@@ -32,4 +32,10 @@ public class TestController {
 		testDAO.initTestThree();
 		return 0;
 	}
+	
+	@GetMapping("pretest")
+	public @ResponseBody int pretest() {
+		testDAO.pretest();
+		return 0;
+	}
 }

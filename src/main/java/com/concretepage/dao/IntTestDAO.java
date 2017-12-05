@@ -8,4 +8,6 @@ public interface IntTestDAO {
 
 	void initTestTwo();
 
+	void pretest();
+
 }
