@@ -1,0 +1,33 @@
+Trial 1 - No user model
+
+1. Read and sign electronic consent form.
+2. Give brief introduction: "You will be representing a worker in a food donation warehouse that is inputting a sequence of donations from various organizations and different categories of food. We will initially give you a clean database so that you can see how the software works. Then we will conduct the actual trial where we will tell you a sequence of donations to input."
+2. Clean the database and give the user 10 seconds to play around with the donation page.
+3. Once the user feels comfortable with the inputs, begin the timer and start the test. Tell the user the sequence in this order:
+
+	Input 20 pounds deli for Org A
+	Input 10 pounds pantry for Org B
+	Input 15 pounds meat for Org X
+	Input 30 pounds dairy for Org C
+	Input 20 pounds bakery for Org D
+	Input 15 pounds produce for Org Y
+	Input 25 pounds pantry for Org E
+	
+4. Stop the timer and record the time. 
+5. Now on to the voice test. Explain to the user: "Next we will test the same sequence of donations with voice commands. First we will give you a trial run of the voice command software. Then we will conduct the trial."
+6. Clean the database, load the Pretest database, then give the users a trial run of the voice commands.
+	
+	Voice commands:
+		select first/second/third organization
+		enter :weight pounds of category
+		submit the donation
+		
+7. Once the user feels comfortable using voice commands, clean the database then load test 3.
+8. Run the voice command trial with the sequence outlined above.
+9. Stop the timer and record the time.
+10. Have the user fill out the System Usability Scale.
+11. Thank the user and reward them with a firm handshake.
+
+Trials 2 & 3
+
+Just mention the functionality of the widget as well
