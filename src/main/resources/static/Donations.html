@@ -339,22 +339,23 @@
                               error : function(request,error) {
                                   if (request.responseText == "ok") {
                                       $( "#successfulDonation" ).dialog({
-                                          modal: true,
-                                          buttons: {
-                                            Ok: function() {
-                                                window.location.href = "Donations.html";
-                                            }
-                                          }
-                                        });
+                                  modal: true,
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#successfulDonation").dialog('close');
+                                            window.location.href = "Donations.html";
+                                        }, 1500);
+                                    }
+                                });
                                   } else {
                                       $( "#failedDonation" ).dialog({
-                                          modal: true,
-                                          buttons: {
-                                            Ok: function() {
-                                              $( this ).dialog( "close" );
-                                            }
-                                          }
-                                        });
+                                  modal: true,
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#failedDonation").dialog('close');
+                                        }, 1500);
+                                    }
+                                });
                                   }
                               }
                             });
@@ -399,7 +400,7 @@
                                       setTimeout(function(){
                                             $("#successfulDonation").dialog('close');
                                             window.location.href = "Donations.html";
-                                        }, 3000);
+                                        }, 1500);
                                     }
                                 });
                           } else {
@@ -408,7 +409,7 @@
                                   open: function(event, ui){
                                       setTimeout(function(){
                                             $("#failedDonation").dialog('close');
-                                        }, 3000);
+                                        }, 1500);
                                     }
                                 });
                           }
