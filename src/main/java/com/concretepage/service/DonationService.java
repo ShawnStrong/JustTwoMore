@@ -319,6 +319,11 @@ public class DonationService implements IntDonationService {
 			pages.add(donationDAO.getUserPage(username, datesToQuery.get(i)));
 		}
 		
+		// currently the way to deal with no user data in redirection_table
+		if (pages.get(0).equals("a")) {
+			return "a";
+		}
+		
 		for (int i = 0; i < 4; i++) {
 			String page = pages.get(i);
 			if (page.equals("reports")) {

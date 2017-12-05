@@ -169,7 +169,12 @@ public class DonationDAO implements IntDonationDAO {
 				"and user_name = '" + user_name +"';");
 		
 		List<String> pages = query.getResultList();
-		return pages.get(0);
+		if (pages.isEmpty()) {
+			System.out.println("Ooga booga");
+			return "a";
+		} else {
+			return pages.get(0);
+		}
 	}
 
 	@Override

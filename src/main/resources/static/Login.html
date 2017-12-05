@@ -41,7 +41,13 @@
                       }
                   },
                   error : function(request,error) {
-                      alert("Request: " + JSON.stringify(request));
+                      //alert("Request: " + JSON.stringify(request));
+					  if (request.status == 200) {
+						if (request.responseText == "a") {
+							localStorage.setItem("username", $("#inputUsername").val());
+							window.location.href = "Console.html";
+						}
+					  }
                   }
               });
           })
