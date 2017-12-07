@@ -37,7 +37,7 @@ public class TestDAO implements IntTestDAO {
 		query = entityManager.createNativeQuery("DROP TABLE org_table");
 		query.executeUpdate();
 		
-		// create user, org, donation tables
+		// create user and org tables
 		
 		query = entityManager.createNativeQuery(
 				"CREATE TABLE IF NOT EXISTS `org_table` (" + 
@@ -59,23 +59,6 @@ public class TestDAO implements IntTestDAO {
 				"  PRIMARY KEY (`user_id`)" + 
 				") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
 		query.executeUpdate();
-		
-		// create donation table
-				query = entityManager.createNativeQuery(
-						"CREATE TABLE IF NOT EXISTS `donation_table` (" +
-						" `order_id` int(5) NOT NULL AUTO_INCREMENT," +
-						" `org_id` int(5) NOT NULL," +
-						" `org_name` TINYTEXT NOT NULL," +
-						" `category` TINYTEXT NOT NULL," +
-						" `weight` int(7) NOT NULL," +
-						" `donation` int(1) NOT NULL," +
-						" `user_name` TINYTEXT NOT NULL," +
-						" `ts` TIMESTAMP," +
-						" PRIMARY KEY (`order_id`)," +
-						" FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)" +
-						") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
-				
-				query.executeUpdate();
 		
 		// create test user
 		query = entityManager.createNativeQuery(
@@ -112,10 +95,10 @@ public class TestDAO implements IntTestDAO {
 		org_name[6] = "Org E";
 		
 		String[] dates = new String[4];
-		dates[0] = "2017-11-07";
-		dates[1] = "2017-11-14";
-		dates[2] = "2017-11-21";
-		dates[3] = "2017-11-28";
+		dates[0] = "2017-11-09";
+		dates[1] = "2017-11-16";
+		dates[2] = "2017-11-23";
+		dates[3] = "2017-11-30";
 		
 		String[] times = new String[7];
 		times[0] = " 14:00:00";
@@ -136,6 +119,23 @@ public class TestDAO implements IntTestDAO {
 		categories[6] = "pantry";
 		
 		Query query;
+		
+		// create donation table
+		query = entityManager.createNativeQuery(
+				"CREATE TABLE IF NOT EXISTS `donation_table` (" +
+				" `order_id` int(5) NOT NULL AUTO_INCREMENT," +
+				" `org_id` int(5) NOT NULL," +
+				" `org_name` TINYTEXT NOT NULL," +
+				" `category` TINYTEXT NOT NULL," +
+				" `weight` int(7) NOT NULL," +
+				" `donation` int(1) NOT NULL," +
+				" `user_name` TINYTEXT NOT NULL," +
+				" `ts` TIMESTAMP," +
+				" PRIMARY KEY (`order_id`)," +
+				" FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)" +
+				") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
+		
+		query.executeUpdate();
 		
 		for (int i = 0; i < 28; i++) {
 			if (i < 7) {
@@ -204,10 +204,10 @@ public class TestDAO implements IntTestDAO {
 		org_name[4] = "Org E";
 		
 		String[] dates = new String[4];
-		dates[0] = "2017-11-07";
-		dates[1] = "2017-11-14";
-		dates[2] = "2017-11-21";
-		dates[3] = "2017-11-28";
+		dates[0] = "2017-11-09";
+		dates[1] = "2017-11-16";
+		dates[2] = "2017-11-23";
+		dates[3] = "2017-11-30";
 		
 		String[] times = new String[5];
 		times[0] = " 14:00:00";
@@ -224,6 +224,23 @@ public class TestDAO implements IntTestDAO {
 		categories[4] = "pantry";
 		
 		Query query;
+		
+		// create donation table
+		query = entityManager.createNativeQuery(
+				"CREATE TABLE IF NOT EXISTS `donation_table` (" +
+				" `order_id` int(5) NOT NULL AUTO_INCREMENT," +
+				" `org_id` int(5) NOT NULL," +
+				" `org_name` TINYTEXT NOT NULL," +
+				" `category` TINYTEXT NOT NULL," +
+				" `weight` int(7) NOT NULL," +
+				" `donation` int(1) NOT NULL," +
+				" `user_name` TINYTEXT NOT NULL," +
+				" `ts` TIMESTAMP," +
+				" PRIMARY KEY (`order_id`)," +
+				" FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)" +
+				") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
+		
+		query.executeUpdate();
 		
 		for (int i = 0; i < 20; i++) {
 			if (i < 5) {
@@ -292,10 +309,10 @@ public class TestDAO implements IntTestDAO {
 		org_name[4] = "Org E";
 		
 		String[] dates = new String[4];
-		dates[0] = "2017-11-07";
-		dates[1] = "2017-11-14";
-		dates[2] = "2017-11-21";
-		dates[3] = "2017-11-28";
+		dates[0] = "2017-11-09";
+		dates[1] = "2017-11-16";
+		dates[2] = "2017-11-23";
+		dates[3] = "2017-11-30";
 		
 		String[] times = new String[5];
 		times[0] = " 14:00:00";
@@ -312,6 +329,23 @@ public class TestDAO implements IntTestDAO {
 		categories[4] = "pantry";
 		
 		Query query;
+		
+		// create donation table
+		query = entityManager.createNativeQuery(
+				"CREATE TABLE IF NOT EXISTS `donation_table` (" +
+				" `order_id` int(5) NOT NULL AUTO_INCREMENT," +
+				" `org_id` int(5) NOT NULL," +
+				" `org_name` TINYTEXT NOT NULL," +
+				" `category` TINYTEXT NOT NULL," +
+				" `weight` int(7) NOT NULL," +
+				" `donation` int(1) NOT NULL," +
+				" `user_name` TINYTEXT NOT NULL," +
+				" `ts` TIMESTAMP," +
+				" PRIMARY KEY (`order_id`)," +
+				" FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)" +
+				") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
+		
+		query.executeUpdate();
 		
 		for (int i = 0; i < 20; i++) {
 			if (i < 5) {
