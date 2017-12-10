@@ -26,32 +26,11 @@
 	<!-- jQuery Tabledit plugin
 	<script src="jquery.tabledit.js"></script> -->
 	
-	<script>
-		// for toggling bootstable buttons for when the table is generated
-		var addBootstable = false;
-		
-		/* function to make jquery table */
-		function makeTable(container, data) {
-			//var table = $("<table>");
-			//var table = $("<tr>");
-			// need to figure out a way to dynamically add headers to table
-			var table = $("");
-			table.append("<tr><th>org_id</th><th>org_name</th><th>contact_name</th><th>contact_number</th><th>contact_email</th><th>notes</th></tr>");
-			$.each(data, function(rowIndex, r) {
-				var row = $("<tr>");
-				$.each(r, function(colIndex, c) { 
-
-					row.append($("<td/>").text(c));
-				});
-				row.append("</tr>");
-				table.append(row);
-			});
-			//table.append("</table>");
-			$("#jqueryTable").append(table);
-			//return container.append(table);
-		}
-		
+	<script>		
 		$(document).ready(function() {
+			//document.getElementById("formbox").style.display = "none";
+			//document.getElementById("tablebox").style.display = "none";
+		
             //Add username to the navbar if it exists in local storage
             var name = localStorage.getItem("username");
             $("#username").prop("value",name);
@@ -69,10 +48,7 @@
                 window.location.href = "Console.html";
             });
 			
-			// Show and add button events
-			$("#showOrgs").click(function() {
-				alert("this guy was pressed");
-			});
+			
 			
             /*if (name != null && name.length > 0) {
                 $(".navbar .container-fluid #userAbsent").hide();
@@ -85,30 +61,23 @@
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });*/
-            
-			/* this makes a jquery table 
-			$( "#button1" ).click(function() {
-                //$('table').remove();
-				$.ajax({
-					url: "http://localhost:8080/org/list2",
-					type: "GET",
-					dataType: "json"
-				})
-				.done(function(data) {
-					//alert( "Data: " + JSON.stringify(data) );
-					makeTable($("#jqueryTable") , data);
-					//$(document.body).append(JSON.stringify(data));
-				})
-				.fail(function(xhr, status, errorThrown) {
-					alert( "Sorry, there was a problem!" );
-					console.log( "Error: " + errorThrown );
-					console.log( "Status: " + status );
-					console.dir( xhr );
-				});
-			}); */
 			
 			/* this makes a dynatable */
-			$( "#button2" ).click(function() {
+			$( "#showOrg" ).click(function() {
+				/*var tablebox = document.getElementById("tablebox");
+				var formbox = document.getElementById("formbox");
+				// disable formbox if activated
+				if (formbox.style.display === "block") {
+					formbox.style.display = "none";
+				}
+				// enable tablebox if not activated
+				if (tablebox.style.display === "none") {
+					tablebox.style.display = "block";
+				}*/
+				
+				$("#tablebox").prop({hidden: false});
+				$("#formbox").prop({hidden: true});
+			
 				var mytable = $("#table1");
                 var form = $("#redirection").serialize();
 				$.ajax({
@@ -117,6 +86,9 @@
 					data: form,
 					dataType: "json",
 					success: function(data){
+						
+						$("#tableBody").empty();
+						$("#table1 thead tr th[name=buttons]").remove();
                         //create columns dynamically
 						mytable.dynatable({
 							dataset: {
@@ -126,25 +98,21 @@
 						mytable.data('dynatable').settings.dataset.records = data;
 						mytable.data('dynatable').dom.update();
 						
-						if (!addBootstable) {
-							$('#table1').SetEditable();
-						}
+						$('#table1').SetEditable({
+							onDelete: function() {}
+						});
 					 }
 				});
 			}); 
 			
-            
-			/* Start of second jQuery table
-            $("#tableButton").click(function() {
-				var mytable = $("#tablebox");
-				$.ajax({
-					url: "http://localhost:8080/org/list2",
-					type: "GET",
-					dataType: "json",
-					success: function(data){
-						var trHTML = '';
-						$.each(data.
-            */
+			$("#addOrg").click(function() {
+				$("#tablebox").prop({hidden: true});
+				$("#formbox").prop({hidden: false});
+			});
+			
+			$("#bAcep").click(function() {
+				alert($("#editing td input").val());
+			});
 			
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
@@ -181,36 +149,7 @@
               // Start listening. You can call this here, or attach this call to an event, button, etc.
               annyang.start();
             }
-            
-            
-			
-			/* this makes a jQuery-Tabledit plugin table 
-			$('#tabledit').Tabledit({
-				url: 'http://localhost:8080/org/list2',
-				columns: {
-					editable: [[0, 'org_id'], [1, 'org_name'], [2, 'contact_name'], [3, 'contact_number'], [4, 'contact_email'], [5, 'notes']]
-				}
-			});*/
-			
-			/* another try to make jQuery-Tabledit to work
-			$( "#button3" ).click(function() {
-				var mytable = $("#tabledit");
-				$.ajax({
-					url: "http://localhost:8080/org/list",
-					type: "GET",
-					dataType: "json",
-					success: function(data){
-						alert(data);
-						mytable.Tabledit({
-							columns: {
-								identifier: [0, 'org_name'],
-								editable: [[1, 'contact_name'], [2, 'contact_number'], [3, 'contact_email'], [4, 'notes']]
-							}
-						});
-					 }
-				});
-			});*/
-            
+
             // Submit the form
             $("#submit").click(function() {
               var form = $("form").serialize();
@@ -253,15 +192,15 @@
                     });
                 }
             });
-			
-			
-            
 		});
     </script>
     
 </head>
 <body>
-    
+    <form id="redirection">
+        <input type="hidden" id="username" name="user_name">
+    </form>
+	
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -293,19 +232,15 @@
       </div><!-- /.container-fluid -->
     </nav>
 	
-	<!-- show and add buttons -->
-	<div id="showAndAdd" class="btn-group col-lg-4" data-toggle="buttons">
-        <label class="btn btn-primary active">
-            <input type="radio" id="showOrgs"> Show Organizations
-        </label>
-        <label class="btn btn-primary">
-            <input type="radio" id="addOrg"> Add Organization
-        </label>
-    </div>
+	<!-- show and add buttons with functions -->
+	<div class="btn-group">
+		<button class="btn btn-primary" id="showOrg">Show Organizations</button>
+		<button class="btn btn-primary" id="addOrg">Add Organization</button>
+	</div>
 	
 	<br><br>
 			
-    <div class="container-fluid">
+    <div class="container-fluid" id="formbox" hidden>
         <form class="form-horizontal" name="orgForm">
           <div class="form-group col-lg-10 col-md-10 col-sm-10">
             <label for="inputOrg" class="col-sm-2 control-label">Organization:</label>
@@ -360,21 +295,7 @@
 
 	<br><br>
 	
-	<!-- Button for loading jquery table 
-	<button type="button" id="button1"> Click moi! </button><br> -->
-	
-	<!-- Button for loading tabledit table 
-	<button type="button" id="button3"> Get Tabledit </button><br> -->
-	
-	
-    <form id="redirection">
-        <input type="hidden" id="username" name="user_name">
-    </form>
-	
-	<!-- Button for loading Dynatable. Need tablebox below as well -->
-	<button type="button" id="button2"> Click for Dinotable </button><br>
-	
-	<div id="tablebox">
+	<div id="tablebox" hidden>
 		<table id="table1" align="center">
 			<thead>
 				<th data-dynatable-column="org_name">Organization</th>
@@ -383,49 +304,10 @@
 				<th data-dynatable-column="contact_email">Email</th>
 				<th>Notes</th>
 			</thead>
-			<tbody>
+			<tbody id="tableBody">
 			</tbody>
         </table>
 	</div>
 	
-	<!-- jQuery-Tabledit plugin 
-	<table id="tabledit">
-        <thead>
-            <tr>
-                <th>Organization</th>
-                <th>Contact</th>
-                <th>Number</th>
-                <th>Email</th>
-                <th>Notes</th>
-            </tr>
-        </thead>
-		<tbody>
-		</tbody>
-    </table>-->
-	
-	<!-- Second jQuery table 
-	<button type="button" id="tableButton"> Show and Edit Orgs </button><br>
-	
-	<table id="tablebox">
-		<tr>
-			<th>Organization</th>
-			<th>Contact</th>
-			<th>Number</th>
-			<th>Email</th>
-			<th>Notes</th>
-		</tr>
-	</table> -->
-	
-	<table id="jqueryTable">
-	<!--
-		<tr>
-			<th>org_id</th>
-			<th>org_name</th>
-			<th>contact_name</th>
-			<th>contact_number</th>
-			<th>contact_email</th>
-			<th>notes</th>
-		</tr> -->
-	</table>
 </body>
 </html>
