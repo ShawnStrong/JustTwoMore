@@ -27,6 +27,9 @@
 	<script src="jquery.tabledit.js"></script> -->
 	
 	<script>
+		// for toggling bootstable buttons for when the table is generated
+		var addBootstable = false;
+		
 		/* function to make jquery table */
 		function makeTable(container, data) {
 			//var table = $("<table>");
@@ -65,8 +68,12 @@
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });
-            
-            
+			
+			// Show and add button events
+			$("#showOrgs").click(function() {
+				alert("this guy was pressed");
+			});
+			
             /*if (name != null && name.length > 0) {
                 $(".navbar .container-fluid #userAbsent").hide();
                 $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
@@ -118,6 +125,10 @@
 						});
 						mytable.data('dynatable').settings.dataset.records = data;
 						mytable.data('dynatable').dom.update();
+						
+						if (!addBootstable) {
+							$('#table1').SetEditable();
+						}
 					 }
 				});
 			}); 
@@ -242,9 +253,8 @@
                     });
                 }
             });
-            
-            
-            
+			
+			
             
 		});
     </script>
@@ -282,16 +292,19 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-    
-	<!-- lol -->
-<!--
-	<form method="get" action="/org/list">
-		<button type="submit">List yo doods</button>
-	</form><br>
--->
 	
-    
-    
+	<!-- show and add buttons -->
+	<div id="showAndAdd" class="btn-group col-lg-4" data-toggle="buttons">
+        <label class="btn btn-primary active">
+            <input type="radio" id="showOrgs"> Show Organizations
+        </label>
+        <label class="btn btn-primary">
+            <input type="radio" id="addOrg"> Add Organization
+        </label>
+    </div>
+	
+	<br><br>
+			
     <div class="container-fluid">
         <form class="form-horizontal" name="orgForm">
           <div class="form-group col-lg-10 col-md-10 col-sm-10">
@@ -344,29 +357,7 @@
           </p>
         </div>
     </div>
-    
-    
-	<!-- org create form -->
-<!--
-    <form action="/org/create">
-        Partner:<br>
-        <input type="text" name="org_name" value="" required>
-        <br>
-        Contact name:<br>
-        <input type="text" name="contact_name" value="" required>
-        <br>
-        Contant phone:<br>
-        <input type="text" name="contact_number" value="" required>
-		<br>
-        Contant email:<br>
-        <input type="text" name="contact_email" value="" required>
-		<br>
-		Description:<br>
-        <input type="text" name="notes" value="" required>
-        <br><br>
-        <input type="submit" value="Submit">
-    </form>
--->
+
 	<br><br>
 	
 	<!-- Button for loading jquery table 
@@ -375,10 +366,12 @@
 	<!-- Button for loading tabledit table 
 	<button type="button" id="button3"> Get Tabledit </button><br> -->
 	
-	<!-- Button for loading Dynatable. Need tablebox below as well -->
+	
     <form id="redirection">
         <input type="hidden" id="username" name="user_name">
     </form>
+	
+	<!-- Button for loading Dynatable. Need tablebox below as well -->
 	<button type="button" id="button2"> Click for Dinotable </button><br>
 	
 	<div id="tablebox">
