@@ -14,5 +14,7 @@ public interface IntOrgDAO {
 
 	public int updateOrg(String org_name, String contact_name, String contact_number, String contact_email,
 			String notes);
+
+	public int deleteOrg(String org_name);
 	
 }

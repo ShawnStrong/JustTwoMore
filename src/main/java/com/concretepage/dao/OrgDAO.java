@@ -114,4 +114,14 @@ public class OrgDAO implements IntOrgDAO {
 				}
 	}
 
+	@Override
+	public int deleteOrg(String org_name) {
+		Query query = entityManager.createNativeQuery(
+				"DELETE FROM org_table WHERE org_name='" +
+				org_name + "';");
+		
+		query.executeUpdate();
+		return 0;
+	}
+
 }

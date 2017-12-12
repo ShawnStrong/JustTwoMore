@@ -52,6 +52,13 @@ public class OrgController {
 		return partnerDAO.updateOrg(org_name, contact_name, contact_number, contact_email, notes);
 	}
 	
+	@GetMapping("delete")
+	public @ResponseBody int deleteOrg (
+			@RequestParam String org_name) {
+		
+		return partnerDAO.deleteOrg(org_name);
+	}
+	
 	@GetMapping("list")
 	public @ResponseBody List<Org> listPartner() {
 
