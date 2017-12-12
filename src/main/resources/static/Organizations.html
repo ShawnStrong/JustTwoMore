@@ -27,10 +27,7 @@
 	<script src="jquery.tabledit.js"></script> -->
 	
 	<script>		
-		$(document).ready(function() {
-			//document.getElementById("formbox").style.display = "none";
-			//document.getElementById("tablebox").style.display = "none";
-		
+		$(document).ready(function() {	
             //Add username to the navbar if it exists in local storage
             var name = localStorage.getItem("username");
             $("#username").prop("value",name);
@@ -99,19 +96,57 @@
 						mytable.data('dynatable').dom.update();
 						
 						$('#table1').SetEditable({
-							onDelete: function() {}
+                            columnsEd: "0,1,2,3,4",
+							onDelete: function() {
+                                alert(JSON.stringify(this));
+                                
+//                                delOrg(orgName);
+                            },
+                            onEdit: function(columnsEd) {   
+                                var orgName = columnsEd[0].childNodes[0].innerHTML;
+                                var contact = columnsEd[0].childNodes[1].innerHTML;
+                                var number = columnsEd[0].childNodes[2].innerHTML;
+                                var email = columnsEd[0].childNodes[3].innerHTML;
+                                var notes = columnsEd[0].childNodes[4].innerHTML;
+                                
+                                editOrg(orgName, contact, number, email, notes);
+                            }
 						});
 					 }
 				});
 			}); 
+            
+            function editOrg(orgName, contact, number, email, notes) {
+                var editString = "?org_name=" + orgName + "&contact_name=" + contact + "&contact_number=" + number + "&contact_email=" + email + "&notes=" + notes;
+                
+                $.ajax({
+                    url:"/org/update" + editString,
+                    type: "GET",
+                    success: function(data) {
+                        if (data == 0) {
+                            alert("Organization successfully updated.");
+                        } else {
+                            alert("Organization information was not updated.")
+                        }
+                    }
+                });
+            };
+            
+            function delOrg(orgName) {
+                var delString = "?org_name=" + orgName;
+                
+                $.ajax({
+                    url:"/org/delete" + delString,
+                    type: "GET",
+                    success: function(data) {
+                        alert("Organization has been deleted.");
+                    }
+                });
+            };
 			
 			$("#addOrg").click(function() {
 				$("#tablebox").prop({hidden: true});
 				$("#formbox").prop({hidden: false});
-			});
-			
-			$("#bAcep").click(function() {
-				alert($("#editing td input").val());
 			});
 			
             if (annyang) {
