@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
-    <script src="bootstable.min.js"></script>
+    <script src="bootstable.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
 	
@@ -94,13 +94,19 @@
 						});
 						mytable.data('dynatable').settings.dataset.records = data;
 						mytable.data('dynatable').dom.update();
+                        mytable.data('dynatable').paginationPerPage.set(1000);
+                        
+                        $("#tablebox .dynatable-per-page").hide();
+                        
+                        $("#dynatable-pagination-links-table1").hide();
+                        
+                        $("#dynatable-query-search-table1").val("");
 						
 						$('#table1').SetEditable({
-                            columnsEd: "0,1,2,3,4",
-							onDelete: function() {
-                                alert(JSON.stringify(this));
-                                
-//                                delOrg(orgName);
+                            columnsEd: "1,2,3,4",
+							onDelete: function(columnsEd) {
+                                var orgName = columnsEd[0].childNodes[0].innerHTML;
+                                delOrg(orgName);
                             },
                             onEdit: function(columnsEd) {   
                                 var orgName = columnsEd[0].childNodes[0].innerHTML;
@@ -115,6 +121,31 @@
 					 }
 				});
 			}); 
+            
+            $(document).on("keypress", "#dynatable-query-search-table1", function(e) {
+                if (e.which == 13 && $("#dynatable-query-search-table1").val() != "") {
+                    $("#table1 thead tr th[name=buttons]").remove();
+                    $('#table1').SetEditable({
+                            columnsEd: "1,2,3,4",
+							onDelete: function(columnsEd) {
+                                var orgName = columnsEd[0].childNodes[0].innerHTML;
+                                delOrg(orgName);
+                            },
+                            onEdit: function(columnsEd) {   
+                                var orgName = columnsEd[0].childNodes[0].innerHTML;
+                                var contact = columnsEd[0].childNodes[1].innerHTML;
+                                var number = columnsEd[0].childNodes[2].innerHTML;
+                                var email = columnsEd[0].childNodes[3].innerHTML;
+                                var notes = columnsEd[0].childNodes[4].innerHTML;
+                                
+                                editOrg(orgName, contact, number, email, notes);
+                            }
+						});
+                    
+                }
+                
+            });
+
             
             function editOrg(orgName, contact, number, email, notes) {
                 var editString = "?org_name=" + orgName + "&contact_name=" + contact + "&contact_number=" + number + "&contact_email=" + email + "&notes=" + notes;
