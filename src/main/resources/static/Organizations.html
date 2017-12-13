@@ -88,6 +88,10 @@
 						$("#table1 thead tr th[name=buttons]").remove();
                         //create columns dynamically
 						mytable.dynatable({
+							features: {
+								paginate: false,
+								perPageSelect: false
+							},
 							dataset: {
 								records: data
 							}
@@ -121,9 +125,14 @@
 					 }
 				});
 			}); 
+			
+			var lastSearch = "";
+			var currentSearch;
             
             $(document).on("keypress", "#dynatable-query-search-table1", function(e) {
-                if (e.which == 13 && $("#dynatable-query-search-table1").val() != "") {
+				currentSearch = $("#dynatable-query-search-table1").val();
+                if (e.which == 13 && currentSearch != "" && currentSearch != lastSearch) {
+					lastSearch = currentSearch;
                     $("#table1 thead tr th[name=buttons]").remove();
                     $('#table1').SetEditable({
                             columnsEd: "1,2,3,4",
