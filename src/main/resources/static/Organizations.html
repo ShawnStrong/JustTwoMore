@@ -126,9 +126,9 @@
 				});
 			}); 
 			
+			/* Function for limiting Dynatable's search field so it doesn't break Bootstable */
 			var lastSearch = "";
 			var currentSearch;
-            
             $(document).on("keypress", "#dynatable-query-search-table1", function(e) {
 				currentSearch = $("#dynatable-query-search-table1").val();
                 if (e.which == 13 && currentSearch != "" && currentSearch != lastSearch) {
@@ -150,11 +150,29 @@
                                 editOrg(orgName, contact, number, email, notes);
                             }
 						});
-                    
                 }
-                
             });
-
+			
+			/* any time a column is resorted, reload the Bootstable addon */
+			$(document).on('click', ".dynatable-sort-header", function() {
+				$("#table1 thead tr th[name=buttons]").remove();
+				$('#table1').SetEditable({
+                    columnsEd: "1,2,3,4",
+					onDelete: function(columnsEd) {
+                        var orgName = columnsEd[0].childNodes[0].innerHTML;
+                        delOrg(orgName);
+                    },
+                    onEdit: function(columnsEd) {   
+                        var orgName = columnsEd[0].childNodes[0].innerHTML;
+                        var contact = columnsEd[0].childNodes[1].innerHTML;
+                        var number = columnsEd[0].childNodes[2].innerHTML;
+                        var email = columnsEd[0].childNodes[3].innerHTML;
+                        var notes = columnsEd[0].childNodes[4].innerHTML;
+                                
+                        editOrg(orgName, contact, number, email, notes);
+                    }
+				});
+			});
             
             function editOrg(orgName, contact, number, email, notes) {
                 var editString = "?org_name=" + orgName + "&contact_name=" + contact + "&contact_number=" + number + "&contact_email=" + email + "&notes=" + notes;
