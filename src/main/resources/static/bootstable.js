@@ -101,10 +101,18 @@ function rowAcep(but) {
 //Acepta los cambios de la edición
     var $row = $(but).parents('tr');  //accede a la fila
     var $cols = $row.find('td');  //lee campos
+	var count = 0;
     if (!ModoEdicion($row)) return;  //Ya está en edición
     //Está en edición. Hay que finalizar la edición
     IterarCamposEdit($cols, function($td) {  //itera por la columnas
-      var cont = $td.find('input').val(); //lee contenido del input
+	  count++;
+	  var cont;
+	  if (count != 4) {
+		  cont = $td.find('input').val(); //lee contenido del input
+	  } else {
+		  cont = $td.find('textarea').val(); //lee contenido del input
+	  }
+      
       $td.html(cont);  //fija contenido y elimina controles
     });
     FijModoNormal(but);
@@ -125,12 +133,22 @@ function rowCancel(but) {
 function rowEdit(but) {  //Inicia la edición de una fila
     var $row = $(but).parents('tr');  //accede a la fila
     var $cols = $row.find('td');  //lee campos
+	var count = 0;
     if (ModoEdicion($row)) return;  //Ya está en edición
     //Pone en modo de edición
     IterarCamposEdit($cols, function($td) {  //itera por la columnas
+		count++;
         var cont = $td.html(); //lee contenido
-        var div = '<div style="display: none;">' + cont + '</div>';  //guarda contenido
-        var input = '<input class="form-control input-sm"  value="' + cont + '">';
+		var input;
+		var div = '<div style="display: none;">' + cont + '</div>';  //guarda contenido
+		if (count != 4) {
+			input = '<input class="form-control input-sm"  value="' + cont + '">';
+		} else {
+			input = '<textarea class="form-control" rows="2">' + cont + '</textarea>';
+		}
+        
+		
+		
         $td.html(div + input);  //fija contenido
     });
     FijModoEdit(but);

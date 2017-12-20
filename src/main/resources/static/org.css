@@ -13,5 +13,8 @@ th {
 	/*text-align: center; doesn't work?*/
 }
 td {
-	padding: 15px;
+	/*padding: 15px;
+	width: 100px;
+	word-wrap: break-word;
+	white-space:pre;*/
 }
