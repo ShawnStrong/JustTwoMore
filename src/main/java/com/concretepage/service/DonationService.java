@@ -39,7 +39,8 @@ public class DonationService implements IntDonationService {
 	 */
 	@Override
 	public String separateDonations(int donation, String org_name, String user_name,
-			int deli, int dairy, int meat, int produce, int pantry, int bakery, String page)
+			int deli, int dairy, int meat, int produce, int pantry, int bakery, 
+			int pet_food, int nonfood, String date, String page)
 	{
 		boolean enteredInfo = false;
 		// separate donations
@@ -50,12 +51,14 @@ public class DonationService implements IntDonationService {
 		mp.put("produce", produce);
 		mp.put("pantry", pantry);
 		mp.put("bakery", bakery);
+		mp.put("pet_food", pet_food);
+		mp.put("nonfood", nonfood);
 		
 		//iterate over mp to check for donations with values > 0. If so, input to database
 		for (String category : mp.keySet()){
 			int weight = mp.get(category);
 			if (weight > 0) {
-				donationDAO.inputDonation(org_name, user_name, category, weight, donation);
+				donationDAO.inputDonation(org_name, user_name, category, weight, donation, date);
 				enteredInfo = true;
 			}
         }

@@ -28,7 +28,6 @@ public class DonationController {
 	@Autowired
 	private IntDonationService donationService;
 	
-	// Bakery, Deli, Dairy, Meat, Produce, & Pantry
 	@GetMapping("input")
 	public @ResponseBody String inputDonation (
 			@RequestParam int donation,
@@ -40,9 +39,13 @@ public class DonationController {
 			@RequestParam int produce,
 			@RequestParam int pantry,
 			@RequestParam int bakery,
+			@RequestParam int pet_food,
+			@RequestParam int nonfood,
+			@RequestParam String date,
 			@RequestParam String page) {
 		
-		return donationService.separateDonations(donation, org_name, user_name, deli, dairy, meat, produce, pantry, bakery, page);
+		return donationService.separateDonations(donation, org_name, user_name, deli, 
+				dairy, meat, produce, pantry, bakery, pet_food, nonfood, date, page);
 	}
 	
 //	@GetMapping("input")
@@ -95,6 +98,8 @@ public class DonationController {
 			@RequestParam String page,
 			@RequestParam String user_name) throws JSONException {
 
+		System.out.println(start_date);
+		
 		if (user_name != "")
 		{
 			donationDAO.inputPage(user_name, page);

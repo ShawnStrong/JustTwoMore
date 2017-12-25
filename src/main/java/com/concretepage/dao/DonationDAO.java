@@ -30,7 +30,7 @@ public class DonationDAO implements IntDonationDAO {
 	private EntityManager entityManager;
 	
 	@Override
-	public int inputDonation(String org_name, String user_name, String category, int weight, int donation) {
+	public int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date) {
 		
 		Query query = entityManager.createNativeQuery(
 				"INSERT INTO donation_table SET "
@@ -40,7 +40,8 @@ public class DonationDAO implements IntDonationDAO {
 				+ "', category = '" + category
 				+ "', weight = '" + weight
 				+ "', donation = '" + donation 
-				+ "', user_name = '" + user_name + "';");
+				+ "', user_name = '" + user_name 
+				+ "', date = '" + date + "';");
 		
 		query.executeUpdate();
 		return 0;

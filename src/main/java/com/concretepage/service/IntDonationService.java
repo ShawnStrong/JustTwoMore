@@ -9,10 +9,6 @@ import com.concretepage.entity.Donation;
 
 public interface IntDonationService {
 
-	String separateDonations(int donation, String org_name, String user_name, int deli, int dairy, int meat,
-			int produce, int pantry, int bakery, String page);
-
-
 	List<String> findWidgetTimes(String username);
 
 	int reportTabPrediction(String user_name, int timeRange, int inOut, int sumDisDick);
@@ -20,4 +16,7 @@ public interface IntDonationService {
 	String findUserPage(String username);
 
 	JSONObject convertToJSON(int reportType, List<Donation> donationList, String[] timeArray) throws JSONException;
+
+	String separateDonations(int donation, String org_name, String user_name, int deli, int dairy, int meat,
+			int produce, int pantry, int bakery, int pet_food, int nonfood, String date, String page);
 }
