@@ -23,6 +23,8 @@ public class Donation {
 	private int donation;
 	
 	private String user_name;
+
+	private String date;
 	
 	private String ts;
 	
@@ -31,7 +33,7 @@ public class Donation {
 	public Donation(int order_id, int org_id, 
 			String org_name, String category,
 			int weight, int donation, 
-			String user_name) {
+			String user_name, String date) {
 		this.order_id = order_id;
 		this.org_id = org_id;
 		this.org_name = org_name;
@@ -39,6 +41,7 @@ public class Donation {
 		this.weight = weight;
 		this.donation = donation;
 		this.user_name = user_name;
+		this.date = date;
 	}
 	
 	public int getOrderId() {
@@ -102,4 +105,8 @@ public class Donation {
 	public void setTs(String ts) {
 		this.ts = ts;
 	}
+
+	public String getDate() { return date; }
+
+	public void setDate(String date) { this.date = date;}
 }
