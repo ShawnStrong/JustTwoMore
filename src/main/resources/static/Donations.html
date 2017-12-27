@@ -111,6 +111,7 @@
                                 return letter.toUpperCase();
                             });
                             $("label[for='" + category[i] + "']").html(label + ":");
+                            category[i] = category[i].replace(/\s+/g, '_').toLowerCase();
                             $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
                         }
 						
@@ -341,7 +342,7 @@
 
                       if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
                          $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0
-						 && $("#test input[name=pet food]").val() == 0 && $("#test input[name=nonfood]").val() == 0) {
+						 && $("#test input[name=pet_food]").val() == 0 && $("#test input[name=nonfood]").val() == 0) {
                           alert("Please enter a weight before submitting the donation.");
                       } else {
                           $.ajax({
@@ -503,7 +504,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];
                         }
 
                         for (var i = 0; i < category.length; i++) {
@@ -547,7 +548,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];
                         }
 
                         for (var i = 0; i < category.length; i++) {
