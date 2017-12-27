@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `donation_table` (
 	`donation` int(1) NOT NULL,
 	`user_name` TINYTEXT NOT NULL,
 	`date` TINYTEXT NOT NULL,
+	`ts` TIMESTAMP,
 	PRIMARY KEY (`order_id`),
 	FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
