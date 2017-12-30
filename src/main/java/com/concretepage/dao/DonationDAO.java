@@ -115,13 +115,15 @@ public class DonationDAO implements IntDonationDAO {
 
 		List<Frequency> frequencyList = query.getResultList();
 		List<String> categories = new ArrayList<String>();
-		String[] categoryNames = new String[6];
+		String[] categoryNames = new String[8];
 		categoryNames[0] = "deli";
 		categoryNames[1] = "dairy";
 		categoryNames[2] = "meat";
 		categoryNames[3] = "produce";
 		categoryNames[4] = "pantry";
 		categoryNames[5] = "bakery";
+		categoryNames[6] = "pet food";
+		categoryNames[7] = "nonfood";
 		for (int i = 0; i < frequencyList.size(); i++)
 		{
 			categories.add(frequencyList.get(i).getCategory());
