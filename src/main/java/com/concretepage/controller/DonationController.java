@@ -155,8 +155,9 @@ public class DonationController {
 
 	@GetMapping("deleteDonation")
 	public @ResponseBody String deleteDonation(@RequestParam String order_id){
+		System.out.println(order_id);
 		int response = donationDAO.deleteDonation(order_id);
-		String json new Gson().toJson(response);
+		String json = new Gson().toJson(response);
 		return json;
 	}
 }

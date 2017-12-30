@@ -134,8 +134,8 @@ function rowEdit(but) {  //Inicia la edición de una fila
 }
 function rowElim(but) {  //Elimina la fila actual
     var $row = $(but).parents('tr');  //accede a la fila
+    params.onDelete($row);
     $row.remove();
-    params.onDelete();
 }
 function rowAgreg() {  //Agrega fila a la tabla $tab_en_edic
     var $filas = $tab_en_edic.find('tbody tr');

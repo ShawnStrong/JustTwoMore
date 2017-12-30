@@ -157,7 +157,16 @@
 							});
 							mytable.data('dynatable').settings.dataset.records = data;
 							mytable.data('dynatable').dom.update();
-							mytable.data('dynatable').paginationPerPage.set(1000);
+							$("#donationtable").each(function(){
+                                $(this).find('th').addClass('dynatableTH');
+                            })
+                            $("#donationtable").each(function(){
+                                $(this).find('td').addClass('centerTD');
+                            })
+                            $("#donationtable").each(function(){
+                                $(this).find('tbody').addClass('editBody');
+                            })
+							mytable.data('dynatable').paginationPerPage.set(10000);
 							
 							$("#tablebox .dynatable-per-page").hide();
 							$("#dynatable-pagination-links-table1").hide();
@@ -166,6 +175,7 @@
 								columnsEd: "1,2,3,4",
 								onDelete: function(columnsEd) {
 									var donation_id = columnsEd[0].childNodes[0].innerHTML;
+									alert("" + donation_id);
 									delDonation(donation_id);
 								}
 							});
@@ -264,6 +274,15 @@
 										});
 										mytable.data('dynatable').settings.dataset.records = data;
 										mytable.data('dynatable').dom.update();
+										$("#donationtable").each(function(){
+											$(this).find('th').addClass('dynatableTH');
+										})
+										$("#donationtable").each(function(){
+											$(this).find('td').addClass('centerTD');
+										})
+										$("#donationtable").each(function(){
+											$(this).find('tbody').addClass('editBody');
+										})
 										mytable.data('dynatable').paginationPerPage.set(1000);
 										
 										$("#tablebox .dynatable-per-page").hide();
@@ -273,6 +292,7 @@
 											columnsEd: "1,2,3,4",
 											onDelete: function(columnsEd) {
 												var donation_id = columnsEd[0].childNodes[0].innerHTML;
+												alert("" + donation_id);
 												delDonation(donation_id);
 											}
 										});
@@ -665,8 +685,9 @@
 			
 			function delDonation(donation_id) {
 				var delString = "?order_id=" + donation_id;
+				alert("" + delString);
 				$.ajax({
-					url:"/org/deleteDonation" + delString,
+					url:"/donation/deleteDonation" + delString,
 					type: "GET",
 					success: function(data) {
 						alert("Organization has been deleted.");
@@ -684,6 +705,15 @@
 						delDonation(donation_id);
 					}
 				});
+				$("#donationtable").each(function(){
+					$(this).find('th').addClass('dynatableTH');
+                })
+                $("#donationtable").each(function(){
+                    $(this).find('td').addClass('centerTD');
+                })
+                $("#donationtable").each(function(){
+                    $(this).find('tbody').addClass('editBody');
+                })
 			});
         });
     </script>

@@ -104,6 +104,15 @@
 						});
 						mytable.data('dynatable').settings.dataset.records = data;
 						mytable.data('dynatable').dom.update();
+						$("#table1").each(function(){
+                            $(this).find('th').addClass('dynatableTH');
+                        })
+                        $("#table1").each(function(){
+                            $(this).find('td').addClass('centerTD');
+                        })
+                        $("#table1").each(function(){
+                            $(this).find('tbody').addClass('editBody');
+                        })
                         mytable.data('dynatable').paginationPerPage.set(1000);
                         
                         $("#tablebox .dynatable-per-page").hide();
@@ -178,6 +187,15 @@
                         editOrg(orgName, contact, number, email, notes);
                     }
 				});
+				$("#table1").each(function(){
+					$(this).find('th').addClass('dynatableTH');
+                })
+                $("#table1").each(function(){
+                    $(this).find('td').addClass('centerTD');
+                })
+                $("#table1").each(function(){
+                    $(this).find('tbody').addClass('editBody');
+                })
 			});
             
             function editOrg(orgName, contact, number, email, notes) {

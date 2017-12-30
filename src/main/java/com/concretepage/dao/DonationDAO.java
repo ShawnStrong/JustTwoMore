@@ -75,7 +75,8 @@ public class DonationDAO implements IntDonationDAO {
 	{
 		Query query = entityManager.createNativeQuery(
 				"DELETE FROM donation_table WHERE " +
-						"order_id = '" + order_id +"';");
+						"order_id =" + order_id +";");
+		query.executeUpdate();
 		return 1;
 	}
 

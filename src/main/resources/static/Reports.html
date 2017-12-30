@@ -261,6 +261,18 @@
                 }
             });
 
+			/* any time a column is resorted, reload css */
+			$(document).on('click', ".dynatable-sort-header", function() {
+				$("#table1").each(function(){
+					$(this).find('th').addClass('dynatableTH');
+                })
+                $("#table1").each(function(){
+                    $(this).find('td').addClass('centerTD');
+                })
+                $("#table1").each(function(){
+                    $(this).find('tbody').addClass('editBody');
+                })
+			});
 
         });
 
