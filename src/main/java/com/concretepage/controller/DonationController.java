@@ -139,4 +139,11 @@ public class DonationController {
 		return widgetTimes;
 		//return null;
 	}
+
+	@GetMapping("showDonations")
+	public @ResponseBody String showDonations(@RequestParam String org_name){
+		List<Donation> listOfDonations = donationDAO.getListOfDonatons(org_name);
+		String json new Gson().toJson(listOfDonations);
+		return json;
+	}
 }

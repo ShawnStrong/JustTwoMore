@@ -45,4 +45,6 @@ public interface IntDonationDAO {
 	String getUserPage(String user_name, String ts);
 
 	int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date);
+
+	public List<Donation> getListOfDonatons(String org_name);
 }

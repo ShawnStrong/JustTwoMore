@@ -59,6 +59,15 @@ public class DonationDAO implements IntDonationDAO {
 		return orgs;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Donation> getListOfDonatons(String org_name){
+		Query query = entityManager.createNativeQuery(
+				"SELECT * FROM donation_table WHERE " +
+						"org_name = '" + org_name +"';");
+		List<String> donations = query.getResultList();
+		return donations;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
