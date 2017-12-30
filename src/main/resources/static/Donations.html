@@ -77,7 +77,7 @@
                     console.log( "Error: " + errorThrown );
                     console.log( "Status: " + status );
                     console.dir( xhr );
-                });
+            });
 
 
             //If the user clicks on an org with their mouse
@@ -133,6 +133,12 @@
                 }
             });
 
+			//If the user clicks on an org with their mouse
+            $(document).on("click",".row #basic-place ul",function() {
+                if ($(".row #basic-place #base").val().length > 0) {
+					
+				}
+			});
             
             //If the user selects the org using arrow keys and hits the enter key or types out the name themselves
             $(document).on("keydown", function(e) {
