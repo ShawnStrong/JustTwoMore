@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.concretepage.dao.IntDonationDAO;
 import com.concretepage.entity.Donation;
 import com.concretepage.service.IntDonationService;
+import com.google.gson.Gson;
 import com.concretepage.service.DonationService;
 
 
@@ -142,8 +143,13 @@ public class DonationController {
 
 	@GetMapping("showDonations")
 	public @ResponseBody String showDonations(@RequestParam String org_name){
-		List<Donation> listOfDonations = donationDAO.getListOfDonatons(org_name);
-		String json new Gson().toJson(listOfDonations);
+		System.out.println(org_name);
+		org_name = org_name.substring(9);
+		String replaceString=org_name.replace("%20"," ");
+		System.out.println(replaceString);
+		List<Donation> listOfDonations = donationDAO.showDonations(replaceString);
+		String json = new Gson().toJson(listOfDonations);
+		System.out.println(json);
 		return json;
 	}
 }
