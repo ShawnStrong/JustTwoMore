@@ -17,7 +17,7 @@ import com.concretepage.entity.Donation;
 import com.concretepage.service.IntDonationService;
 import com.google.gson.Gson;
 import com.concretepage.service.DonationService;
-
+import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("donation")
@@ -150,6 +150,13 @@ public class DonationController {
 		List<Donation> listOfDonations = donationDAO.showDonations(replaceString);
 		String json = new Gson().toJson(listOfDonations);
 		System.out.println(json);
+		return json;
+	}
+
+	@GetMapping("deleteDonation")
+	public @ResponseBody String deleteDonation(@RequestParam String order_id){
+		int response = donationDAO.deleteDonation(order_id);
+		String json new Gson().toJson(response);
 		return json;
 	}
 }
