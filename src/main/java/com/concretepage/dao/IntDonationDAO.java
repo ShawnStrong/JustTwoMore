@@ -47,4 +47,6 @@ public interface IntDonationDAO {
 	int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date);
 
 	public List<Donation> getListOfDonatons(String org_name);
+
+	public int deleteDonation(String order_id);
 }
