@@ -133,7 +133,6 @@
                                 var number = columnsEd[0].childNodes[2].innerHTML;
                                 var email = columnsEd[0].childNodes[3].innerHTML;
                                 var notes = columnsEd[0].childNodes[4].innerHTML;
-                                alert(notes);
                                 editOrg(orgName, contact, number, email, notes);
                             }
 						});
@@ -200,7 +199,6 @@
             
             function editOrg(orgName, contact, number, email, notes) {
 				notes = notes.split("\n").join(".");
-				alert(notes);
                 var editString = "?org_name=" + orgName + "&contact_name=" + contact + "&contact_number=" + number + "&contact_email=" + email + "&notes=" + notes;
                 
                 $.ajax({
@@ -306,7 +304,7 @@
                           }
                       },
                       error : function(request,error) {
-                          alert("Request: " + JSON.stringify(request));
+                          alert("Org creation failed.");
                       }
                     });
                 }

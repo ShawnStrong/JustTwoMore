@@ -22,29 +22,20 @@ public class UserController {
 	private IntDonationService donationService;
 	
 	@GetMapping("create")
-	public @ResponseBody String createUser (
+	public @ResponseBody int createUser (
 			@RequestParam String username,
 			@RequestParam String password,
 			@RequestParam String user_email) {
 
-		userDAO.createUser(username, password, user_email);
-		return "Created user " + username;
+		return userDAO.createUser(username, password, user_email);
 	}
 	
 	@GetMapping("login")
-	public @ResponseBody String loginUser (
+	public @ResponseBody int loginUser (
 			@RequestParam String username,
 			@RequestParam String password) {
 		
-		int success = userDAO.login(username, password);
-		if (success == 0) {
-			//System.out.println(donationService.findUserPage(username));
-			String test = donationService.findUserPage(username);
-			System.out.println(test);
-			return test;
-		} else {
-			return "a";
-		}
+		return userDAO.login(username, password);
 	}
 	
 	@GetMapping("changePassword")

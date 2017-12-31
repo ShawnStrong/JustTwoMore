@@ -227,6 +227,10 @@
 
                                 var mytable = $("#table1");
                                 mytable.dynatable({
+									features: {
+										paginate: false,
+										perPageSelect: false
+									},
                                     table: {
                                         headRowSelector: 'thead',
                                     },
@@ -250,6 +254,9 @@
                                     $("#table1").table2csv();
                                 })
                             }
+							else {
+								alert("No donations to report between these dates.");
+							}
                         },
                         error : function(request,error) {
                             //                      alert("Request: " + JSON.stringify(request));

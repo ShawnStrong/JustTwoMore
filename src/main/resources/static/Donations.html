@@ -73,9 +73,6 @@
                 // status codes are passed to the function
                 .fail(function( xhr, status, errorThrown ) {
                     alert( "Sorry, there was a problem!" );
-                    console.log( "Error: " + errorThrown );
-                    console.log( "Status: " + status );
-                    console.dir( xhr );
             });
 
             //If the user clicks on an org on 'input donation' tab with their mouse
@@ -124,9 +121,6 @@
 
                     .fail(function(jqXHR, textStatus, errorThrown) {
                         alert( "Sorry, there was a problem!" );
-                        console.log( "Error: " + errorThrown );
-                        console.log( "Status: " + status );
-                        console.dir( xhr );
                     });
 
                 }
@@ -143,6 +137,14 @@
                         data: {org_name:OrgsName},
                         dataType : "json",
 						success: function(data){
+							//convert donation integers to strings
+							for( var k = 0; k < data.length; ++k ) {
+								if( data[k]["donation"] == 0 ) {
+									data[k]["donation"] = "Outgoing";
+								} else {
+									data[k]["donation"] = "Incoming";
+								}
+							}
 							$("#tableBody").empty();
 							$("#donationtable thead tr th[name=buttons]").remove();
 							//create columns dynamically
@@ -175,7 +177,6 @@
 								columnsEd: "1,2,3,4",
 								onDelete: function(columnsEd) {
 									var donation_id = columnsEd[0].childNodes[0].innerHTML;
-									alert("" + donation_id);
 									delDonation(donation_id);
 								}
 							});
@@ -234,9 +235,6 @@
 
                                 .fail(function(jqXHR, textStatus, errorThrown) {
                                     alert( "Sorry, there was a problem!" );
-                                    console.log( "Error: " + errorThrown );
-                                    console.log( "Status: " + status );
-                                    console.dir( xhr );
                                 });
                                 
                                 
@@ -260,6 +258,14 @@
                                     data: {org_name:OrgsName} ,
                                     dataType : "json",
 									success: function(data){
+										//convert donation integers to strings
+										for( var k = 0; k < data.length; ++k ) {
+											if( data[k]["donation"] == 0 ) {
+												data[k]["donation"] = "Outgoing";
+											} else {
+												data[k]["donation"] = "Incoming";
+											}
+										}
 										$("#tableBody").empty();
 										$("#donationtable thead tr th[name=buttons]").remove();
 										//create columns dynamically
@@ -292,7 +298,6 @@
 											columnsEd: "1,2,3,4",
 											onDelete: function(columnsEd) {
 												var donation_id = columnsEd[0].childNodes[0].innerHTML;
-												alert("" + donation_id);
 												delDonation(donation_id);
 											}
 										});
@@ -303,6 +308,7 @@
 					}
 				}
 			});
+			/*
             // Voice commands
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
@@ -494,9 +500,7 @@
               // Start listening. You can call this here, or attach this call to an event, button, etc.
               annyang.start();
             }
-            
-            
-            
+            */
             // Submit the form
             $("#submit").click(function() {
               var form = $("form").serialize();
@@ -541,6 +545,7 @@
                     });
                 }
             });
+			/*
             //set up ajax request to grab generated list for widget
             var widgetList = [];
             $.ajax({
@@ -620,8 +625,8 @@
                         console.dir( xhr );
                     });
             });
-            
-            
+            */
+			
             function categories(orgName) {
                 var category =[];
                 $.ajax({
@@ -659,9 +664,6 @@
 
                     .fail(function(jqXHR, textStatus) {
                         alert( "Sorry, there was a problem!" );
-                        console.log( "Error: " + errorThrown );
-                        console.log( "Status: " + status );
-                        console.dir( xhr );
                     });
             };
             
@@ -685,7 +687,6 @@
 			
 			function delDonation(donation_id) {
 				var delString = "?order_id=" + donation_id;
-				alert("" + delString);
 				$.ajax({
 					url:"/donation/deleteDonation" + delString,
 					type: "GET",
@@ -808,13 +809,13 @@
 		  </p>
 		</div>
 	</div>
-		
+		<!-- 
 	<div id="suggestionWidget" title="Suggestion Widget" hidden="hidden" style="border:1px solid black">
 		<h5 align = "center"><u>Suggested Organizations</u></h5>
 		<a class="0"></a>
 		<a class="1"></a>
 		<a class="2"></a>
-	</div>
+	</div>-->
 
 	<!-- Show donations tab content -->
 	

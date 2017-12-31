@@ -61,8 +61,11 @@ public class UserDAO implements IntUserDAO {
 				username + "';", User.class);
 		
 		List<User> users = query.getResultList();
-			
-		return users.get(0).getPassword().equals(password)? 0 : 1;
+		if (!users.isEmpty()) {
+			return users.get(0).getPassword().equals(password)? 0 : 1;
+		} else {
+			return 1;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
