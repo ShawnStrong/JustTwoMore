@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.concretepage.dao.IntDonationDAO;
 import com.concretepage.entity.Donation;
@@ -452,5 +453,19 @@ public class DonationService implements IntDonationService {
 		allData.put("data", array);
 		
 		return allData;
+	}
+	
+	public JSONObject constructReport(int donation, int time, 
+			int type, String start_date, String end_date) {
+		
+		String[] dates = findDateArray(time, start_date, end_date);
+		List<Donation> donations = donationDAO.getDonations(donation, start_date, end_date);
+
+		return convertToJSON(type, donations, dates);
+	}
+	
+	private String[] findDateArray(int time, String start_date, String end_date) {
+		
+		return null;
 	}
 }
