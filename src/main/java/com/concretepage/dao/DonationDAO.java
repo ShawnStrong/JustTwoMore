@@ -23,30 +23,30 @@ import com.concretepage.entity.Frequency;
 @Transactional
 @Repository
 public class DonationDAO implements IntDonationDAO {
-	
-	
+
+
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Override
 	public int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date) {
-		
+
 		Query query = entityManager.createNativeQuery(
 				"INSERT INTO donation_table SET "
-				+ "org_id=(SELECT org_id FROM org_table WHERE "
-				+ "org_name = '" + org_name + "'), "
-				+ "org_name = '" + org_name
-				+ "', category = '" + category
-				+ "', weight = '" + weight
-				+ "', donation = '" + donation 
-				+ "', user_name = '" + user_name 
-				+ "', date = '" + date + "';");
-		
+						+ "org_id=(SELECT org_id FROM org_table WHERE "
+						+ "org_name = '" + org_name + "'), "
+						+ "org_name = '" + org_name
+						+ "', category = '" + category
+						+ "', weight = '" + weight
+						+ "', donation = '" + donation
+						+ "', user_name = '" + user_name
+						+ "', date = '" + date + "';");
+
 		query.executeUpdate();
 		return 0;
 	}
-//select distinct org_name from donation_table where (ts between '2017-10-15 00:00:00' and '2017-10-15 23:59:59') and user_name = 'Adam';
+	//select distinct org_name from donation_table where (ts between '2017-10-15 00:00:00' and '2017-10-15 23:59:59') and user_name = 'Adam';
 	@Override
 	public List<String> getWidgetOrgs(String date, String username)
 	{
@@ -83,11 +83,11 @@ public class DonationDAO implements IntDonationDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> listOrg(int donation) {
-		
+
 		Query query = entityManager.createNativeQuery(
 				"SELECT DISTINCT org_name FROM donation_table WHERE " +
-				"donation='" + donation + "';");
-		
+						"donation='" + donation + "';");
+
 		List<String> orgs = query.getResultList();
 		return orgs;
 	}
@@ -95,30 +95,30 @@ public class DonationDAO implements IntDonationDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Donation> listInfo(String org_name, int donation) {
-		
+
 		Query query = entityManager.createNativeQuery(
-				"SELECT * FROM donation_table WHERE org_name='" + 
-				org_name + "' AND donation='" + donation + "';", Donation.class);
-		
+				"SELECT * FROM donation_table WHERE org_name='" +
+						org_name + "' AND donation='" + donation + "';", Donation.class);
+
 		List<Donation> donations = query.getResultList();
 		return donations;
 	}
 
 	@Override
 	public void initDonationTable() {
-		
+
 		Query query = entityManager.createNativeQuery(
 				"CREATE TABLE IF NOT EXISTS `donation_table` (" +
-				" `order_id` int(5) NOT NULL AUTO_INCREMENT," +
-				" `org_id` int(5) NOT NULL," +
-				" `org_name` TINYTEXT NOT NULL," +
-				" `category` TINYTEXT NOT NULL," +
-				" `weight` int(7) NOT NULL," +
-				" `donation` int(1) NOT NULL," +
-				" PRIMARY KEY (`order_id`)," +
-				" FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)" +
-				") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
-		
+						" `order_id` int(5) NOT NULL AUTO_INCREMENT," +
+						" `org_id` int(5) NOT NULL," +
+						" `org_name` TINYTEXT NOT NULL," +
+						" `category` TINYTEXT NOT NULL," +
+						" `weight` int(7) NOT NULL," +
+						" `donation` int(1) NOT NULL," +
+						" PRIMARY KEY (`order_id`)," +
+						" FOREIGN KEY (`org_id`) REFERENCES org_table(org_id)" +
+						") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
+
 		query.executeUpdate();
 	}
 
@@ -182,15 +182,15 @@ public class DonationDAO implements IntDonationDAO {
 		query.executeUpdate();
 		return 0;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getUserPage(String user_name, String date) {
 		Query query = entityManager.createNativeQuery(
 				"SELECT DISTINCT page FROM redirection_table WHERE " +
-				"(ts between '" + date + " 00:00:00' and '" + date + " 23:59:59') " +
-				"and user_name = '" + user_name +"';");
-		
+						"(ts between '" + date + " 00:00:00' and '" + date + " 23:59:59') " +
+						"and user_name = '" + user_name +"';");
+
 		List<String> pages = query.getResultList();
 		if (pages.isEmpty()) {
 			System.out.println("Ooga booga");
@@ -213,13 +213,102 @@ public class DonationDAO implements IntDonationDAO {
 		query.executeUpdate();
 		return 0;
 	}
-	
-//	.___  __         .__  .__                  _________              __  .__               
-//	|   |/  |______  |  | |__|____    ____    /   _____/ ____   _____/  |_|__| ____   ____  
-//	|   \   __\__  \ |  | |  \__  \  /    \   \_____  \_/ __ \_/ ___\   __\  |/  _ \ /    \ 
+
+//	.___  __         .__  .__                  _________              __  .__
+//	|   |/  |______  |  | |__|____    ____    /   _____/ ____   _____/  |_|__| ____   ____
+//	|   \   __\__  \ |  | |  \__  \  /    \   \_____  \_/ __ \_/ ___\   __\  |/  _ \ /    \
 //	|   ||  |  / __ \|  |_|  |/ __ \|   |  \  /        \  ___/\  \___|  | |  (  <_> )   |  \
 //	|___||__| (____  /____/__(____  /___|  / /_______  /\___  >\___  >__| |__|\____/|___|  /
-//	               \/             \/     \/          \/     \/     \/                    \/ 
+//	               \/             \/     \/          \/     \/     \/                    \/
+
+	private String[] getTimeArrayYearly(String firstTsYear, String lastTsYear)
+	{
+		int YearsSpanned = Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear);
+		String timeRangeArray[] = new String[YearsSpanned+1];
+		if (YearsSpanned == 0)
+		{
+			timeRangeArray[0] = lastTsYear;
+		}
+		else
+		{
+			int tempYear = Integer.parseInt(firstTsYear);
+			for (int i = 0; i<= YearsSpanned;i++)
+			{
+				tempYear += i;
+				timeRangeArray[i] = Integer.toString(tempYear);
+			}
+		}
+		return timeRangeArray;
+	}
+
+	private int getMonthsSpanned(String firstTsYear, String lastTsYear, String firstTsMonth, String lastTsMonth)
+	{
+		int MonthsSpanned = 0;
+		int lastYear = Integer.parseInt(lastTsYear);
+		int firstYear = Integer.parseInt(firstTsYear);
+		if(Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear)<0)
+		{
+			return -1;
+		}
+		if(Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear) !=0)
+		{
+			MonthsSpanned = Integer.parseInt(lastTsMonth) + (Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear) - 1)*12;
+		}
+		if (Integer.parseInt(lastTsMonth) - Integer.parseInt(firstTsMonth) < 0)
+		{
+			MonthsSpanned += (12 - Integer.parseInt(firstTsMonth));
+		}
+		else
+		{
+			MonthsSpanned += (Integer.parseInt(lastTsMonth) - Integer.parseInt(firstTsMonth));
+		}
+		return MonthsSpanned;
+	}
+
+	private Calendar[] getCalendarArray(String firstTsYear, String firstTsMonth, String firstTsDay, String lastTsYear, String lastTsMonth, String lastTsDay)
+	{
+		Calendar cStart = Calendar.getInstance();
+		cStart.set(Integer.parseInt(firstTsYear), Integer.parseInt(firstTsMonth)-1, Integer.parseInt(firstTsDay));
+		int dayOfWeek = cStart.get(Calendar.DAY_OF_WEEK);
+		Calendar cFinish = Calendar.getInstance();
+		cFinish.set(Integer.parseInt(lastTsYear), Integer.parseInt(lastTsMonth)-1, Integer.parseInt(lastTsDay));
+		Calendar[] calendarArray = new Calendar[2];
+		calendarArray[0] = cStart;
+		calendarArray[1] = cFinish;
+		return calendarArray;
+	}
+
+	private String[] timeList2Array(List<String> timeList)
+	{
+		String timeRangeArray[] = new String[timeList.size()];
+		for (int i = 0; i < timeList.size(); i++)
+		{
+			timeRangeArray[i] = timeList.get(i);
+		}
+		return timeRangeArray;
+	}
+
+	public List<Donation> getDonations(int donation, String start_Date, String end_Date)
+	{
+		Query query = null;
+		if (donation == 0)
+		{
+			query = entityManager.createNativeQuery(
+					"SELECT * FROM `donation_table`"
+							+ " WHERE (date >= '" + start_Date + "' AND date <= '"
+							+ end_Date + "') AND "
+							+ "donation=" + donation + " ORDER BY org_name, category, date;", Donation.class);
+		}
+		else
+		{
+			query = entityManager.createNativeQuery(
+					"SELECT * FROM `donation_table`"
+							+ " WHERE (date >= '" + start_Date + "' AND date <= '"
+							+ end_Date + "') AND "
+							+ "donation=" + donation + " ORDER BY org_name, date;", Donation.class);
+		}
+		return query.getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -231,9 +320,9 @@ public class DonationDAO implements IntDonationDAO {
 		System.out.println("\n" + "end Date: " + end_date);
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
-				+ " WHERE (date >= '" + start_date + "' AND date <= '"
-				+ end_date + "') AND "
-				+ "donation=" + donation + " ORDER BY org_name, category, date;", Donation.class);
+						+ " WHERE (date >= '" + start_date + "' AND date <= '"
+						+ end_date + "') AND "
+						+ "donation=" + donation + " ORDER BY org_name, category, date;", Donation.class);
 		/*Query query = entityManager.createNativeQuery(
 				"SELECT * FROM `donation_table`"
 				+ " WHERE (ts BETWEEN '" + start_date + " 00:00:00' AND '"
@@ -304,21 +393,8 @@ public class DonationDAO implements IntDonationDAO {
 
 			if(time == 2 && type == 1)
 			{
-				int YearsSpanned = Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear);
-				String timeRangeArray[] = new String[YearsSpanned+1];
-				if (YearsSpanned == 0)
-				{
-					timeRangeArray[0] = lastTsYear;
-				}
-				else
-				{
-					int tempYear = Integer.parseInt(firstTsYear);
-					for (int i = 0; i<= YearsSpanned;i++)
-					{
-						tempYear += i;
-						timeRangeArray[i] = Integer.toString(tempYear);
-					}
-				}
+				String[] timeRangeArray = new String[1];
+				timeRangeArray = getTimeArrayYearly(firstTsYear, lastTsYear);
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
 				int reportListIndex = 0;
 				int tempWeight = 0;
@@ -368,14 +444,14 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getDate() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
 				}
-				
+
 				List<String> timeRangesList = Arrays.asList(timeRangeArray);
-				
+
 				List<Object> listsToReturn = new ArrayList<Object>();
-				
+
 				listsToReturn.add(timeRangesList);
 				listsToReturn.add(donationListToReturn);
-				
+
 				return listsToReturn;
 			}
 			else if (time == 2 && type == 0)
@@ -467,38 +543,21 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getDate() + " Donation List Category: "+donationListToReturn.get(i).getCategory() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
 				}
-				
+
 				List<String> timeRangesList = Arrays.asList(timeRangeArray);
-				
+
 				List<Object> listsToReturn = new ArrayList<Object>();
-				
+
 				listsToReturn.add(timeRangesList);
 				listsToReturn.add(donationListToReturn);
-				
+
 				return listsToReturn;
 			}
 			else if(time == 1 && type == 1)
 			{
-				int MonthsSpanned = 0;
-				int lastYear = Integer.parseInt(lastTsYear);
-				int firstYear = Integer.parseInt(firstTsYear);
 				int tempWeight =0;
-				if(Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear)<0)
-				{
-					return null;
-				}
-				if(Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear) !=0)
-				{
-					MonthsSpanned = Integer.parseInt(lastTsMonth) + (Integer.parseInt(lastTsYear) - Integer.parseInt(firstTsYear) - 1)*12;
-				}
-				if (Integer.parseInt(lastTsMonth) - Integer.parseInt(firstTsMonth) < 0)
-				{
-					MonthsSpanned += (12 - Integer.parseInt(firstTsMonth));
-				}
-				else
-				{
-					MonthsSpanned += (Integer.parseInt(lastTsMonth) - Integer.parseInt(firstTsMonth));
-				}
+				int MonthsSpanned = 0;
+				MonthsSpanned = getMonthsSpanned(firstTsYear, lastTsYear, firstTsMonth, lastTsMonth);
 				String timeRangeArray[] = new String[MonthsSpanned+1];//timeRangeArray is used to check which year to put weights into.
 				timeRangeArray = getMonthTimeRange(MonthsSpanned, firstTsYear, firstTsMonth, firstTs, lastTs);
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
@@ -550,14 +609,14 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getDate() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
 				}
-				
+
 				List<String> timeRangesList = Arrays.asList(timeRangeArray);
-				
+
 				List<Object> listsToReturn = new ArrayList<Object>();
-				
+
 				listsToReturn.add(timeRangesList);
 				listsToReturn.add(donationListToReturn);
-				
+
 				return listsToReturn;
 				//print csv code here
 			}
@@ -642,32 +701,27 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getDate() + " Donation List Category: "+donationListToReturn.get(i).getCategory() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
 				}
-				
+
 				List<String> timeRangesList = Arrays.asList(timeRangeArray);
-				
+
 				List<Object> listsToReturn = new ArrayList<Object>();
-				
+
 				listsToReturn.add(timeRangesList);
 				listsToReturn.add(donationListToReturn);
-				
+
 				return listsToReturn;
 				//print csv code here
 			}
 			else if(time == 0 && type == 1)
 			{
-				Calendar cStart = Calendar.getInstance();
-				cStart.set(Integer.parseInt(firstTsYear), Integer.parseInt(firstTsMonth)-1, Integer.parseInt(firstTsDay));
-				int dayOfWeek = cStart.get(Calendar.DAY_OF_WEEK);
-				Calendar cFinish = Calendar.getInstance();
-				cFinish.set(Integer.parseInt(lastTsYear), Integer.parseInt(lastTsMonth)-1, Integer.parseInt(lastTsDay));
+				//create calendar array
+				Calendar[] calendarArray = new Calendar[1];
+				calendarArray = getCalendarArray(firstTsYear, firstTsMonth, firstTsDay, lastTsYear, lastTsMonth, lastTsDay);
 				List<String> timeList = new ArrayList<String>();
-				timeList = getWeeklyTimeRange(cStart, cFinish);
+				timeList = getWeeklyTimeRange(calendarArray[0], calendarArray[1]);
 				System.out.println(timeList);
 				String timeRangeArray[] = new String[timeList.size()];
-				for (int i = 0; i < timeList.size(); i++)
-				{
-					timeRangeArray[i] = timeList.get(i);
-				}
+				timeRangeArray = timeList2Array(timeList);
 				List<SummaryReport> reportList = new ArrayList<SummaryReport>();
 				reportList = fillWeeklySummaryList(timeList, donationsSummary);
 				//check for week dates
@@ -700,14 +754,14 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getDate() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
 				}
-				
+
 				List<String> timeRangesList = Arrays.asList(timeRangeArray);
-				
+
 				List<Object> listsToReturn = new ArrayList<Object>();
-				
+
 				listsToReturn.add(timeRangesList);
 				listsToReturn.add(donationListToReturn);
-				
+
 				return listsToReturn;
 			}
 			else if(time == 0 && type == 0)
@@ -745,14 +799,14 @@ public class DonationDAO implements IntDonationDAO {
 				{
 					System.out.println("Donation List Org: " + donationListToReturn.get(i).getOrgName() + " Donation List Time Range: " + donationListToReturn.get(i).getDate() + " Donation List Category: "+donationListToReturn.get(i).getCategory() + " Donation List Weight: " + donationListToReturn.get(i).getWeight());
 				}
-				
+
 				List<String> timeRangesList = Arrays.asList(timeRangeArray);
-				
+
 				List<Object> listsToReturn = new ArrayList<Object>();
-				
+
 				listsToReturn.add(timeRangesList);
 				listsToReturn.add(donationListToReturn);
-				
+
 				return listsToReturn;
 			}
 		}

@@ -43,6 +43,15 @@ public class Donation {
 		this.user_name = user_name;
 		this.date = date;
 	}
+
+	public Donation(String org_name, String category, int weight,
+					String date)
+	{
+		this.org_name = org_name;
+		this.category = category;
+		this.weight = weight;
+		this.date = date;
+	}
 	
 	public int getOrderId() {
 		return order_id;
