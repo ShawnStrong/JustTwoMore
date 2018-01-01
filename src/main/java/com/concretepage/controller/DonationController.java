@@ -109,31 +109,15 @@ public class DonationController {
 		//List<Donation> donationList = new ArrayList<Donation>();
 		//donationList = donationDAO.getReport(donation, time, type, start_date, end_date);
 		//return DonationService.convertToJson(type, donationList);
-		List<Object> ListOfReportStuff = donationDAO.getReport(donation, time, type, start_date, end_date);
-		
-		if (!ListOfReportStuff.isEmpty()) {
-			List<Object> donationObjectList = (List<Object>) ListOfReportStuff.get(1);
-			List<Object> timeList = (List<Object>) ListOfReportStuff.get(0);
-			
-			List<Donation> donations = new ArrayList<>(donationObjectList.size());
-			for (Object object : donationObjectList) {
-				donations.add((Donation) object);
-			}
-			
-			String[] timeArray = new String[timeList.size()];
-			int index = 0;
-			for (Object value : timeList) {
-			  timeArray[index] = (String) value;
-			  index++;
-			}
-			
-			JSONObject report = donationService.convertToJSON(type, donations, timeArray);
-			System.out.println(report.toString());
-			return report.toString();
+		//List<Object> ListOfReportStuff = donationDAO.getReport(donation, time, type, start_date, end_date);
+		//List<Object> ListOfReportStuff = donationService.constructReport(donation, time, type, start_date, end_date);
+		JSONObject x = donationService.constructReport(donation, time, type, start_date, end_date);
+		if (x.equals(null))
+		{
+			x = new JSONObject().put("JSON", "error");
 		}
-		else {
-			return "";
-		}
+		System.out.println(x.toString());
+		return x.toString();
 	}
 
 	@GetMapping("widget")

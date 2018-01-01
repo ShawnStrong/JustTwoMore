@@ -49,4 +49,6 @@ public interface IntDonationDAO {
 	List<Donation> showDonations(String org_name);
 
 	public int deleteDonation(String order_id);
+
+	public List<Donation> getDonations(int donation, String startDate, String endDate);
 }

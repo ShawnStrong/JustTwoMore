@@ -1,0 +1,28 @@
+.dynatableTH {
+    background: #10152b;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px;
+    border-color: black;
+    border-left: solid;
+    border-right: solid;
+    font-size: 115%;
+}
+
+.centerTD {
+	padding: 7px;
+    text-align: left;
+    border: 5px;
+    border-color: black;
+    border-bottom: groove;
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.editBody {
+    border: 1px;
+    border-color: black;
+    border-bottom: groove;
+    border-left: groove;
+    border-right: groove;
+}
