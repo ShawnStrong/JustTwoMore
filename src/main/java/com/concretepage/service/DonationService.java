@@ -459,9 +459,10 @@ public class DonationService implements IntDonationService {
 			int type, String start_date, String end_date) {
 		
 		String[] dates = findDateArray(time, start_date, end_date);
-		List<Donation> donations = donationDAO.getDonations(donation, start_date, end_date);
+		//List<Donation> donations = donationDAO.getDonations(donation, start_date, end_date);
 
-		return convertToJSON(type, donations, dates);
+		//return convertToJSON(type, donations, dates);
+		return null;
 	}
 	
 	private String[] findDateArray(int time, String start_date, String end_date) {

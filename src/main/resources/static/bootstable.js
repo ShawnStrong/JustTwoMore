@@ -144,7 +144,7 @@ function rowEdit(but) {  //Inicia la edición de una fila
 		if (count != 4) {
 			input = '<input class="form-control input-sm"  value="' + cont + '">';
 		} else {
-			input = '<textarea class="form-control" rows="2">' + cont + '</textarea>';
+			input = '<textarea class="form-control" rows="4">' + cont + '</textarea>';
 		}
         
 		

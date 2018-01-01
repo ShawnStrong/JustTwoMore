@@ -10,6 +10,7 @@
 }
 
 .centerTD {
+	padding: 7px;
     text-align: center !important;
     border: 5px;
     border-color: black;

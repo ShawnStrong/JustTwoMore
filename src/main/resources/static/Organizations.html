@@ -3,9 +3,6 @@
 <head>
     <title>Organizations</title>
 	
-	<!-- table looks -->
-	<link rel="stylesheet" type="text/css" href="org.css"> 
-	
 	<!-- bootstrap css -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	
@@ -17,7 +14,7 @@
 	
 	<!-- dynatable css and js -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
-	<link rel="stylesheet" type="text/css" href="dynatableTH.css">
+	<link rel="stylesheet" type="text/css" href="orgTable.css">
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script> -->
 	<script src="jquery.dynatable.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
@@ -30,6 +27,9 @@
 	<style>
 	td {
 		white-space: pre;
+	}
+	textarea {
+		resize: vertical;
 	}
 	</style>
 	<script>		
@@ -186,6 +186,7 @@
                         editOrg(orgName, contact, number, email, notes);
                     }
 				});
+				
 				$("#table1").each(function(){
 					$(this).find('th').addClass('dynatableTH');
                 })
@@ -198,7 +199,10 @@
 			});
             
             function editOrg(orgName, contact, number, email, notes) {
-				notes = notes.split("\n").join(".");
+				//notes = notes.split("\n").join("aaaa");
+				//notes = notes.split("'").join("bbbb");
+				notes = encodeURIComponent(notes).replace(/[!'()*]/g, escape);
+				console.log(notes);
                 var editString = "?org_name=" + orgName + "&contact_name=" + contact + "&contact_number=" + number + "&contact_email=" + email + "&notes=" + notes;
                 
                 $.ajax({
@@ -275,7 +279,7 @@
                   $("#inputContactPhone").val() == "" || $("#inputContactEmail").val() == "") {
                   alert("Please fill out all the information before submitting.");
               } else {
-                
+                alert("" + form);
                   $.ajax({
                       url : 'http://localhost:8080/org/create',
                       type : 'GET',

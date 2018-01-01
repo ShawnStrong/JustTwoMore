@@ -320,7 +320,8 @@
       td += ' class="' + column.cssClass + '"';
     }
 	
-	html = html.split(".").join("\n");
+	//html = html.split("aaaa").join("\n");
+	//html = html.split("bbbb").join("'");
 	
     return td + '>' + html + '</td>';
   };
