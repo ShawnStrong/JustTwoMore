@@ -465,6 +465,10 @@ public class DonationService implements IntDonationService {
 					" Date: " + x.getDate());
 		}
 		String[] dates = findDateArray(time, start_date, end_date, donations);
+		for (int i =0 ; i< dates.length;i++)
+		{
+			System.out.println("Dates Array: " + dates[i]);
+		}
 		List<Donation> correctlyFormattedDonationList = formatDonationList(donations, dates, type, time);
 		for (Donation x: donations)
 		{
@@ -512,22 +516,32 @@ public class DonationService implements IntDonationService {
 				tempDateRange = x.getDate();
 				tempWeight = x.getWeight();
 				tempOrgName = x.getOrgName();
+				System.out.println("First Donation Passed into addWeightsSummary: " +
+						"" + tempOrgName + " Weight: " + tempWeight + " Date Range: " + tempDateRange);
 				cnt++;
 			}
-			else if(cnt == formattedDonationListWeightsNotAdded.size() - 1)
+			else if(cnt == formattedDonationListWeightsNotAdded.size() -1)
 			{
+				System.out.println("Last Donation Passed into addWeightsSummary: " +
+						"" + x.getOrgName() + " Weight: " + x.getWeight() + " Date Range: " + x.getDate());
 				if (x.getOrgName().equals(tempOrgName) && x.getDate().equals(tempDateRange))
 				{
 					tempWeight += x.getWeight();
 					cnt++;
+					Donation tempDonation = new Donation(tempOrgName, "", tempWeight, tempDateRange);
+					formattedDonationListWeightsAdded.add(tempDonation);
 				}
 				else {
 					Donation tempDonation = new Donation(tempOrgName, "", tempWeight, tempDateRange);
+					formattedDonationListWeightsAdded.add(tempDonation);
+					tempDonation = new Donation(x.getOrgName(), "", x.getWeight(), x.getDate());
 					formattedDonationListWeightsAdded.add(tempDonation);
 				}
 			}
 			else
 			{
+				System.out.println("Donation Passed into addWeightsSummary: " +
+						"" + tempOrgName + " Weight: " + tempWeight + " Date Range: " + tempDateRange);
 				if (x.getOrgName().equals(tempOrgName) && x.getDate().equals(tempDateRange))
 				{
 					tempWeight += x.getWeight();
@@ -543,6 +557,11 @@ public class DonationService implements IntDonationService {
 					cnt++;
 				}
 			}
+		}
+		for (Donation x: formattedDonationListWeightsAdded)
+		{
+			System.out.println("formattedDonationListWeightsAdded: " + x.getOrgName() + "" +
+					" Weight: " + x.getWeight() + " Date Range: " + x.getDate());
 		}
 		return formattedDonationListWeightsAdded;
 	}
@@ -611,6 +630,9 @@ public class DonationService implements IntDonationService {
 			{
 				dateRange = x.getDate().substring(0,4);
 				Donation temp = new Donation(x.getOrgName(), "", x.getWeight(), dateRange);
+				System.out.println("Passing Donation: " + temp.getOrgName() + " category: " +
+						temp.getCategory() + " weight: " + temp.getWeight() + "" +
+						" Date Range: " + temp.getDate() + " into formattedDonationListWeightsNotAdded");
 				formattedDonationListWeightsNotAdded.add(temp);
 			}
 			//add Weights
@@ -622,6 +644,9 @@ public class DonationService implements IntDonationService {
 			{
 				dateRange = x.getDate().substring(0,4) + "-" + x.getDate().substring(5,7);
 				Donation temp = new Donation(x.getOrgName(), "", x.getWeight(), dateRange);
+				System.out.println("Passing Donation: " + temp.getOrgName() + " category: " +
+						temp.getCategory() + " weight: " + temp.getWeight() + "" +
+						" Date Range: " + temp.getDate() + " into formattedDonationListWeightsNotAdded");
 				formattedDonationListWeightsNotAdded.add(temp);
 			}
 			formattedDonationListWeightsAdded = addWeightsSummary(formattedDonationListWeightsNotAdded);
@@ -632,6 +657,9 @@ public class DonationService implements IntDonationService {
 			{
 				dateRange = x.getDate().substring(0,4) + "-" + x.getDate().substring(5,7) + "-" +  x.getDate().substring(8,10);
 				Donation temp = new Donation(x.getOrgName(), "", x.getWeight(), dateRange);
+				System.out.println("Passing Donation: " + temp.getOrgName() + " category: " +
+						temp.getCategory() + " weight: " + temp.getWeight() + "" +
+						" Date Range: " + temp.getDate() + " into formattedDonationListWeightsNotAdded");
 				formattedDonationListWeightsNotAdded.add(temp);
 			}
 			//format times correctly
@@ -693,6 +721,9 @@ public class DonationService implements IntDonationService {
 			{
 				dateRange = x.getDate().substring(0,4);
 				Donation temp = new Donation(x.getOrgName(), x.getCategory(), x.getWeight(), dateRange);
+				System.out.println("Passing Donation: " + temp.getOrgName() + " category: " +
+						temp.getCategory() + " weight: " + temp.getWeight() + "" +
+						" Date Range: " + temp.getDate() + " into formattedDonationListWeightsNotAdded");
 				formattedDonationListWeightsNotAdded.add(temp);
 			}
 			//add Weights
