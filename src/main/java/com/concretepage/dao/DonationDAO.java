@@ -288,10 +288,10 @@ public class DonationDAO implements IntDonationDAO {
 		return timeRangeArray;
 	}
 
-	public List<Donation> getDonations(int donation, String start_Date, String end_Date)
+	public List<Donation> getDonations(int type, int donation, String start_Date, String end_Date)
 	{
 		Query query = null;
-		if (donation == 0)
+		if (type == 0)
 		{
 			query = entityManager.createNativeQuery(
 					"SELECT * FROM `donation_table`"
@@ -307,6 +307,16 @@ public class DonationDAO implements IntDonationDAO {
 							+ end_Date + "') AND "
 							+ "donation=" + donation + " ORDER BY org_name, date;", Donation.class);
 		}
+		return query.getResultList();
+	}
+	
+	public List<Donation> getDonationTimesSorted(int donation, String start_Date, String end_Date) {
+		Query query = null;
+		query = entityManager.createNativeQuery(
+				"SELECT * FROM `donation_table`"
+						+ " WHERE (date >= '" + start_Date + "' AND date <= '"
+						+ end_Date + "') AND "
+						+ "donation=" + donation + " ORDER BY date;", Donation.class);
 		return query.getResultList();
 	}
 

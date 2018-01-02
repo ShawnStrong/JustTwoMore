@@ -458,19 +458,20 @@ public class DonationService implements IntDonationService {
 	public JSONObject constructReport(int donation, int time, 
 			int type, String start_date, String end_date) {
 
-		//List<Donation> donations = donationDAO.getDonations(donation, start_date, end_date);
-		for (Donation x: donations)
+		List<Donation> donations = donationDAO.getDonations(type, donation, start_date, end_date);
+		List<Donation> donationTimesSorted = donationDAO.getDonationTimesSorted(donation, start_date, end_date);
+		for (Donation x: donationTimesSorted)
 		{
 			System.out.println("Data returned by query: " + x.getOrgName() + " Category: " + x.getCategory() + " Weight: " + x.getWeight() + "" +
 					" Date: " + x.getDate());
 		}
-		String[] dates = findDateArray(time, start_date, end_date, donations);
+		String[] dates = findDateArray(time, start_date, end_date, donationTimesSorted);
 		for (int i =0 ; i< dates.length;i++)
 		{
 			System.out.println("Dates Array: " + dates[i]);
 		}
 		List<Donation> correctlyFormattedDonationList = formatDonationList(donations, dates, type, time);
-		for (Donation x: donations)
+		for (Donation x: correctlyFormattedDonationList)
 		{
 			System.out.println("Data returned by formatDonationList: " + x.getOrgName() + " Category: " + x.getCategory() + " Weight: " + x.getWeight() + "" +
 					" Date: " + x.getDate());
@@ -584,15 +585,39 @@ public class DonationService implements IntDonationService {
 				tempCategory = x.getCategory();
 				cnt++;
 			}
+			/*
+			 * else if(cnt == formattedDonationListWeightsNotAdded.size() -1)
+			{
+				System.out.println("Last Donation Passed into addWeightsSummary: " +
+						"" + x.getOrgName() + " Weight: " + x.getWeight() + " Date Range: " + x.getDate());
+				if (x.getOrgName().equals(tempOrgName) && x.getDate().equals(tempDateRange))
+				{
+					tempWeight += x.getWeight();
+					cnt++;
+					Donation tempDonation = new Donation(tempOrgName, "", tempWeight, tempDateRange);
+					formattedDonationListWeightsAdded.add(tempDonation);
+				}
+				else {
+					Donation tempDonation = new Donation(tempOrgName, "", tempWeight, tempDateRange);
+					formattedDonationListWeightsAdded.add(tempDonation);
+					tempDonation = new Donation(x.getOrgName(), "", x.getWeight(), x.getDate());
+					formattedDonationListWeightsAdded.add(tempDonation);
+				}
+			}
+			 */
 			else if(cnt == formattedDonationListWeightsNotAdded.size() - 1)
 			{
 				if (x.getOrgName().equals(tempOrgName) && x.getDate().equals(tempDateRange) && x.getCategory().equals(tempCategory))
 				{
 					tempWeight += x.getWeight();
 					cnt++;
+					Donation tempDonation = new Donation(tempOrgName, x.getCategory(), tempWeight, tempDateRange);
+					formattedDonationListWeightsAdded.add(tempDonation);
 				}
 				else {
 					Donation tempDonation = new Donation(tempOrgName, tempCategory, tempWeight, tempDateRange);
+					formattedDonationListWeightsAdded.add(tempDonation);
+					tempDonation = new Donation(x.getOrgName(), x.getCategory(), x.getWeight(), x.getDate());
 					formattedDonationListWeightsAdded.add(tempDonation);
 				}
 			}
@@ -663,9 +688,20 @@ public class DonationService implements IntDonationService {
 				formattedDonationListWeightsNotAdded.add(temp);
 			}
 			//format times correctly
+			
+			List<Donation> formattedDonationListWeightsNotAddedTemp = new ArrayList<Donation>();
 			for (Donation x:formattedDonationListWeightsNotAdded)
 			{
+				Donation temp = new Donation(x.getOrgName(), "", x.getWeight(), x.getDate());
+				formattedDonationListWeightsNotAddedTemp.add(temp);
+			}
+			formattedDonationListWeightsNotAdded = new ArrayList<Donation>();
+			for (Donation x:formattedDonationListWeightsNotAddedTemp)
+			{
 				//extract date
+				System.out.println("Using Donation in formattedDonationListWeightsNotAdded: " + x.getOrgName() + " category: " +
+						x.getCategory() + " weight: " + x.getWeight() + "" +
+						" Date Range: " + x.getDate());
 				String tempYear = x.getDate().substring(0,4);
 				String tempMonth = x.getDate().substring(5,7);
 				String tempDay = x.getDate().substring(8,10);
@@ -677,7 +713,7 @@ public class DonationService implements IntDonationService {
 					String datesTempMonth = dates[i].substring(5,7);
 					String datesTempDay = dates[i].substring(8,10);
 					Calendar datesTempCalendarDate = Calendar.getInstance();
-					tempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
+					datesTempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
 					if (tempYear.equals(datesTempYear))
 					{
 						if (tempCalendarDate.get(Calendar.WEEK_OF_YEAR) == datesTempCalendarDate.get(Calendar.WEEK_OF_YEAR))
@@ -687,11 +723,11 @@ public class DonationService implements IntDonationService {
 							break;
 						}
 					}
-					else if(tempYear.equals(dates[i].substring(11,15)))
+					else if(tempYear.equals(dates[i].substring(13,17)))
 					{
-						datesTempYear = dates[i].substring(11,15);
-						datesTempMonth = dates[i].substring(16,18);
-						datesTempDay = dates[i].substring(19,21);
+						datesTempYear = dates[i].substring(13,17);
+						datesTempMonth = dates[i].substring(18,20);
+						datesTempDay = dates[i].substring(21,23);
 						datesTempCalendarDate = Calendar.getInstance();
 						tempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
 						if (tempCalendarDate.get(Calendar.WEEK_OF_YEAR) == datesTempCalendarDate.get(Calendar.WEEK_OF_YEAR))
@@ -748,7 +784,15 @@ public class DonationService implements IntDonationService {
 				formattedDonationListWeightsNotAdded.add(temp);
 			}
 			//format times correctly
+			List<Donation> formattedDonationListWeightsNotAddedTemp = new ArrayList<Donation>();
 			for (Donation x:formattedDonationListWeightsNotAdded)
+			{
+				Donation temp = new Donation(x.getOrgName(), x.getCategory(), x.getWeight(), x.getDate());
+				formattedDonationListWeightsNotAddedTemp.add(temp);
+				System.out.println("Temp: " + temp.getOrgName() + " Category: " + temp.getCategory());
+			}
+			formattedDonationListWeightsNotAdded = new ArrayList<Donation>();
+			for (Donation x:formattedDonationListWeightsNotAddedTemp)
 			{
 				//extract date
 				String tempYear = x.getDate().substring(0,4);
@@ -762,23 +806,24 @@ public class DonationService implements IntDonationService {
 					String datesTempMonth = dates[i].substring(5,7);
 					String datesTempDay = dates[i].substring(8,10);
 					Calendar datesTempCalendarDate = Calendar.getInstance();
-					tempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
+					datesTempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
 					if (tempYear.equals(datesTempYear))
 					{
 						if (tempCalendarDate.get(Calendar.WEEK_OF_YEAR) == datesTempCalendarDate.get(Calendar.WEEK_OF_YEAR))
 						{
 							Donation temp = new Donation(x.getOrgName(), x.getCategory(), x.getWeight(), dates[i]);
+							System.out.println("Temp: " + temp.getOrgName() + " Category: " + temp.getCategory());
 							formattedDonationListWeightsNotAdded.add(temp);
 							break;
 						}
 					}
-					else if(tempYear.equals(dates[i].substring(11,15)))
+					else if(tempYear.equals(dates[i].substring(13,17)))
 					{
-						datesTempYear = dates[i].substring(11,15);
-						datesTempMonth = dates[i].substring(16,18);
-						datesTempDay = dates[i].substring(19,21);
+						datesTempYear = dates[i].substring(13,17);
+						datesTempMonth = dates[i].substring(18,20);
+						datesTempDay = dates[i].substring(21,23);
 						datesTempCalendarDate = Calendar.getInstance();
-						tempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
+						datesTempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
 						if (tempCalendarDate.get(Calendar.WEEK_OF_YEAR) == datesTempCalendarDate.get(Calendar.WEEK_OF_YEAR))
 						{
 							Donation temp = new Donation(x.getOrgName(), x.getCategory(), x.getWeight(), dates[i]);
@@ -1194,6 +1239,67 @@ public class DonationService implements IntDonationService {
 				}
 			}
 		}
+		
+		
+		Donation currentElem = donationListToReturn.get(donationListIdx-1);
+		// this fills out the rest of the second to last row
+		if (!(currentElem.getOrgName().equals(lastElem.getOrgName()) && currentElem.getCategory().equals(lastElem.getCategory()))) {
+			for (int i = timeRangeArrayIdx; i < timeRangeArray.length; i++) {
+				Donation temp = new Donation(currentElem.getOrgName(), currentElem.getCategory(), 0, timeRangeArray[i]);
+				donationListToReturn.add(donationListIdx, temp);
+				donationListIdx++;
+			}
+			for (int i = 0; i < timeRangeArray.length; i++) {
+				if (!timeRangeArray[i].equals(lastElem.getDate())) {
+					Donation temp = new Donation(lastElem.getOrgName(), lastElem.getCategory(), 0, timeRangeArray[i]);
+					donationListToReturn.add(donationListIdx, temp);
+					donationListIdx++;
+				}
+				else {
+					donationListIdx++;
+				}
+			}
+		}
+		else {
+			int index2use = 0;
+			for (int i = 0; i < timeRangeArray.length; i++) {
+				if (currentElem.getDate().equals(timeRangeArray[i])) {
+					index2use = i;
+					break;
+				}
+			}
+			for (int i = index2use + 1; i < timeRangeArray.length; i++) {
+				if (!timeRangeArray[i].equals(lastElem.getDate())) {
+					Donation temp = new Donation(currentElem.getOrgName(), currentElem.getCategory(), 0, timeRangeArray[i]);
+					donationListToReturn.add(donationListIdx, temp);
+					donationListIdx++;
+				}
+				else {
+					donationListIdx++;
+				}
+			}
+		}
+		
+		//search through list for the last elements org name and category
+		/*
+		int index2use = donationListToReturn.size()-1;
+		while(donationListToReturn.get(index2use).getOrgName().equals(lastElem.getOrgName()) && donationListToReturn.get(index2use).getCategory().equals(lastElem.getCategory()))
+		{
+			index2use--;
+		}
+		for(int i = 0; i < timeRangeArrayIdxLength; i++)
+		{
+			if(!(donationListToReturn.get(index2use).getDate().equals(timeRangeArray[i])))
+			{
+				Donation temp = new Donation(lastElem.getOrgName(), lastElem.getCategory(), 0, timeRangeArray[i]);
+				donationListToReturn.add(index2use, temp);
+				index2use++;
+			}
+			else
+			{
+				index2use++;
+			}
+		}
 		for (int i = timeRangeArrayIdx; i< timeRangeArrayIdxLength; i++)
 		{
 			Donation tempDonation = new Donation();
@@ -1211,7 +1317,7 @@ public class DonationService implements IntDonationService {
 			timeRangeArrayIdx++;
 			lastObjectUsed = donationListToReturn.get(donationListIdx);
 			donationListIdx++;
-		}
+		}*/
 		return donationListToReturn;
 	}
 }
