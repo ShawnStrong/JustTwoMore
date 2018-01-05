@@ -194,7 +194,7 @@
                         dataType:'json',
                         success : function(json) {
                             if (json != ""){
-                              alert("endpoint has returned " + JSON.stringify(json));
+                              //alert("endpoint has returned " + JSON.stringify(json));
 
 //							   dynamically make the headers
 //							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
@@ -345,6 +345,9 @@
             </label>
             <label class="btn btn-primary" id="weeklyLabel">
                 <input type="radio" name="time" value="0"autocomplete="off" id="weekly"> Weekly
+            </label>
+			<label class="btn btn-primary" id="dailyLabel">
+                <input type="radio" name="time" value="3"autocomplete="off" id="daily"> Daily
             </label>
         </div>
         <div class="btn-group col-lg-4" data-toggle="buttons">
