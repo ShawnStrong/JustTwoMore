@@ -34,6 +34,9 @@
 	</style>
 	<script>		
 		$(document).ready(function() {	
+			var ip = location.host;
+			localStorage.setItem("serverIp", ip);
+		
             //Add username to the navbar if it exists in local storage
             var name = localStorage.getItem("username");
             $("#username").prop("value",name);
@@ -84,7 +87,7 @@
 				var mytable = $("#table1");
                 var form = $("#redirection").serialize();
 				$.ajax({
-					url: "http://localhost:8080/org/list2",
+					url: 'http://' + ip + '/org/list2',
 					type: "GET",
 					data: form,
 					dataType: "json",
@@ -206,7 +209,7 @@
                 var editString = "?org_name=" + orgName + "&contact_name=" + contact + "&contact_number=" + number + "&contact_email=" + email + "&notes=" + notes;
                 
                 $.ajax({
-                    url:"/org/update" + editString,
+                    url: 'http://' + ip + '/org/update' + editString,
                     type: "GET",
                     success: function(data) {
                         if (data == 0) {
@@ -222,7 +225,7 @@
                 var delString = "?org_name=" + orgName;
                 
                 $.ajax({
-                    url:"/org/delete" + delString,
+                    url: 'http://' + ip + '/org/delete' + delString,
                     type: "GET",
                     success: function(data) {
                         alert("Organization has been deleted.");
@@ -279,9 +282,9 @@
                   $("#inputContactPhone").val() == "" || $("#inputContactEmail").val() == "") {
                   alert("Please fill out all the information before submitting.");
               } else {
-                alert("" + form);
+                // ("" + form);
                   $.ajax({
-                      url : 'http://localhost:8080/org/create',
+                      url : 'http://' + ip + '/org/create',
                       type : 'GET',
                       data : form,
                       dataType:'json',
@@ -363,12 +366,20 @@
 			
     <div class="container-fluid" id="formbox" hidden>
         <form class="form-horizontal" name="orgForm">
+		  <div class="form-group col-lg-10 col-md-10 col-sm-10">
+            <label for="inputOrg" class="col-sm-2 control-label">Organization:</label>
+            <div class="col-sm-10">
+                <textarea rows="1" type="text" name="org_name" class="form-control" id="inputOrg" placeholder="Organization Name" style="height: 100px" required></textarea>
+            </div>
+          </div>
+		  <!--
           <div class="form-group col-lg-10 col-md-10 col-sm-10">
             <label for="inputOrg" class="col-sm-2 control-label">Organization:</label>
             <div class="col-sm-10">
               <input type="text" name="org_name" class="form-control" id="inputOrg" placeholder="Organization Name" required>
             </div>
           </div>
+		  -->
           <div class="form-group col-lg-10 col-md-10 col-sm-10">
             <label for="inputContactName" class="col-sm-2 control-label">Contact:</label>
             <div class="col-sm-10">

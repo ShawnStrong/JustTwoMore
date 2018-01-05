@@ -62,8 +62,13 @@ public class OrgController {
 	@GetMapping("list")
 	public @ResponseBody List<Org> listPartner() {
 
-
 		List<Org> lop = partnerDAO.listPartner();
+		for (Org x : lop) {
+			String name = x.getName();
+			name = name.replaceAll("''", "'");
+			x.setName(name);
+		}
+		
 		return lop;
 	}
 	
@@ -79,6 +84,11 @@ public class OrgController {
 			donationDAO.inputPage(user_name, "orgs");
 		}
 		List<Org> lop = partnerDAO.listPartner();
+		for (Org x : lop) {
+			String name = x.getName();
+			name = name.replaceAll("''", "'");
+			x.setName(name);
+		}
 		String json = new Gson().toJson(lop);
 		return json;
 	}

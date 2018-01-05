@@ -28,6 +28,9 @@
     
     <script>
         $( document ).ready(function() {
+			var ip = location.host;
+			localStorage.setItem("serverIp", ip);
+			
             //Hide submit button until an org is selected
             $("button[type=submit]").hide();
             
@@ -51,7 +54,7 @@
             //Generate the list of organizations
             $.ajax({
                 // The URL for the request
-                url: "http://localhost:8080/org/list",
+                url: 'http://' + ip + '/org/list',
 
                 // Whether this is a POST or GET request
                 type: "GET",
@@ -82,7 +85,7 @@
                     var OrgsName = $("#inputPlace #base").serialize().toString();
 
                     $.ajax({
-                        url: 'http://localhost:8080/donation/frequency',
+                        url: 'http://' + ip + '/donation/frequency',
                         type: 'GET',
                         data: {org_name:OrgsName} ,
                         dataType : "json",
@@ -132,7 +135,7 @@
 					var mytable = $("#donationtable");
                     var OrgsName = $("#showPlace #showOrgSelect").serialize().toString();
 					$.ajax({
-                        url: 'http://localhost:8080/donation/showDonations',
+                        url: 'http://' + ip + '/donation/showDonations',
                         type: 'GET',
                         data: {org_name:OrgsName},
                         dataType : "json",
@@ -197,7 +200,7 @@
                                 var OrgsName = $("#inputPlace #base").serialize().toString();
 
                                 $.ajax({
-                                    url: 'http://localhost:8080/donation/frequency',
+                                    url: 'http://' + ip + '/donation/frequency',
                                     type: 'GET',
                                     data: {org_name:OrgsName} ,
                                     dataType : "json",
@@ -253,7 +256,7 @@
 								var OrgsName = $("#showPlace #showOrgSelect").serialize().toString();
 
                                 $.ajax({
-                                    url: 'http://localhost:8080/donation/frequency',
+                                    url: 'http://' + ip + '/donation/frequency',
                                     type: 'GET',
                                     data: {org_name:OrgsName} ,
                                     dataType : "json",
@@ -510,7 +513,7 @@
                   alert("Please enter a weight before submitting the donation.");
               } else {
                   $.ajax({
-                      url : 'http://localhost:8080/donation/input',
+                      url : 'http://' + ip + '/donation/input',
                       type : 'GET',
                       data : form,
                       dataType:'json',
@@ -630,7 +633,7 @@
             function categories(orgName) {
                 var category =[];
                 $.ajax({
-                        url: 'http://localhost:8080/donation/frequency',
+                        url: 'http://' + ip + '/donation/frequency',
                         type: 'GET',
                         data: {org_name:orgName} ,
                         dataType : "json",
@@ -688,7 +691,7 @@
 			function delDonation(donation_id) {
 				var delString = "?order_id=" + donation_id;
 				$.ajax({
-					url:"/donation/deleteDonation" + delString,
+					url: 'http://' + ip + '/donation/deleteDonation' + delString,
 					type: "GET",
 					success: function(data) {
 						alert("Donation has been deleted.");

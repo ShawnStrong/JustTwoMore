@@ -132,11 +132,16 @@ public class DonationController {
 
 	@GetMapping("showDonations")
 	public @ResponseBody String showDonations(@RequestParam String org_name){
-		System.out.println(org_name);
 		org_name = org_name.substring(9);
 		String replaceString=org_name.replace("%20"," ");
+		replaceString = replaceString.replaceAll("'", "''");
 		System.out.println(replaceString);
 		List<Donation> listOfDonations = donationDAO.showDonations(replaceString);
+		for (Donation x : listOfDonations) {
+			String name = x.getOrgName();
+			name = name.replaceAll("''", "'");
+			x.setOrgName(name);
+		}
 		String json = new Gson().toJson(listOfDonations);
 		System.out.println(json);
 		return json;

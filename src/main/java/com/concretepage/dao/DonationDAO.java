@@ -32,18 +32,39 @@ public class DonationDAO implements IntDonationDAO {
 	@Override
 	public int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date) {
 
+		org_name = org_name.replaceAll("'", "''");
+		
+//		query = entityManager.createNativeQuery(
+//				"INSERT INTO org_table SET org_name = ?1, contact_name = ?2, contact_number = ?3, contact_email = ?4, notes = ?5");
+//	        query.setParameter(1, org_name);
+//	        query.setParameter(2, contact_name);
+//	        query.setParameter(3, contact_number);
+//	        query.setParameter(4, contact_email);
+//	        query.setParameter(5, notes);
+		
+//		Query query = entityManager.createNativeQuery(
+//				"INSERT INTO donation_table SET "
+//						+ "org_id=(SELECT org_id FROM org_table WHERE "
+//						+ "org_name = '" + org_name + "'), "
+//						+ "org_name = '" + org_name
+//						+ "', category = '" + category
+//						+ "', weight = '" + weight
+//						+ "', donation = '" + donation
+//						+ "', user_name = '" + user_name
+//						+ "', date = '" + date + "';");
+//		query.executeUpdate();
+		
 		Query query = entityManager.createNativeQuery(
-				"INSERT INTO donation_table SET "
-						+ "org_id=(SELECT org_id FROM org_table WHERE "
-						+ "org_name = '" + org_name + "'), "
-						+ "org_name = '" + org_name
-						+ "', category = '" + category
-						+ "', weight = '" + weight
-						+ "', donation = '" + donation
-						+ "', user_name = '" + user_name
-						+ "', date = '" + date + "';");
-
-		query.executeUpdate();
+				"INSERT INTO donation_table SET org_id=(SELECT org_id FROM org_table WHERE org_name=?1), org_name=?2, category=?3, weight=?4, donation=?5, user_name=?6, date=?7");
+			query.setParameter(1, org_name);
+			query.setParameter(2, org_name);
+			query.setParameter(3, category);
+			query.setParameter(4, weight);
+			query.setParameter(5, donation);
+			query.setParameter(6, user_name);
+			query.setParameter(7, date);
+			query.executeUpdate();
+		
 		return 0;
 	}
 	//select distinct org_name from donation_table where (ts between '2017-10-15 00:00:00' and '2017-10-15 23:59:59') and user_name = 'Adam';
@@ -59,12 +80,28 @@ public class DonationDAO implements IntDonationDAO {
 		return orgs;
 	}
 
+	
+//	query = entityManager.createNativeQuery(
+//    		"UPDATE org_table SET org_name = ?1, contact_name = ?2, contact_number = ?3, contact_email = ?4, notes = ?5 " +
+//    		"WHERE org_name = ?6");
+//	    query.setParameter(1, org_name);
+//        query.setParameter(2, contact_name);
+//        query.setParameter(3, contact_number);
+//        query.setParameter(4, contact_email);
+//        query.setParameter(5, notes);
+//        query.setParameter(6, org_name);
+//        query.executeUpdate();
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Donation> showDonations(String org_name){
 		Query query = entityManager.createNativeQuery(
-				"SELECT * FROM donation_table WHERE " +
-						"org_name = '" + org_name +"';", Donation.class);
+				"SELECT * FROM donation_table WHERE org_name = ?1", Donation.class);
+		query.setParameter(1, org_name);
+//		Query query = entityManager.createNativeQuery(
+//				"SELECT * FROM donation_table WHERE " +
+//						"org_name = '" + org_name +"';", Donation.class);
 		List<Donation> donations = query.getResultList();
 		return donations;
 	}
@@ -127,8 +164,10 @@ public class DonationDAO implements IntDonationDAO {
 	public List<String> getFrequency(String org_name)
 	{
 
+		org_name = org_name.replaceAll("'", "''");
 		org_name=org_name.replaceAll("%20"," ");
 		org_name=org_name.replaceAll("org_name=","");
+		System.out.println(org_name);
 		Query query = entityManager.createNativeQuery(
 				"SELECT category, count(*) freq FROM donation_table"
 						+ " WHERE org_name='" + org_name + "' GROUP BY category ORDER BY freq DESC;", Frequency.class);

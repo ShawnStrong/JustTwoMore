@@ -32,6 +32,7 @@ public class OrgDAO implements IntOrgDAO {
 		// error codes:
 		// 0 for successful create
 		// 1 for org already exists
+		org_name = org_name.replaceAll("'", "''");
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM org_table WHERE org_name='" +
 				org_name + "';", Org.class);
@@ -40,16 +41,23 @@ public class OrgDAO implements IntOrgDAO {
 		
 		// check if org with org_name is already made
 		if (orgs.isEmpty()) {
-			System.out.println(notes);
 			query = entityManager.createNativeQuery(
-					"INSERT INTO org_table (org_name,contact_name,contact_number,contact_email,notes) " +
-		            " VALUES(?,?,?,?,?)");
+					"INSERT INTO org_table SET org_name = ?1, contact_name = ?2, contact_number = ?3, contact_email = ?4, notes = ?5");
 		        query.setParameter(1, org_name);
 		        query.setParameter(2, contact_name);
 		        query.setParameter(3, contact_number);
 		        query.setParameter(4, contact_email);
 		        query.setParameter(5, notes);
 		        query.executeUpdate();
+//			query = entityManager.createNativeQuery(
+//					"INSERT INTO org_table (org_name,contact_name,contact_number,contact_email,notes) " +
+//		            " VALUES(?1,?2,?3,?4,?5)");
+//		        query.setParameter(1, org_name);
+//		        query.setParameter(2, contact_name);
+//		        query.setParameter(3, contact_number);
+//		        query.setParameter(4, contact_email);
+//		        query.setParameter(5, notes);
+//		        query.executeUpdate();
 		        
 		    return 0;
 		} else {
@@ -89,6 +97,7 @@ public class OrgDAO implements IntOrgDAO {
 				// error codes:
 				// 0 for successful update
 				// 1 for org not created yet
+				org_name = org_name.replaceAll("'", "''");
 				Query query = entityManager.createNativeQuery(
 						"SELECT * FROM org_table WHERE org_name='" +
 						org_name + "';", Org.class);

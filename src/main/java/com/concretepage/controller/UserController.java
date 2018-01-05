@@ -1,5 +1,8 @@
 package com.concretepage.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.concretepage.dao.IntUserDAO;
-import com.concretepage.service.DonationService;
-import com.concretepage.service.IntDonationService;
 
 @Controller
 @RequestMapping("user")
@@ -17,9 +18,6 @@ public class UserController {
 
 	@Autowired
 	private IntUserDAO userDAO;
-	
-	@Autowired
-	private IntDonationService donationService;
 	
 	@GetMapping("create")
 	public @ResponseBody int createUser (
@@ -53,4 +51,17 @@ public class UserController {
 		return "all good";
 	}
 	
+	@GetMapping("findIp")
+	public @ResponseBody String findIp() {
+		InetAddress server = null;
+		try {
+			server = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		String serverAddress = server.getHostAddress().trim();
+		System.out.println(serverAddress);
+		
+		return serverAddress;
+	}
 }

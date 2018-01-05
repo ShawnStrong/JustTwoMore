@@ -7,6 +7,9 @@
 
   <script type="text/javascript">
       $(document).ready(function() {
+			var ip = location.host;
+			localStorage.setItem("serverIp", ip);
+	  
             var name = localStorage.getItem("username");
 
             if (name != null && name.length > 0) {
@@ -28,7 +31,7 @@
               var form = $("form").serialize();
 
               $.ajax({
-                  url : 'http://localhost:8080/user/login',
+                  url : 'http://' + ip + '/user/login',
                   type : 'GET',
                   data : form,
                   dataType:'text',
