@@ -73,6 +73,7 @@ public class DonationService implements IntDonationService {
 
 	@Override
 	public List<String> findWidgetTimes(String username) {
+		System.out.println("User Name passed to service Layer: " + username);
 		Calendar todaysDate = Calendar.getInstance();
 		Calendar temp = Calendar.getInstance();
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -769,6 +770,12 @@ public class DonationService implements IntDonationService {
 				}
 			}
 			//add weights together
+			for (Donation x: formattedDonationListWeightsNotAdded)
+			{
+				System.out.println("Placing Donation in formattedDonationListWeightsNotAdded: " + x.getOrgName() + " category: " +
+						x.getCategory() + " weight: " + x.getWeight() + "" +
+						" Date Range: " + x.getDate() + " into addWeightsSummary");
+			}
 			formattedDonationListWeightsAdded = addWeightsSummary(formattedDonationListWeightsNotAdded);
 		}
 		return formattedDonationListWeightsAdded;
