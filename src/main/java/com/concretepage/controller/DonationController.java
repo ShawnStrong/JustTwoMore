@@ -116,13 +116,18 @@ public class DonationController {
 		{
 			x = new JSONObject().put("JSON", "error");
 		}
-		System.out.println(x.toString());
-		return x.toString();
+		String y = "";
+		y = x.toString();
+		y = y.replaceAll("''", "'");
+		//System.out.println(x.toString());
+		//return x.toString();
+		return y;
 	}
 
 	@GetMapping("widget")
 	public @ResponseBody List<String> widget(
 			@RequestParam String username) {
+		System.out.println(username);
 		List<String> widgetTimes = donationService.findWidgetTimes(username);
 		//widgetTimes = DonationService.findWidgetTimes(username);
 
