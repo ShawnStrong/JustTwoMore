@@ -762,7 +762,7 @@ public class DonationService implements IntDonationService {
 						datesTempMonth = dates[i].substring(18,20);
 						datesTempDay = dates[i].substring(21,23);
 						datesTempCalendarDate = Calendar.getInstance();
-						tempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
+						datesTempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
 						if (tempCalendarDate.get(Calendar.WEEK_OF_YEAR) == datesTempCalendarDate.get(Calendar.WEEK_OF_YEAR))
 						{
 							Donation temp = new Donation(x.getOrgName(), "", x.getWeight(), dates[i]);
