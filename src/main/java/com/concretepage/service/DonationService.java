@@ -742,8 +742,8 @@ public class DonationService implements IntDonationService {
 					String datesTempYear = dates[i].substring(0,4);
 					String datesTempMonth = dates[i].substring(5,7);
 					String datesTempDay = dates[i].substring(8,10);
-					System.out.print("TempYear: " + tempYear + " datesTempYear: " + datesTempYear);
-					System.out.print("TempYear: " + tempYear + " 2nd Year: " + dates[i].substring(13,17));
+					System.out.println("TempYear: " + tempYear + " datesTempYear: " + datesTempYear);
+					System.out.println("TempYear: " + tempYear + " 2nd Year: " + dates[i].substring(13,17));
 					Calendar datesTempCalendarDate = Calendar.getInstance();
 					datesTempCalendarDate.set(Integer.parseInt(datesTempYear), Integer.parseInt(datesTempMonth)-1, Integer.parseInt(datesTempDay));
 					if (tempYear.equals(datesTempYear))
@@ -757,7 +757,7 @@ public class DonationService implements IntDonationService {
 					}
 					else if(tempYear.equals(dates[i].substring(13,17)))
 					{
-						System.out.print("Entered else if statement");
+						System.out.println("Entered else if statement");
 						datesTempYear = dates[i].substring(13,17);
 						datesTempMonth = dates[i].substring(18,20);
 						datesTempDay = dates[i].substring(21,23);
