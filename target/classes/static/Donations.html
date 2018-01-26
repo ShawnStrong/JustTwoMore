@@ -11,6 +11,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+	<!-- dynatable css and js -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+	<link rel="stylesheet" type="text/css" href="dynatableTH.css">
+	<!--<script src="jquery.dynatable.js"></script> -->
+	<script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.dynatable.js'></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+    <script src="donationsBootstable.js"></script>
 
     <style>
         #suggestionWidget p:hover{
@@ -20,6 +28,9 @@
     
     <script>
         $( document ).ready(function() {
+			var ip = location.host;
+			localStorage.setItem("serverIp", ip);
+			
             //Hide submit button until an org is selected
             $("button[type=submit]").hide();
             
@@ -43,7 +54,7 @@
             //Generate the list of organizations
             $.ajax({
                 // The URL for the request
-                url: "http://localhost:8080/org/list",
+                url: 'http://' + ip + '/org/list',
 
                 // Whether this is a POST or GET request
                 type: "GET",
@@ -55,30 +66,26 @@
             // The response is passed to the function
                 .done(function( data ) {
                     $.each(data, function() {
-                        $(document.createElement('option')).prop({text: this.name}).appendTo(".row #basic-place #base");
+                        $(document.createElement('option')).prop({text: this.name}).appendTo(".row #inputPlace #base");
+						$(document.createElement('option')).prop({text: this.name}).appendTo(".row #showPlace #showOrgSelect");
                     })
-
-                    $('.row #basic-place #base').editableSelect();
-
+                    $('.row #inputPlace #base').editableSelect();
+					$('.row #showPlace #showOrgSelect').editableSelect();
                 })
                 // Code to run if the request fails; the raw request and
                 // status codes are passed to the function
                 .fail(function( xhr, status, errorThrown ) {
                     alert( "Sorry, there was a problem!" );
-                    console.log( "Error: " + errorThrown );
-                    console.log( "Status: " + status );
-                    console.dir( xhr );
-                });
+            });
 
-
-            //If the user clicks on an org with their mouse
-            $(document).on("click",".row #basic-place ul",function() {
-                if ($(".row #basic-place #base").val().length > 0) {
+            //If the user clicks on an org on 'input donation' tab with their mouse
+            $(document).on("click",".row #inputPlace ul",function() {
+                if ($(".row #inputPlace #base").val().length > 0) {
                     var category =[];
-                    var OrgsName = $("#basic-place #base").serialize().toString();
+                    var OrgsName = $("#inputPlace #base").serialize().toString();
 
                     $.ajax({
-                        url: 'http://localhost:8080/donation/frequency',
+                        url: 'http://' + ip + '/donation/frequency',
                         type: 'GET',
                         data: {org_name:OrgsName} ,
                         dataType : "json",
@@ -92,7 +99,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];    
                         }
 
                         for (var i = 0; i < category.length; i++) {
@@ -102,37 +109,98 @@
                                 return letter.toUpperCase();
                             });
                             $("label[for='" + category[i] + "']").html(label + ":");
+                            category[i] = category[i].replace(/\s+/g, '_').toLowerCase();
                             $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
                         }
+						
+						$(document.createElement('label')).prop({for: 'date'}).appendTo(".row #test");
+						$("label[for='date']").html("Date:");
+						$(document.createElement('input')).prop({type: "date", class: "form-control",  name: "date"}).appendTo(".row #test");
 
                         $("button[type=submit]").show();
                         
                         
                     })
 
-                    .fail(function(jqXHR, textStatus) {
+                    .fail(function(jqXHR, textStatus, errorThrown) {
                         alert( "Sorry, there was a problem!" );
-                        console.log( "Error: " + errorThrown );
-                        console.log( "Status: " + status );
-                        console.dir( xhr );
                     });
 
                 }
             });
 
+			//If the user clicks on an org on 'show donations' tab with their mouse
+            $(document).on("click",".row #showPlace ul",function() {
+				if ($(".row #showPlace #showOrgSelect").val().length > 0) {
+					var mytable = $("#donationtable");
+                    var OrgsName = $("#showPlace #showOrgSelect").serialize().toString();
+					$.ajax({
+                        url: 'http://' + ip + '/donation/showDonations',
+                        type: 'GET',
+                        data: {org_name:OrgsName},
+                        dataType : "json",
+						success: function(data){
+							//convert donation integers to strings
+							for( var k = 0; k < data.length; ++k ) {
+								if( data[k]["donation"] == 0 ) {
+									data[k]["donation"] = "Outgoing";
+								} else {
+									data[k]["donation"] = "Incoming";
+								}
+							}
+							$("#tableBody").empty();
+							$("#donationtable thead tr th[name=buttons]").remove();
+							//create columns dynamically
+							mytable.dynatable({
+								features: {
+									paginate: false,
+									perPageSelect: false
+								},
+								dataset: {
+									records: data
+								}
+							});
+							mytable.data('dynatable').settings.dataset.records = data;
+							mytable.data('dynatable').dom.update();
+							$("#donationtable").each(function(){
+                                $(this).find('th').addClass('dynatableTH');
+                            })
+                            $("#donationtable").each(function(){
+                                $(this).find('td').addClass('centerTD');
+                            })
+                            $("#donationtable").each(function(){
+                                $(this).find('tbody').addClass('editBody');
+                            })
+							mytable.data('dynatable').paginationPerPage.set(10000);
+							
+							$("#tablebox .dynatable-per-page").hide();
+							$("#dynatable-pagination-links-table1").hide();
+							$("#dynatable-query-search-table1").val("");
+							$('#donationtable').SetEditable({
+								columnsEd: "1,2,3,4",
+								onDelete: function(columnsEd) {
+									var donation_id = columnsEd[0].childNodes[0].innerHTML;
+									delDonation(donation_id);
+								}
+							});
+						 }
+                    })
+					$("#tablebox").prop({hidden: false});
+				}
+			});
             
-            //If the user selects the org using arrow keys and hits the enter key or types out the name themselves
+            //If the user selects the org on 'input donation' tab using arrow keys and hits the enter key or types out the name themselves
             $(document).on("keydown", function(e) {
                 if(e.which == 13) {
-                    if ($(".row #basic-place #base").val().length > 0) {
-                        $('.row #basic-place ul li').each(function() {
+                    if ($(".row #inputPlace #base").val().length > 0) {
+                        $('.row #inputPlace ul li').each(function() {
 
                             if($(this).hasClass("selected")) {
                                 var category =[];
-                                var OrgsName = $("#basic-place #base").serialize().toString();
+                                var OrgsName = $("#inputPlace #base").serialize().toString();
 
                                 $.ajax({
-                                    url: 'http://localhost:8080/donation/frequency',
+                                    url: 'http://' + ip + '/donation/frequency',
                                     type: 'GET',
                                     data: {org_name:OrgsName} ,
                                     dataType : "json",
@@ -146,7 +214,7 @@
                                     $(".row #test").children().remove();
                                     
                                     if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                                        category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];     
+                                        category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];     
                                     }
 
                                     for (var i = 0; i < category.length; i++) {
@@ -158,17 +226,18 @@
                                         $("label[for='" + category[i] + "']").html(label + ":");
                                         $(document.createElement('input')).prop({type: "number", class: "form-control", min: 0, value: 0, name: category[i]}).appendTo(".row #test");
                                     }
+									
+									$(document.createElement('label')).prop({for: 'date'}).appendTo(".row #test");
+									$("label[for='date']").html("Date:");
+									$(document.createElement('input')).prop({type: "date", class: "form-control",  name: "date"}).appendTo(".row #test");
 
                                     $("button[type=submit]").show();
 
 
                                 })
 
-                                .fail(function(jqXHR, textStatus) {
+                                .fail(function(jqXHR, textStatus, errorThrown) {
                                     alert( "Sorry, there was a problem!" );
-                                    console.log( "Error: " + errorThrown );
-                                    console.log( "Status: " + status );
-                                    console.dir( xhr );
                                 });
                                 
                                 
@@ -178,8 +247,71 @@
                 }
             });
 
-            
-            
+            //If the user selects the org on 'show donation' tab using arrow keys and hits the enter key or types out the name themselves
+            $(document).on("keydown", function(e) {
+                if(e.which == 13) {
+                    if ($(".row #showPlace #showOrgSelect").val().length > 0) {
+                        $('.row #showPlace ul li').each(function() {
+							if($(this).hasClass("selected")) {
+								var OrgsName = $("#showPlace #showOrgSelect").serialize().toString();
+
+                                $.ajax({
+                                    url: 'http://' + ip + '/donation/frequency',
+                                    type: 'GET',
+                                    data: {org_name:OrgsName} ,
+                                    dataType : "json",
+									success: function(data){
+										//convert donation integers to strings
+										for( var k = 0; k < data.length; ++k ) {
+											if( data[k]["donation"] == 0 ) {
+												data[k]["donation"] = "Outgoing";
+											} else {
+												data[k]["donation"] = "Incoming";
+											}
+										}
+										$("#tableBody").empty();
+										$("#donationtable thead tr th[name=buttons]").remove();
+										//create columns dynamically
+										mytable.dynatable({
+											features: {
+												paginate: false,
+												perPageSelect: false
+											},
+											dataset: {
+												records: data
+											}
+										});
+										mytable.data('dynatable').settings.dataset.records = data;
+										mytable.data('dynatable').dom.update();
+										$("#donationtable").each(function(){
+											$(this).find('th').addClass('dynatableTH');
+										})
+										$("#donationtable").each(function(){
+											$(this).find('td').addClass('centerTD');
+										})
+										$("#donationtable").each(function(){
+											$(this).find('tbody').addClass('editBody');
+										})
+										mytable.data('dynatable').paginationPerPage.set(1000);
+										
+										$("#tablebox .dynatable-per-page").hide();
+										$("#dynatable-pagination-links-table1").hide();
+										$("#dynatable-query-search-table1").val("");
+										$('#donationtable').SetEditable({
+											columnsEd: "1,2,3,4",
+											onDelete: function(columnsEd) {
+												var donation_id = columnsEd[0].childNodes[0].innerHTML;
+												delDonation(donation_id);
+											}
+										});
+									 }
+                                })
+							}
+						});
+					}
+				}
+			});
+			/*
             // Voice commands
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
@@ -224,19 +356,19 @@
                   
                 'select first organization': function() {
                     var orgName = $("#suggestionWidget .0 p").html();
-                    $(".row #basic-place #base").val(orgName);
+                    $(".row #inputPlace #base").val(orgName);
                     categories(orgName);
                 },
                   
                 'select second organization': function() {
                     var orgName = $("#suggestionWidget .1 p").html();
-                    $(".row #basic-place #base").val(orgName);
+                    $(".row #inputPlace #base").val(orgName);
                     categories(orgName);
                 },
                   
                 'select third organization': function() {
                     var orgName = $("#suggestionWidget .2 p").html();
-                    $(".row #basic-place #base").val(orgName);
+                    $(".row #inputPlace #base").val(orgName);
                     categories(orgName);
                 },
                   
@@ -323,7 +455,8 @@
                       var form = $("form").serialize();
 
                       if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
-                         $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0) {
+                         $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0
+						 && $("#test input[name=pet_food]").val() == 0 && $("#test input[name=nonfood]").val() == 0) {
                           alert("Please enter a weight before submitting the donation.");
                       } else {
                           $.ajax({
@@ -339,26 +472,27 @@
                               error : function(request,error) {
                                   if (request.responseText == "ok") {
                                       $( "#successfulDonation" ).dialog({
-                                          modal: true,
-                                          buttons: {
-                                            Ok: function() {
-                                                window.location.href = "Donations.html";
-                                            }
-                                          }
-                                        });
+                                  modal: true,
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#successfulDonation").dialog('close');
+                                            window.location.href = "Donations.html";
+                                        }, 1500);
+                                    }
+                                });
                                   } else {
                                       $( "#failedDonation" ).dialog({
-                                          modal: true,
-                                          buttons: {
-                                            Ok: function() {
-                                              $( this ).dialog( "close" );
-                                            }
-                                          }
-                                        });
+                                  modal: true,
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#failedDonation").dialog('close');
+                                        }, 1500);
+                                    }
+                                });
                                   }
                               }
-                            });
-                        }
+                          });
+                      }
                 }
                   
               };
@@ -369,19 +503,17 @@
               // Start listening. You can call this here, or attach this call to an event, button, etc.
               annyang.start();
             }
-            
-            
-            
+            */
             // Submit the form
             $("#submit").click(function() {
               var form = $("form").serialize();
-                
-              if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 &&
-                 $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0) {
+              if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 
+			     && $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0
+				 && $("#test input[name=pet_food]").val() == 0 && $("#test input[name=nonfood]").val() == 0) {
                   alert("Please enter a weight before submitting the donation.");
               } else {
                   $.ajax({
-                      url : 'http://localhost:8080/donation/input',
+                      url : 'http://' + ip + '/donation/input',
                       type : 'GET',
                       data : form,
                       dataType:'json',
@@ -395,29 +527,28 @@
                           if (request.responseText == "ok") {
                               $( "#successfulDonation" ).dialog({
                                   modal: true,
-                                  buttons: {
-                                    Ok: function() {
-                                        window.location.href = "Donations.html";
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#successfulDonation").dialog('close');
+                                            window.location.href = "Donations.html";
+                                        }, 1500);
                                     }
-                                  }
                                 });
                           } else {
                               $( "#failedDonation" ).dialog({
                                   modal: true,
-                                  buttons: {
-                                    Ok: function() {
-                                      $( this ).dialog( "close" );
+                                  open: function(event, ui){
+                                      setTimeout(function(){
+                                            $("#failedDonation").dialog('close');
+                                        }, 1500);
                                     }
-                                  }
                                 });
                           }
                       }
                     });
                 }
             });
-            
-            
-            
+			/*
             //set up ajax request to grab generated list for widget
             var widgetList = [];
             $.ajax({
@@ -426,57 +557,36 @@
                 data: {username:name} ,
                 dataType : "json",
             })
-
             .done(function(data) {
                 $.each(data, function() {
                     widgetList.push(this);
-                })
-                
-                
+                });
                 for (var i = 0; i < 3; i++) {
                     var temp = $(document.createElement('p')).prop({align: "center"});
                     temp.html(widgetList[i]);
                     temp.appendTo("#suggestionWidget ." + i +"");
                 }
-
-                
             })
-
-            .fail(function(jqXHR, textStatus) {
+            .fail(function(jqXHR, textStatus, errorThrown) {
                 alert( "Sorry, there was a problem!" );
                 console.log( "Error: " + errorThrown );
                 console.log( "Status: " + status );
                 console.dir( xhr );
             });
-            
-            
-            
-//            var widgetList = ["test org", "test org 2"];
-            
-            
-//            for (var i = 0; i < widgetList.length; i++) {
-////                $(document.createElement('p')).html(widgetList[i]).appendTo("#suggestionWidget");
-//                var temp = $(document.createElement('p')).prop({align: "center"});
-//                temp.html(widgetList[i]);
-//                temp.appendTo("#suggestionWidget ." + i +"");
-//            }
-
+			
             if (name != null && name.length > 0) {
                 $("#pageInfo").addClass("col-lg-9 col-md-9 col-sm-9");
                 $("#suggestionWidget").addClass("col-lg-2 col-md-2 col-sm-2");
                 if ($("#suggestionWidget .0 p").html() == "") {
                     $("#suggestionWidget").prop({"hidden": true});
                 } else{
-                    $("#suggestionWidget").prop({"hidden": false});
+                    //$("#suggestionWidget").prop({"hidden": false});
                 }
             } 
-            
-            
-            
-            
+			
             $(document).on("click", "#suggestionWidget p", function(e) {
                 e.preventDefault;
-                $(".row #basic-place #base").val(e.currentTarget.innerHTML);
+                $(".row #inputPlace #base").val(e.currentTarget.innerHTML);
                 var category =[];
                 $.ajax({
                         url: 'http://localhost:8080/donation/frequency',
@@ -493,7 +603,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];
                         }
 
                         for (var i = 0; i < category.length; i++) {
@@ -511,19 +621,19 @@
                         
                     })
 
-                    .fail(function(jqXHR, textStatus) {
+                    .fail(function(jqXHR, textStatus, errorThrown) {
                         alert( "Sorry, there was a problem!" );
                         console.log( "Error: " + errorThrown );
                         console.log( "Status: " + status );
                         console.dir( xhr );
                     });
             });
-            
-            
+            */
+			
             function categories(orgName) {
                 var category =[];
                 $.ajax({
-                        url: 'http://localhost:8080/donation/frequency',
+                        url: 'http://' + ip + '/donation/frequency',
                         type: 'GET',
                         data: {org_name:orgName} ,
                         dataType : "json",
@@ -537,7 +647,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce"];    
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];
                         }
 
                         for (var i = 0; i < category.length; i++) {
@@ -557,15 +667,58 @@
 
                     .fail(function(jqXHR, textStatus) {
                         alert( "Sorry, there was a problem!" );
-                        console.log( "Error: " + errorThrown );
-                        console.log( "Status: " + status );
-                        console.dir( xhr );
                     });
             };
             
-            
-            
-
+            $("#addDonation").click(function() {
+				$("#showOrgBox").prop({hidden: true});
+				$("#tablebox").prop({hidden: true});
+				$("#pageInfo").prop({hidden: false});
+				if (name != null && name.length > 0) {
+					$("#suggestionWidget").prop({hidden: false});
+				}
+			});
+			
+			$("#showDonation").click(function() {
+				$("#pageInfo").prop({hidden: true});
+				$("#tablebox").prop({hidden: true});
+				$("#showOrgBox").prop({hidden: false});
+				if (name != null && name.length > 0) {
+					$("#suggestionWidget").prop({hidden: true});
+				}
+			});
+			
+			function delDonation(donation_id) {
+				var delString = "?order_id=" + donation_id;
+				$.ajax({
+					url: 'http://' + ip + '/donation/deleteDonation' + delString,
+					type: "GET",
+					success: function(data) {
+						alert("Donation has been deleted.");
+					}
+				});
+			};
+			
+			/* any time a column is resorted, reload the Bootstable addon */
+			$(document).on('click', ".dynatable-sort-header", function() {
+				$("#donationtable thead tr th[name=buttons]").remove();
+				$('#donationtable').SetEditable({
+                    columnsEd: "1,2,3,4",
+					onDelete: function(columnsEd) {
+						var donation_id = columnsEd[0].childNodes[0].innerHTML;
+						delDonation(donation_id);
+					}
+				});
+				$("#donationtable").each(function(){
+					$(this).find('th').addClass('dynatableTH');
+                })
+                $("#donationtable").each(function(){
+                    $(this).find('td').addClass('centerTD');
+                })
+                $("#donationtable").each(function(){
+                    $(this).find('tbody').addClass('editBody');
+                })
+			});
         });
     </script>
 </head>
@@ -601,68 +754,98 @@
     </div><!-- /.container-fluid -->
 </nav>
 
+	<!-- show and add buttons with functions -->
+	<div class="btn-group" align="center">
+		<button class="btn btn-primary" id="showDonation">Show Donations</button>
+		<button class="btn btn-primary" id="addDonation">Input Donation</button>
+	</div>
 
-<h1 align="center">Input a Donation</h1>
-<br>
+	<!-- Add donation tab content -->
+		
+	<div class="container-fluid" id="pageInfo" hidden>
+		<form action="/donation/input">
+
+			<div class="row form-group">
+				<div class="col-lg-3 col-md-3 col-sm-1"></div>
+				<div class="col-lg-6 col-md-6 col-sm-10" id="inputPlace">
+					<label for="orgName">Organization Name:</label>
+					<select class="form-control" id="base" name="org_name" required>
+
+					</select>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-1"></div>
+				<div id="test" class="form-group col-lg-6 col-md-6 col-sm-5">
+
+				</div>
+			</div>
+
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-primary active" id="incomingLabel">
+					<input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
+				</label>
+				<label class="btn btn-primary" id="outgoingLabel">
+					<input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
+				</label>
+			</div>
+			<br/>
+			<br/>
+			<input type="hidden" id="username" name="user_name">
+			<input type="hidden" value="donation" name="page">
+		</form>
+		<button type="submit" class="btn btn-primary" id="submit">Submit</button>
+		
+		
+		<div id="successfulDonation" title="Donation complete" hidden="hidden">
+		  <p>
+			<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+			Your donation has been successfully added.
+		  </p>
+		</div>
+		
+		<div id="failedDonation" title="Donation complete" hidden="hidden">
+		  <p>
+			<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+			Your donation has been unsuccessful. Please try again.
+		  </p>
+		</div>
+	</div>
+		<!-- 
+	<div id="suggestionWidget" title="Suggestion Widget" hidden="hidden" style="border:1px solid black">
+		<h5 align = "center"><u>Suggested Organizations</u></h5>
+		<a class="0"></a>
+		<a class="1"></a>
+		<a class="2"></a>
+	</div>-->
+
+	<!-- Show donations tab content -->
+	
+	<div class="row form-group" id="showOrgBox" hidden>
+		<div class="col-lg-3 col-md-3 col-sm-1"></div>
+		<div class="col-lg-6 col-md-6 col-sm-10" id="showPlace">
+			<label for="orgName">Organization Name:</label>
+			<select class="form-control" id="showOrgSelect" name="org_name" required>
+
+			</select>
+		</div>
+	</div>
     
-<div class="container-fluid" id="pageInfo">
-    <form action="/donation/input">
-
-        <div class="row form-group">
-            <div class="col-lg-3 col-md-3 col-sm-1"></div>
-            <div class="col-lg-6 col-md-6 col-sm-10" id="basic-place">
-                <label for="orgName">Organization Name:</label>
-                <select class="form-control" id="base" name="org_name" required>
-
-                </select>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-1"></div>
-            <div id="test" class="form-group col-lg-6 col-md-6 col-sm-5">
-
-            </div>
-        </div>
-
-        <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-primary active" id="incomingLabel">
-                <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
-            </label>
-            <label class="btn btn-primary" id="outgoingLabel">
-                <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
-            </label>
-        </div>
-        <br/>
-        <br/>
-        <input type="hidden" id="username" name="user_name">
-        <input type="hidden" value="donation" name="page">
-    </form>
-    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-    
-    
-    <div id="successfulDonation" title="Donation complete" hidden="hidden">
-      <p>
-        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        Your donation has been successfully added.
-      </p>
-    </div>
-    
-    <div id="failedDonation" title="Donation complete" hidden="hidden">
-      <p>
-        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        Your donation has been unsuccessful. Please try again.
-      </p>
-    </div>
-</div>
-    
-<div id="suggestionWidget" title="Suggestion Widget" hidden="hidden" style="border:1px solid black">
-    <h5 align = "center"><u>Suggested Organizations</u></h5>
-    <a class="0"></a>
-    <a class="1"></a>
-    <a class="2"></a>
-</div>
-    
-
+	<div id="tablebox" hidden>
+		<table id="donationtable" align="center">
+			<thead>
+				<th data-dynatable-column="order_id">ID</th>
+				<th data-dynatable-column="org_name">Organization</th>
+				<th data-dynatable-column="category">Category</th>
+				<th data-dynatable-column="weight">Weight</th>
+				<th data-dynatable-column="donation">Donation</th>
+				<th data-dynatable-column="user_name">User</th>
+				<th data-dynatable-column="date">Date</th>
+			</thead>
+			<tbody id="tableBody">
+			</tbody>
+        </table>
+	</div>
 </body>
 </html>

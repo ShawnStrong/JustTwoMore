@@ -95,10 +95,10 @@ public class TestDAO implements IntTestDAO {
 		org_name[6] = "Org E";
 		
 		String[] dates = new String[4];
-		dates[0] = "2017-11-09";
-		dates[1] = "2017-11-16";
-		dates[2] = "2017-11-23";
-		dates[3] = "2017-11-30";
+		dates[0] = "2017-11-19";
+		dates[1] = "2017-11-26";
+		dates[2] = "2017-12-03";
+		dates[3] = "2017-12-10";
 		
 		String[] times = new String[7];
 		times[0] = " 14:00:00";

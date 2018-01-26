@@ -1,209 +1,404 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
-	<title> Reports </title>
-    
+
+    <title> Reports </title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
-    
-    
-	<style>
-		h1 {
-			color: green;
-			font-family: verdana;
-			font-size: 300%;
-		}
-		input {
-			align: center;
-			width: 30%;
-			padding: 4px 8px;
-			margin: 8px 0;
-			box-sizing: border-box;
-		}
-		input[type=text] {
-			width: 30%;
-			padding: 12px 20px;
-			margin: 8px 0;
-			box-sizing: border-box;
-	}
-	</style>
-    
+    <script src="table2csv.js"></script>
+
+    <!-- dynatable css and js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="dynatableTH.css">
+
+
+    <style>
+        h1 {
+            color: black;
+            font-family: "Arial Rounded MT Bold";
+            font-size: 400%;
+        }
+        input {
+            align: center;
+            width: 30%;
+            padding: 4px 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        input[type=text] {
+            width: 30%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        .btn2 {
+            background: #2980cc;
+            background-image: -webkit-linear-gradient(top, #2980cc, #c5e0d4);
+            background-image: -moz-linear-gradient(top, #2980cc, #c5e0d4);
+            background-image: -ms-linear-gradient(top, #2980cc, #c5e0d4);
+            background-image: -o-linear-gradient(top, #2980cc, #c5e0d4);
+            background-image: linear-gradient(to bottom, #2980cc, #c5e0d4);
+            -webkit-border-radius: 11;
+            -moz-border-radius: 11;
+            border-radius: 11px;
+            text-shadow: 1px 1px 3px #666666;
+            font-family: Arial;
+            color: #000000;
+            font-size: 16px;
+            padding: 9px 9px 7px 9px;
+            text-decoration: none;
+        }
+
+        .btn2:hover {
+            background: #264f69;
+            background-image: -webkit-linear-gradient(top, #264f69, #3498db);
+            background-image: -moz-linear-gradient(top, #264f69, #3498db);
+            background-image: -ms-linear-gradient(top, #264f69, #3498db);
+            background-image: -o-linear-gradient(top, #264f69, #3498db);
+            background-image: linear-gradient(to bottom, #264f69, #3498db);
+            text-decoration: none;
+        }
+
+
+    </style>
+
     <script>
         $(document).ready(function() {
-            
+			var ip = location.host;
+			localStorage.setItem("serverIp", ip);
+
             var name = localStorage.getItem("username");
             $("#username").prop("value",name);
-            
+
             if (name != null && name.length > 0) {
                 $(".navbar .container-fluid #userAbsent").hide();
                 $(".navbar .container-fluid #userPresent li #user").html("Welcome " + name + "!");
             } else {
                 $(".navbar .container-fluid #userPresent").hide();
             }
-            
+
             $("#signOut").click(function() {
-               localStorage.removeItem("username");
+                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });
-            
-            
-            
+
+
+
             if (annyang) {
-              // Let's define our first command. First the text we expect, and then the function it should call
-              var commands = {
-                'open organizations': function() {
-                  window.location.href = "Organizations.html";
-                },
-                  
-                'show organizations': function() {
-                  window.location.href = "Organizations.html";
-                },
-                  
-                'go to organizations': function() {
-                  window.location.href = "Organizations.html";
-                },
-                  
-                'open donations': function() {
-                  window.location.href = "Donations.html";
-                },
-                  
-                'show donations': function() {
-                  window.location.href = "Donations.html";
-                },
-                  
-                'go to donations': function() {
-                  window.location.href = "Donations.html";
-                },
-                  
-                'select incoming': function() {
-                    $("#incoming").prop("checked", true);
-                    $("#outgoing").prop("checked", false);
-                    $("#incomingLabel").addClass("active");
-                    $("#outgoingLabel").removeClass("active");
-                },
-                
-                'select outgoing': function() {
-                    $("#outgoing").prop("checked", true);
-                    $("#incoming").prop("checked", false);
-                    $("#outgoingLabel").addClass("active");
-                    $("#incomingLabel").removeClass("active");
-                },
-                  
-                'select yearly': function() {
-                    $("#yearly").prop("checked", true);
-                    $("#monthly").prop("cheked", false);
-                    $("#weekly").prop("checked", false);
-                    $("#yearlyLabel").addClass("active");
-                    $("#monthlyLabel").removeClass("active");
-                    $("#weeklyLabel").removeClass("active");
-                },
-                  
-                'select monthly': function() {
-                    $("#yearly").prop("checked", false);
-                    $("#monthly").prop("cheked", true);
-                    $("#weekly").prop("checked", false);
-                    $("#yearlyLabel").removeClass("active");
-                    $("#monthlyLabel").addClass("active");
-                    $("#weeklyLabel").removeClass("active");
-                },
-                  
-                'select weekly': function() {
-                    $("#yearly").prop("checked", false);
-                    $("#monthly").prop("cheked", false);
-                    $("#weekly").prop("checked", true);
-                    $("#yearlyLabel").removeClass("active");
-                    $("#monthlyLabel").removeClass("active");
-                    $("#weeklyLabel").addClass("active");
-                },
-                  
-                'select summary': function() {
-                    $("#summary").prop("checked", true);
-                    $("#descriptive").prop("checked", false);
-                    $("#summaryLabel").addClass("active");
-                    $("#descriptiveLabel").removeClass("active");
-                },
-                
-                'select descriptive': function() {
-                    $("#summary").prop("checked", false);
-                    $("#descriptive").prop("checked", true);
-                    $("#summaryLabel").removeClass("active");
-                    $("#descriptiveLabel").addClass("active");
-                }
-                  
-              };
+                // Let's define our first command. First the text we expect, and then the function it should call
+                var commands = {
+                    'open organizations': function() {
+                        window.location.href = "Organizations.html";
+                    },
 
-              // Add our commands to annyang
-              annyang.addCommands(commands);
+                    'show organizations': function() {
+                        window.location.href = "Organizations.html";
+                    },
 
-              // Start listening. You can call this here, or attach this call to an event, button, etc.
-              annyang.start();
+                    'go to organizations': function() {
+                        window.location.href = "Organizations.html";
+                    },
+
+                    'open donations': function() {
+                        window.location.href = "Donations.html";
+                    },
+
+                    'show donations': function() {
+                        window.location.href = "Donations.html";
+                    },
+
+                    'go to donations': function() {
+                        window.location.href = "Donations.html";
+                    },
+
+                    'select incoming': function() {
+                        $("#incoming").prop("checked", true);
+                        $("#outgoing").prop("checked", false);
+                        $("#incomingLabel").addClass("active");
+                        $("#outgoingLabel").removeClass("active");
+                    },
+
+                    'select outgoing': function() {
+                        $("#outgoing").prop("checked", true);
+                        $("#incoming").prop("checked", false);
+                        $("#outgoingLabel").addClass("active");
+                        $("#incomingLabel").removeClass("active");
+                    },
+
+                    'select yearly': function() {
+                        $("#yearly").prop("checked", true);
+                        $("#monthly").prop("cheked", false);
+                        $("#weekly").prop("checked", false);
+                        $("#yearlyLabel").addClass("active");
+                        $("#monthlyLabel").removeClass("active");
+                        $("#weeklyLabel").removeClass("active");
+                    },
+
+                    'select monthly': function() {
+                        $("#yearly").prop("checked", false);
+                        $("#monthly").prop("cheked", true);
+                        $("#weekly").prop("checked", false);
+                        $("#yearlyLabel").removeClass("active");
+                        $("#monthlyLabel").addClass("active");
+                        $("#weeklyLabel").removeClass("active");
+                    },
+
+                    'select weekly': function() {
+                        $("#yearly").prop("checked", false);
+                        $("#monthly").prop("cheked", false);
+                        $("#weekly").prop("checked", true);
+                        $("#yearlyLabel").removeClass("active");
+                        $("#monthlyLabel").removeClass("active");
+                        $("#weeklyLabel").addClass("active");
+                    },
+
+                    'select summary': function() {
+                        $("#summary").prop("checked", true);
+                        $("#descriptive").prop("checked", false);
+                        $("#summaryLabel").addClass("active");
+                        $("#descriptiveLabel").removeClass("active");
+                    },
+
+                    'select descriptive': function() {
+                        $("#summary").prop("checked", false);
+                        $("#descriptive").prop("checked", true);
+                        $("#summaryLabel").removeClass("active");
+                        $("#descriptiveLabel").addClass("active");
+                    }
+
+                };
+
+                // Add our commands to annyang
+                annyang.addCommands(commands);
+
+                // Start listening. You can call this here, or attach this call to an event, button, etc.
+                annyang.start();
             }
-            
-            
-            
+
+
+
             // Submit the form
             $("#submit").click(function() {
-              var form = $("form").serialize();
-                
-              if ($("#startDate").val() == "" || $("#endDate").val() == "") {
-                  alert("Please enter a date before generating the report.");
-              } else {
-                  $.ajax({
-                      url : 'http://localhost:8080/donation/report',
-                      type : 'GET',
-                      data : form,
-                      dataType:'json',
-                      success : function(data) {
-                          if (data != ""){
-                              alert("endpoint has returned ");
-                              // ***************************************************************************************
-                              // *REMOVE THE ALERT AND ADD WHATEVER TABLE/CHART IS NECESSARY TO DISPLAY THE INFORMATION*
-                              // ***************************************************************************************
-                          }
-                      },
-                      error : function(request,error) {
-    //                      alert("Request: " + JSON.stringify(request));
-                          if (request.status == 500) {
-                              alert("No report available. Please adjust parameters and try again.")
-                          }
+                var form = $("form").serialize();
+
+                if ($("#startDate").val() == "" || $("#endDate").val() == "") {
+                    alert("Please enter a date before generating the report.");
+                } else {
+                    $.ajax({
+                        url : 'http://' + ip + '/donation/report',
+                        type : 'GET',
+                        data : form,
+                        dataType:'json',
+                        success : function(json) {
+                            if (json != ""){
+                              //alert("endpoint has returned " + JSON.stringify(json));
+
+//							   dynamically make the headers
+//							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
+//							  $.each(json.columns, function(rowIndex, r) {
+//								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
+//							  });
+//							  headers.append("</thead><tbody></tbody>");
+//							  $("#table1").append(headers);
+
+                                $("#tablebox").empty();
+
+                                $(document.createElement("table")).prop({id: "table1", align: "center"}).appendTo($("#tablebox"));
+                                $(document.createElement("thead")).prop({id: "header"}).appendTo($("#table1"));
+                                $(document.createElement("tbody")).prop({id: "body", align: "center"}).appendTo($("#table1"));
+
+
+                                $.each(json.columns, function() {
+                                    var name = "";
+                                    if (this == "org_name"){
+                                        name = "Organization";
+                                    } else if (this == "category") {
+                                        name = "Category";
+                                    } else {
+                                        name = this;
+                                    }
+                                    $(document.createElement("th")).attr({"data-dynatable-column" : this}).html(name).appendTo($("#header"));
+                                })
+
+
+
+                                var mytable = $("#table1");
+                                mytable.dynatable({
+									features: {
+										paginate: false,
+										perPageSelect: false
+									},
+                                    table: {
+                                        headRowSelector: 'thead',
+                                    },
+                                    dataset: {
+                                        records: json.data
+                                    }
+                                });
+                                mytable.data('dynatable').settings.dataset.records = json.data;
+                                mytable.data('dynatable').dom.update();
+                                $("#table1").each(function(){
+                                    $(this).find('th').addClass('dynatableTH');
+                                })
+                                $("#table1").each(function(){
+                                    $(this).find('td').addClass('centerTD');
+                                })
+                                $("#table1").each(function(){
+                                    $(this).find('tbody').addClass('editBody');
+                                })
+
+                                $("#dl").click(function(){
+                                    $("#table1").table2csv();
+                                })
+                            }
+							else {
+								alert("No donations to report between these dates.");
+							}
+                        },
+                        error : function(request,error) {
+                            //                      alert("Request: " + JSON.stringify(request));
+                            if (request.status == 500) {
+                                alert("No report available. Please adjust parameters and try again.")
+                            }
                         }
                     });
                 }
             });
-            
-            
-            
-            
-            
+
+			/* any time a column is resorted, reload css */
+			$(document).on('click', ".dynatable-sort-header", function() {
+				$("#table1").each(function(){
+					$(this).find('th').addClass('dynatableTH');
+                })
+                $("#table1").each(function(){
+                    $(this).find('td').addClass('centerTD');
+                })
+                $("#table1").each(function(){
+                    $(this).find('tbody').addClass('editBody');
+                })
+			});
+            $("#quickbooks").click(function() {
+                alert("Clicked");
+                var form = $("form").serialize();
+                if ($("#startDate").val() == "" || $("#endDate").val() == "" || ($("#startDate").val() != $("#endDate").val())) {
+                    alert("Please enter a date before generating the report or make sure that the dates are the same.");
+                } else {
+                    $.ajax({
+                        url : 'http://' + ip + '/donation/quickbooksreport',
+                        type : 'GET',
+                        data : form,
+                        dataType:'json',
+                        success : function(json) {
+                            if (json != ""){
+                                //alert("endpoint has returned " + JSON.stringify(json));
+
+//							   dynamically make the headers
+//							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
+//							  $.each(json.columns, function(rowIndex, r) {
+//								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
+//							  });
+//							  headers.append("</thead><tbody></tbody>");
+//							  $("#table1").append(headers);
+
+                                $("#tablebox").empty();
+
+                                $(document.createElement("table")).prop({id: "table1", align: "center"}).appendTo($("#tablebox"));
+                                $(document.createElement("thead")).prop({id: "header"}).appendTo($("#table1"));
+                                $(document.createElement("tbody")).prop({id: "body", align: "center"}).appendTo($("#table1"));
+
+
+                                $.each(json.columns, function() {
+                                    var name = "";
+                                    if (this == "org_name"){
+                                        name = "Organization";
+                                    } else if (this == "category") {
+                                        name = "Category";
+                                    } else {
+                                        name = this;
+                                    }
+                                    $(document.createElement("th")).attr({"data-dynatable-column" : this}).html(name).appendTo($("#header"));
+                                })
+
+
+
+                                var mytable = $("#table1");
+                                mytable.dynatable({
+                                    features: {
+                                        paginate: false,
+                                        perPageSelect: false
+                                    },
+                                    table: {
+                                        headRowSelector: 'thead',
+                                    },
+                                    dataset: {
+                                        records: json.data
+                                    }
+                                });
+                                mytable.data('dynatable').settings.dataset.records = json.data;
+                                mytable.data('dynatable').dom.update();
+                                $("#table1").each(function(){
+                                    $(this).find('th').addClass('dynatableTH');
+                                })
+                                $("#table1").each(function(){
+                                    $(this).find('td').addClass('centerTD');
+                                })
+                                $("#table1").each(function(){
+                                    $(this).find('tbody').addClass('editBody');
+                                })
+
+                                $("#dl").click(function(){
+                                    $("#table1").table2csv();
+                                })
+                            }
+                            else {
+                                alert("No donations to report between these dates.");
+                            }
+                        },
+                        error : function(request,error) {
+                            //                      alert("Request: " + JSON.stringify(request));
+                            if (request.status == 500) {
+                                alert("No report available. Please adjust parameters and try again.")
+                            }
+                        }
+                    });
+                }
+            });
         });
+
+
+
     </script>
-    
-    
+
+
 </head>
 
 <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="Console.html">Just One More Ministry</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="Console.html">Just One More Ministry</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li><a href="Organizations.html">Organizations</a></li>
-            <li><a href="Donations.html">Donations</a></li>
-            <li><a href="Reports.html">Reports</a></li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="Organizations.html">Organizations</a></li>
+                <li><a href="Donations.html">Donations</a></li>
+                <li><a href="Reports.html">Reports</a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right" id="userAbsent">
                 <li><a href="Login.html">Login</a></li>
                 <li><a href="Register.html">Register</a></li>
@@ -213,62 +408,78 @@
                 <li><a href="" id="signOut">Sign Out</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-    
-    
-    <h1 align="center">Generate a report</h1>
-    <br><br>
-    
-    
-    <div class="container-fluid">
-        <form method="get" action="/donation/report">
-            <div class="btn-group col-lg-4" data-toggle="buttons">
-                <label class="btn btn-primary active" id="incomingLabel">
-                    <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
-                </label>
-                <label class="btn btn-primary" id="outgoingLabel">
-                    <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
-                </label>
-            </div>
-            <div class="btn-group col-lg-4" data-toggle="buttons">
-                <label class="btn btn-primary active" id="yearlyLabel">
-                    <input type="radio" name="time" value="2"autocomplete="off" id="yearly" checked> Yearly
-                </label>
-                <label class="btn btn-primary" id="monthlyLabel">
-                    <input type="radio" name="time" value="1"autocomplete="off" id="monthly"> Monthly
-                </label>
-                <label class="btn btn-primary" id="weeklyLabel">
-                    <input type="radio" name="time" value="0"autocomplete="off" id="weekly"> Weekly
-                </label>
-            </div>
-            <div class="btn-group col-lg-4" data-toggle="buttons">
-                <label class="btn btn-primary active" id="summaryLabel">
-                    <input type="radio" name="type" value="1"autocomplete="off" id="summary" checked> Summary
-                </label>
-                <label class="btn btn-primary" id="descriptiveLabel">
-                    <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
-                </label>
-            </div>
-            <br><br><br><br>
-            <div class="col-lg-3"></div>
-            <div class="row form-group col-lg-6">
-                <label for="startdate">Start Date:</label>
-                <input type="date" name="start_date" id="startDate">
-                
-                <label for="enddate">End Date:</label>
-                <input type="date" name="end_date" id="endDate">
-            </div>
-            <br/>
-            <br/>
-            <input type="hidden" id="username" name="user_name">
-            <input type="hidden" value="reports" name="page">
-        </form>
-        <div class="row col-lg-4">
-            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<h1 align="center">Generate a Report</h1>
+<br><br>
+
+
+<div class="container-fluid">
+    <form method="get" action="/donation/report">
+        <div class="btn-group col-lg-4" data-toggle="buttons">
+            <label class="btn btn-primary active" id="incomingLabel">
+                <input type="radio" name="donation" value="1" autocomplete="off" id="incoming" checked> Incoming
+            </label>
+            <label class="btn btn-primary" id="outgoingLabel">
+                <input type="radio" name="donation" value="0" autocomplete="off" id="outgoing"> Outgoing
+            </label>
         </div>
+        <div class="btn-group col-lg-4" data-toggle="buttons">
+            <label class="btn btn-primary active" id="yearlyLabel">
+                <input type="radio" name="time" value="2"autocomplete="off" id="yearly" checked> Yearly
+            </label>
+            <label class="btn btn-primary" id="monthlyLabel">
+                <input type="radio" name="time" value="1"autocomplete="off" id="monthly"> Monthly
+            </label>
+            <label class="btn btn-primary" id="weeklyLabel">
+                <input type="radio" name="time" value="0"autocomplete="off" id="weekly"> Weekly
+            </label>
+			<label class="btn btn-primary" id="dailyLabel">
+                <input type="radio" name="time" value="3"autocomplete="off" id="daily"> Daily
+            </label>
+        </div>
+        <div class="btn-group col-lg-4" data-toggle="buttons">
+            <label class="btn btn-primary active" id="summaryLabel">
+                <input type="radio" name="type" value="1"autocomplete="off" id="summary" checked> Summary
+            </label>
+            <label class="btn btn-primary" id="descriptiveLabel">
+                <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
+            </label>
+        </div>
+        <br><br><br><br>
+        <div class="col-lg-3"></div>
+        <div class="row form-group col-lg-6">
+            <label for="startdate">Start Date:</label>
+            <input type="date" name="start_date" id="startDate">
+
+            <label for="enddate">End Date:</label>
+            <input type="date" name="end_date" id="endDate">
+        </div>
+        <br/>
+        <br/>
+        <input type="hidden" id="username" name="user_name">
+        <input type="hidden" value="reports" name="page">
+    </form>
+    <div class="row col-lg-4">
+        <button type="button" class="btn btn-primary" id="quickbooks">QuickBooks Report</button>
+        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+        <button class="btn btn-primary" id="dl">Download Report</button>
     </div>
-    
+</div>
+
+
+<div id="tablebox">
+    <!--
+            <table id="table1" align="center">
+                <thead id="header">
+                </thead>
+                <tbody id="body">
+                </tbody>
+            </table>
+    -->
+</div>
 
 <!--
 <form method="get" action="/donation/report">

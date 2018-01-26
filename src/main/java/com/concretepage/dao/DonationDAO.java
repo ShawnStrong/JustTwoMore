@@ -30,6 +30,19 @@ public class DonationDAO implements IntDonationDAO {
 	private EntityManager entityManager;
 
 	@Override
+	public List<Donation> getQuickBooksDonation(int donation, String start_date){
+		Query query = entityManager.createNativeQuery(
+				"SELECT * FROM donation_table WHERE (date=?1 and donation=?2) ORDER BY org_name", Donation.class);
+		query.setParameter(1, start_date);
+		query.setParameter(2, donation);
+//		Query query = entityManager.createNativeQuery(
+//				"SELECT * FROM donation_table WHERE " +
+//						"org_name = '" + org_name +"';", Donation.class);
+		List<Donation> donations = query.getResultList();
+		return donations;
+	}
+
+	@Override
 	public int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date) {
 
 		org_name = org_name.replaceAll("'", "''");

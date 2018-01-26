@@ -22,4 +22,6 @@ public interface IntDonationService {
 	
 	public JSONObject constructReport(int donation, int time, 
 			int type, String start_date, String end_date);
+
+	public String getQuickBooksReport(int donation, String start_date);
 }

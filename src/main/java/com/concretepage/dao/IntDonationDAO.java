@@ -24,6 +24,8 @@ import com.concretepage.entity.Frequency;
  */
 
 public interface IntDonationDAO {
+
+	public List<Donation> getQuickBooksDonation(int donation, String start_date);
 	
 	public List<String> listOrg(int donation);
 	

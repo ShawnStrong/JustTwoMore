@@ -31,17 +31,25 @@
                   url : 'http://localhost:8080/user/login',
                   type : 'GET',
                   data : form,
-                  dataType:'json',
+                  dataType:'text',
                   success : function(data) {
                       if (data == 0) {
                           localStorage.setItem("username", $("#inputUsername").val());
-                          window.location.href = "Console.html";
+							window.location.href = "Console.html";
                       } else {
-                          alert("incorrect username or password");
+                          alert("Incorrect username or password");
                       }
                   },
                   error : function(request,error) {
-                      alert("Request: " + JSON.stringify(request));
+                      //alert("Request: " + JSON.stringify(request));
+					  if (request.status == 200) {
+						if (request.responseText == "0") {
+							localStorage.setItem("username", $("#inputUsername").val());
+							window.location.href = "Console.html";
+						} else {
+                          alert("Incorrect username or password");
+                        }
+					  }
                   }
               });
           })

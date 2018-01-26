@@ -35,6 +35,89 @@ public class DonationService implements IntDonationService {
 	@Autowired
 	private IntDonationDAO donationDAO;
 
+
+	@Override
+	public String getQuickBooksReport(int donation, String start_date){
+		List<Donation> qbList = donationDAO.getQuickBooksDonation(donation, start_date);
+		//{"data":[{"2018":40,"2017":0,"org_name":"C. C's Bakery"},{"2018":483,"2017":0,"org_name":"Metcalfe's Sentry"},
+		// {"2018":0,"2017":30,"org_name":"Org A"},{"2018":0,"2017":10,"org_name":"Org B"}],"columns":["org_name","2017","2018"]}
+
+		//retuned
+		//{"data":[{"Organization":"C. C''s Bakery","Category":"deli","Description":"deli","2018-01-08":"20","Amount":"60",
+		// "Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"1"},{"Organization":"C. C''s Bakery","Category":"dairy",
+		// "Description":"dairy","2018-01-08":"20","Amount":"60","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"2"},
+		// {"Organization":"Metcalfe''s Sentry","Category":"deli","Description":"deli","2018-01-08":"220","Amount":"660",
+		// "Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"3"},{"Organization":"Metcalfe''s Sentry","Category":"bakery","Description":"bakery","2018-01-08":"72","Amount":"216","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"4"},{"Organization":"Metcalfe''s Sentry","Category":"pantry","Description":"pantry","2018-01-08":"35","Amount":"105","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"5"},{"Organization":"Metcalfe''s Sentry","Category":"meat","Description":"meat","2018-01-08":"21","Amount":"63","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"6"},{"Organization":"Metcalfe''s Sentry","Category":"dairy","Description":"dairy","2018-01-08":"135","Amount":"405","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"7"},],
+		// {"columns":["Organization","Category","Description","2018-01-08","Amount","Date","Due Date","Rate","Bill No"]}
+		String Data = "{\"data\":[";
+		String columns ="";
+		if (donation == 1) {
+			columns = "],\"columns\":[\"Organization\",\"Category\",\"Description\",\"" + start_date + "" +
+					"\",\"Amount\",\"Date\",\"Due Date\",\"Rate\",\"Bill No\"]";
+			int BillNo = 1;
+			int count = 0;
+			String orgNameSaved = qbList.get(0).getOrgName();
+			for (Donation x : qbList) {
+				String org = x.getOrgName();
+				System.out.println(org);
+				String category = x.getCategory();
+				int weight = x.getWeight();
+				int Amount = weight * 3;
+				String weight2String = Integer.toString(weight);
+				String Amount2String = Integer.toString(Amount);
+				String rate = "3";
+				if (!(orgNameSaved.equals(x.getOrgName()))) {
+					orgNameSaved = x.getOrgName();
+					BillNo++;
+				}
+				String Bill2String = Integer.toString(BillNo);
+				Data = Data + "{\"Organization\":\"" + org + "\",\"Category\":\"" + category + "\"," +
+						"\"Description\":\"" + category + "\",\"" + start_date + "\":\"" + weight2String + "\"," +
+						"\"Amount\":\"" + Amount2String + "\",\"Date\":\"" + start_date + "\",\"Due Date\":\"" + start_date + "\"," +
+						"\"Rate\":\"" + rate + "\",\"Bill No\":\"" + Bill2String + "\"}";
+				count++;
+				if (count != qbList.size()) {
+					Data = Data + ",";
+				}
+			}
+		}
+		else
+		{
+			columns = "],\"columns\":[\"Billing Address Line 1\",\"Line Item\",\"Line Item Description\",\"" + start_date + "" +
+					"\",\"Line Item Amount\",\"Sales Receipt Date\",\"Deposit To\",\"Line Item Rate\",\"Payment Method\",\"Customer\",\"Sales Receipt No\"]";
+			//String Data = "{\"data\":[";
+			int BillNo = 1;
+			int count = 0;
+			String orgNameSaved = qbList.get(0).getOrgName();
+			for (Donation x : qbList) {
+				String org = x.getOrgName();
+				System.out.println(org);
+				String category = x.getCategory();
+				int weight = x.getWeight();
+				int Amount = weight * 3;
+				String weight2String = Integer.toString(weight);
+				String Amount2String = Integer.toString(Amount);
+				String rate = "3";
+				String Payment = "E-Check";
+				String Deposit = "12000 Undeposited Funds";
+				if (!(orgNameSaved.equals(x.getOrgName()))) {
+					orgNameSaved = x.getOrgName();
+					BillNo++;
+				}
+				String Bill2String = Integer.toString(BillNo);
+				Data = Data + "{\"Billing Address Line 1\":\"" + org + "\",\"Line Item\":\"" + category + "\"," +
+						"\"Line Item Description\":\"" + category + "\",\"" + start_date + "\":\"" + weight2String + "\"," +
+						"\"Line Item Amount\":\"" + Amount2String + "\",\"Sales Receipt Date\":\"" + start_date + "\",\"Deposit To\":\"" + Deposit + "\"," +
+						"\"Line Item Rate\":\"" + rate + "\",\"Payment Method\":\"" + Payment + "\",\"Customer\":\"" + org + "\",\"Sales Receipt No\":\"" + BillNo + "\"}";
+				count++;
+				if (count != qbList.size()) {
+					Data = Data + ",";
+				}
+			}
+		}
+		return Data + columns + "}";
+	}
+
 	/**
 	 * Create separate donations from bulk donation payload from UI
 	 */

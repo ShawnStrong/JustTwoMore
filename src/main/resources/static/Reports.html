@@ -12,8 +12,10 @@
 
     <!-- dynatable css and js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
-    <link rel="stylesheet" type="text/css" href="dynatableTH.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="dynatableTH.css">
 
 
     <style>
@@ -282,8 +284,94 @@
                     $(this).find('tbody').addClass('editBody');
                 })
 			});
+            $("#quickbooks").click(function() {
+                alert("Clicked");
+                var form = $("form").serialize();
+                if ($("#startDate").val() == "" || $("#endDate").val() == "" || ($("#startDate").val() != $("#endDate").val())) {
+                    alert("Please enter a date before generating the report or make sure that the dates are the same.");
+                } else {
+                    $.ajax({
+                        url : 'http://' + ip + '/donation/quickbooksreport',
+                        type : 'GET',
+                        data : form,
+                        dataType:'json',
+                        success : function(json) {
+                            if (json != ""){
+                                //alert("endpoint has returned " + JSON.stringify(json));
 
+//							   dynamically make the headers
+//							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
+//							  $.each(json.columns, function(rowIndex, r) {
+//								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
+//							  });
+//							  headers.append("</thead><tbody></tbody>");
+//							  $("#table1").append(headers);
+
+                                $("#tablebox").empty();
+
+                                $(document.createElement("table")).prop({id: "table1", align: "center"}).appendTo($("#tablebox"));
+                                $(document.createElement("thead")).prop({id: "header"}).appendTo($("#table1"));
+                                $(document.createElement("tbody")).prop({id: "body", align: "center"}).appendTo($("#table1"));
+
+
+                                $.each(json.columns, function() {
+                                    var name = "";
+                                    if (this == "org_name"){
+                                        name = "Organization";
+                                    } else if (this == "category") {
+                                        name = "Category";
+                                    } else {
+                                        name = this;
+                                    }
+                                    $(document.createElement("th")).attr({"data-dynatable-column" : this}).html(name).appendTo($("#header"));
+                                })
+
+
+
+                                var mytable = $("#table1");
+                                mytable.dynatable({
+                                    features: {
+                                        paginate: false,
+                                        perPageSelect: false
+                                    },
+                                    table: {
+                                        headRowSelector: 'thead',
+                                    },
+                                    dataset: {
+                                        records: json.data
+                                    }
+                                });
+                                mytable.data('dynatable').settings.dataset.records = json.data;
+                                mytable.data('dynatable').dom.update();
+                                $("#table1").each(function(){
+                                    $(this).find('th').addClass('dynatableTH');
+                                })
+                                $("#table1").each(function(){
+                                    $(this).find('td').addClass('centerTD');
+                                })
+                                $("#table1").each(function(){
+                                    $(this).find('tbody').addClass('editBody');
+                                })
+
+                                $("#dl").click(function(){
+                                    $("#table1").table2csv();
+                                })
+                            }
+                            else {
+                                alert("No donations to report between these dates.");
+                            }
+                        },
+                        error : function(request,error) {
+                            //                      alert("Request: " + JSON.stringify(request));
+                            if (request.status == 500) {
+                                alert("No report available. Please adjust parameters and try again.")
+                            }
+                        }
+                    });
+                }
+            });
         });
+
 
 
     </script>
@@ -375,6 +463,7 @@
         <input type="hidden" value="reports" name="page">
     </form>
     <div class="row col-lg-4">
+        <button type="button" class="btn btn-primary" id="quickbooks">QuickBooks Report</button>
         <button type="submit" class="btn btn-primary" id="submit">Submit</button>
         <button class="btn btn-primary" id="dl">Download Report</button>
     </div>

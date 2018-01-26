@@ -119,6 +119,7 @@ public class DonationController {
 		String y = "";
 		y = x.toString();
 		y = y.replaceAll("''", "'");
+		System.out.println(y);
 		//System.out.println(x.toString());
 		//return x.toString();
 		return y;
@@ -158,5 +159,21 @@ public class DonationController {
 		int response = donationDAO.deleteDonation(order_id);
 		String json = new Gson().toJson(response);
 		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	@GetMapping("quickbooksreport")
+	public @ResponseBody String getQuickBooksReport(
+			@RequestParam int donation,
+			@RequestParam int time,
+			@RequestParam int type,
+			@RequestParam String start_date,
+			@RequestParam String end_date,
+			@RequestParam String page,
+			@RequestParam String user_name) throws JSONException {
+
+		String x = donationService.getQuickBooksReport(donation, start_date);
+		x = x.replaceAll("''", "'");
+		return x;
 	}
 }

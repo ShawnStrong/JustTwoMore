@@ -24,10 +24,7 @@
                localStorage.removeItem("username");
                 window.location.href = "Console.html";
             });
-            
-            
-            
-            
+            /*
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
               var commands = {
@@ -82,10 +79,46 @@
            
 
             
-
+			$("#initTest").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/init",
+					type: "GET",
+					success: function(){
+						alert("Initiated test orgs and user");
+					}
+				});
+			});
             
-            
-            
+			$("#test2").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/test2",
+					type: "GET",
+					success: function(){
+						alert("Test 2 activated");
+					}
+				});
+			});
+			
+            $("#test3").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/test3",
+					type: "GET",
+					success: function(){
+						alert("Test 3 activated");
+					}
+				});
+			});
+			
+			$("#pretest").click(function() {
+				$.ajax({
+					url: "http://localhost:8080/test/pretest",
+					type: "GET",
+					success: function(){
+						alert("Pretest activated");
+					}
+				});
+			});
+			*/
         });
         
 
@@ -126,7 +159,19 @@
       </div><!-- /.container-fluid -->
     </nav>
     
+	<br>
+	<!--
+    <button type="button" id="initTest"> Clean databases
+	</button><br><br>
+	
+	<button type="button" id="test2"> Test 2
+	</button><br><br>
+	
+	<button type="button" id="test3"> Test 3
+	</button><br><br>
     
-    
+	<button type="button" id="pretest"> Pretest
+	</button>
+	-->
 </body>
 </html>
