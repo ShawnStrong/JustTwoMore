@@ -8,6 +8,9 @@
 
   <script>
       $(document).ready(function() {
+			var ip = location.host;
+			localStorage.setItem("serverIp", ip);
+			
             var name = localStorage.getItem("username");
             
             if (name != null && name.length > 0) {
@@ -35,7 +38,11 @@
 				}
 				else {
 				  $.ajax({
+<<<<<<< Updated upstream
 					  url : 'http://localhost:8080/user/create',
+=======
+					  url : 'http://' + ip + '/user/create',
+>>>>>>> Stashed changes
 					  type : 'GET',
 					  data : form,
 					  dataType:'text'

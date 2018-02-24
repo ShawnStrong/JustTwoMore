@@ -124,7 +124,7 @@ public class DonationService implements IntDonationService {
 	@Override
 	public String separateDonations(int donation, String org_name, String user_name,
 			int deli, int dairy, int meat, int produce, int pantry, int bakery, 
-			int pet_food, int nonfood, String date, String page)
+			int pet_food, int nonfood, int family_meals_2, int family_meals_4, String date, String page)
 	{
 		boolean enteredInfo = false;
 		// separate donations
@@ -137,6 +137,8 @@ public class DonationService implements IntDonationService {
 		mp.put("bakery", bakery);
 		mp.put("pet_food", pet_food);
 		mp.put("nonfood", nonfood);
+		mp.put("family_meals_2", family_meals_2);
+		mp.put("family_meals_4", family_meals_4);
 		
 		//iterate over mp to check for donations with values > 0. If so, input to database
 		for (String category : mp.keySet()){

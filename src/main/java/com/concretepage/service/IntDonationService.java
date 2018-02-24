@@ -18,7 +18,7 @@ public interface IntDonationService {
 	JSONObject convertToJSON(int reportType, List<Donation> donationList, String[] timeArray) throws JSONException;
 
 	String separateDonations(int donation, String org_name, String user_name, int deli, int dairy, int meat,
-			int produce, int pantry, int bakery, int pet_food, int nonfood, String date, String page);
+			int produce, int pantry, int bakery, int pet_food, int nonfood, int family_meals_2, int family_meals_4, String date, String page);
 	
 	public JSONObject constructReport(int donation, int time, 
 			int type, String start_date, String end_date);

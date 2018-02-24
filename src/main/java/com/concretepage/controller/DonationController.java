@@ -42,11 +42,13 @@ public class DonationController {
 			@RequestParam int bakery,
 			@RequestParam int pet_food,
 			@RequestParam int nonfood,
+			@RequestParam int family_meals_2,
+			@RequestParam int family_meals_4,
 			@RequestParam String date,
 			@RequestParam String page) {
 		
 		return donationService.separateDonations(donation, org_name, user_name, deli, 
-				dairy, meat, produce, pantry, bakery, pet_food, nonfood, date, page);
+				dairy, meat, produce, pantry, bakery, pet_food, nonfood, family_meals_2, family_meals_4, date, page);
 	}
 	
 //	@GetMapping("input")

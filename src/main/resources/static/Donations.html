@@ -24,6 +24,10 @@
         #suggestionWidget p:hover{
             cursor: pointer;
         }
+
+		p.lables    {color: black;
+					 font-weight: bold;
+					 font-size: 40px;}
     </style>
     
     <script>
@@ -99,7 +103,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];    
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood", "family_meals_2", "family_meals_4"];
                         }
 
                         for (var i = 0; i < category.length; i++) {
@@ -245,6 +249,15 @@
                         });
                     }
                 }
+            });
+			$("#outgoingLabel").click(function () {
+				$("#OutDon").prop({hidden: false});
+                $("#IncDon").prop({hidden: true});
+            });
+
+            $("#incomingLabel").click(function () {
+                $("#OutDon").prop({hidden: true});
+                $("#IncDon").prop({hidden: false});
             });
 
             //If the user selects the org on 'show donation' tab using arrow keys and hits the enter key or types out the name themselves
@@ -507,9 +520,10 @@
             // Submit the form
             $("#submit").click(function() {
               var form = $("form").serialize();
-              if ($("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0 
+              if( $("#test input[name=bakery]").val() == 0 && $("#test input[name=dairy]").val() == 0 && $("#test input[name=deli]").val() == 0
 			     && $("#test input[name=meat]").val() == 0 && $("#test input[name=pantry]").val() == 0 && $("#test input[name=produce]").val() == 0
-				 && $("#test input[name=pet_food]").val() == 0 && $("#test input[name=nonfood]").val() == 0) {
+				 && $("#test input[name=pet_food]").val() == 0 && $("#test input[name=nonfood]").val() == 0
+                  && $("#test input[name=family_meals_2]").val() == 0 && $("#test input[name=family_meals_4]").val() == 0) {
                   alert("Please enter a weight before submitting the donation.");
               } else {
                   $.ajax({
@@ -647,7 +661,7 @@
                         $(".row #test").children().remove();
                         
                         if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];
+                            category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood", "family_meals_2","family_meals_4"];
                         }
 
                         for (var i = 0; i < category.length; i++) {
@@ -768,6 +782,8 @@
 			<div class="row form-group">
 				<div class="col-lg-3 col-md-3 col-sm-1"></div>
 				<div class="col-lg-6 col-md-6 col-sm-10" id="inputPlace">
+					<p class="lables" id="IncDon">Incoming Donation</p>
+					<p class="lables" id="OutDon" hidden>Outgoing Donation</p>
 					<label for="orgName">Organization Name:</label>
 					<select class="form-control" id="base" name="org_name" required>
 

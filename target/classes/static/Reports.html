@@ -12,10 +12,15 @@
 
     <!-- dynatable css and js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+<<<<<<< Updated upstream
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
 
     <link rel="stylesheet" type="text/css" href="dynatableTH.css">
+=======
+    <link rel="stylesheet" type="text/css" href="dynatableTH.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.js"></script>
+>>>>>>> Stashed changes
 
 
     <style>
@@ -101,6 +106,7 @@
                     'show organizations': function() {
                         window.location.href = "Organizations.html";
                     },
+<<<<<<< Updated upstream
 
                     'go to organizations': function() {
                         window.location.href = "Organizations.html";
@@ -141,6 +147,48 @@
                         $("#weeklyLabel").removeClass("active");
                     },
 
+=======
+
+                    'go to organizations': function() {
+                        window.location.href = "Organizations.html";
+                    },
+
+                    'open donations': function() {
+                        window.location.href = "Donations.html";
+                    },
+
+                    'show donations': function() {
+                        window.location.href = "Donations.html";
+                    },
+
+                    'go to donations': function() {
+                        window.location.href = "Donations.html";
+                    },
+
+                    'select incoming': function() {
+                        $("#incoming").prop("checked", true);
+                        $("#outgoing").prop("checked", false);
+                        $("#incomingLabel").addClass("active");
+                        $("#outgoingLabel").removeClass("active");
+                    },
+
+                    'select outgoing': function() {
+                        $("#outgoing").prop("checked", true);
+                        $("#incoming").prop("checked", false);
+                        $("#outgoingLabel").addClass("active");
+                        $("#incomingLabel").removeClass("active");
+                    },
+
+                    'select yearly': function() {
+                        $("#yearly").prop("checked", true);
+                        $("#monthly").prop("cheked", false);
+                        $("#weekly").prop("checked", false);
+                        $("#yearlyLabel").addClass("active");
+                        $("#monthlyLabel").removeClass("active");
+                        $("#weeklyLabel").removeClass("active");
+                    },
+
+>>>>>>> Stashed changes
                     'select monthly': function() {
                         $("#yearly").prop("checked", false);
                         $("#monthly").prop("cheked", true);
@@ -267,6 +315,7 @@
                             if (request.status == 500) {
                                 alert("No report available. Please adjust parameters and try again.")
                             }
+<<<<<<< Updated upstream
                         }
                     });
                 }
@@ -366,14 +415,36 @@
                             if (request.status == 500) {
                                 alert("No report available. Please adjust parameters and try again.")
                             }
+=======
+>>>>>>> Stashed changes
                         }
                     });
                 }
             });
+<<<<<<< Updated upstream
         });
 
 
 
+=======
+
+			/* any time a column is resorted, reload css */
+			$(document).on('click', ".dynatable-sort-header", function() {
+				$("#table1").each(function(){
+					$(this).find('th').addClass('dynatableTH');
+                })
+                $("#table1").each(function(){
+                    $(this).find('td').addClass('centerTD');
+                })
+                $("#table1").each(function(){
+                    $(this).find('tbody').addClass('editBody');
+                })
+			});
+
+        });
+
+
+>>>>>>> Stashed changes
     </script>
 
 
@@ -439,6 +510,7 @@
 			<label class="btn btn-primary" id="dailyLabel">
                 <input type="radio" name="time" value="3"autocomplete="off" id="daily"> Daily
             </label>
+<<<<<<< Updated upstream
         </div>
         <div class="btn-group col-lg-4" data-toggle="buttons">
             <label class="btn btn-primary active" id="summaryLabel">
@@ -448,6 +520,17 @@
                 <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
             </label>
         </div>
+=======
+        </div>
+        <div class="btn-group col-lg-4" data-toggle="buttons">
+            <label class="btn btn-primary active" id="summaryLabel">
+                <input type="radio" name="type" value="1"autocomplete="off" id="summary" checked> Summary
+            </label>
+            <label class="btn btn-primary" id="descriptiveLabel">
+                <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
+            </label>
+        </div>
+>>>>>>> Stashed changes
         <br><br><br><br>
         <div class="col-lg-3"></div>
         <div class="row form-group col-lg-6">
@@ -463,8 +546,12 @@
         <input type="hidden" value="reports" name="page">
     </form>
     <div class="row col-lg-4">
+<<<<<<< Updated upstream
         <button type="button" class="btn btn-primary" id="quickbooks">QuickBooks Report</button>
         <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+=======
+        <button type="submit" class="btn btn-primary" id="submit">View Donations</button>
+>>>>>>> Stashed changes
         <button class="btn btn-primary" id="dl">Download Report</button>
     </div>
 </div>
