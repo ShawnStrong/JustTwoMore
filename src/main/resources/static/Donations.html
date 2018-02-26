@@ -218,7 +218,7 @@
                                     $(".row #test").children().remove();
                                     
                                     if ($(".navbar .container-fluid #userPresent li #user").html() == "") {
-                                        category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood"];     
+                                        category = ["bakery", "dairy", "deli", "meat", "pantry", "produce", "pet_food", "nonfood", "family_meals_2", "family_meals_4"];
                                     }
 
                                     for (var i = 0; i < category.length; i++) {
@@ -782,8 +782,6 @@
 			<div class="row form-group">
 				<div class="col-lg-3 col-md-3 col-sm-1"></div>
 				<div class="col-lg-6 col-md-6 col-sm-10" id="inputPlace">
-					<p class="lables" id="IncDon">Incoming Donation</p>
-					<p class="lables" id="OutDon" hidden>Outgoing Donation</p>
 					<label for="orgName">Organization Name:</label>
 					<select class="form-control" id="base" name="org_name" required>
 
@@ -810,6 +808,8 @@
 			<br/>
 			<input type="hidden" id="username" name="user_name">
 			<input type="hidden" value="donation" name="page">
+			<p class="lables" id="IncDon">Incoming Donation</p>
+			<p class="lables" id="OutDon" hidden>Outgoing Donation</p>
 		</form>
 		<button type="submit" class="btn btn-primary" id="submit">Submit</button>
 		

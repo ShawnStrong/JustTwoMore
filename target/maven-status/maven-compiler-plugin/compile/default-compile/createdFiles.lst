@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 com\concretepage\App.class
 com\concretepage\dao\UserDAO.class
 com\concretepage\service\DonationService$1.class
@@ -7,4 +5,3 @@ com\concretepage\service\DonationService$2.class
 com\concretepage\entity\OrgStats.class
 com\concretepage\dao\IntUserDAO.class
 com\concretepage\entity\User.class
->>>>>>> Stashed changes

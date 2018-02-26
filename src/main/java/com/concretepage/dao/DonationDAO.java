@@ -196,8 +196,8 @@ public class DonationDAO implements IntDonationDAO {
 		categoryNames[5] = "bakery";
 		categoryNames[6] = "pet food";
 		categoryNames[7] = "nonfood";
-		categoryNames[8] = "family meals 2";
-		categoryNames[9] = "family meals 4";
+		categoryNames[8] = "family_meals_2";
+		categoryNames[9] = "family_meals_4";
 		for (int i = 0; i < frequencyList.size(); i++)
 		{
 			categories.add(frequencyList.get(i).getCategory());

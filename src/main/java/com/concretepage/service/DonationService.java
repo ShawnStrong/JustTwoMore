@@ -62,6 +62,14 @@ public class DonationService implements IntDonationService {
 				System.out.println(org);
 				String category = x.getCategory();
 				int weight = x.getWeight();
+				if(category.equals("family_meals_2"))
+                {
+                    weight = weight*2;
+                }
+                if(category.equals("family_meals_4"))
+                {
+                    weight = weight*5;
+                }
 				int Amount = weight * 3;
 				String weight2String = Integer.toString(weight);
 				String Amount2String = Integer.toString(Amount);
@@ -94,6 +102,14 @@ public class DonationService implements IntDonationService {
 				System.out.println(org);
 				String category = x.getCategory();
 				int weight = x.getWeight();
+                if(category.equals("family_meals_2"))
+                {
+                    weight = weight*2;
+                }
+                if(category.equals("family_meals_4"))
+                {
+                    weight = weight*5;
+                }
 				int Amount = weight * 3;
 				String weight2String = Integer.toString(weight);
 				String Amount2String = Integer.toString(Amount);
@@ -752,6 +768,21 @@ public class DonationService implements IntDonationService {
 		String dateRange ="";
 		List<Donation> formattedDonationListWeightsNotAdded = new ArrayList<Donation>();
 		List<Donation> formattedDonationListWeightsAdded = new ArrayList<Donation>();
+		for (Donation x: donations)
+		{
+			if(x.getCategory().equals("family_meals_2"))
+			{
+				int tweight = x.getWeight();
+				tweight = tweight*2;
+				x.setWeight(tweight);
+			}
+			if(x.getCategory().equals("family_meals_4"))
+			{
+				int tweight = x.getWeight();
+				tweight = tweight*5;
+				x.setWeight(tweight);
+			}
+		}
 		if (time == 2)//yearly
 		{
 			for (Donation x:donations)

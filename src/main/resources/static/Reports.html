@@ -285,7 +285,7 @@
                 })
 			});
             $("#quickbooks").click(function() {
-                alert("Clicked");
+                //alert("Clicked");
                 var form = $("form").serialize();
                 if ($("#startDate").val() == "" || $("#endDate").val() == "" || ($("#startDate").val() != $("#endDate").val())) {
                     alert("Please enter a date before generating the report or make sure that the dates are the same.");
@@ -308,11 +308,14 @@
 //							  $("#table1").append(headers);
 
                                 $("#tablebox").empty();
-
+                                var str1 = JSON.stringify(json);
+                                //alert(str1);
+                                str1 = str1.split('_').join(' ');
+                                //alert(str1);
+                                json = JSON.parse(str1);
                                 $(document.createElement("table")).prop({id: "table1", align: "center"}).appendTo($("#tablebox"));
                                 $(document.createElement("thead")).prop({id: "header"}).appendTo($("#table1"));
                                 $(document.createElement("tbody")).prop({id: "body", align: "center"}).appendTo($("#table1"));
-
 
                                 $.each(json.columns, function() {
                                     var name = "";
@@ -463,12 +466,12 @@
         <input type="hidden" value="reports" name="page">
     </form>
     <div class="row col-lg-4">
-<<<<<<< Updated upstream
+
         <button type="button" class="btn btn-primary" id="quickbooks">QuickBooks Report</button>
         <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-=======
-        <button type="submit" class="btn btn-primary" id="submit">View Donations</button>
->>>>>>> Stashed changes
+
+        <!--<button type="submit" class="btn btn-primary" id="submit">View Donations</button>-->
+
         <button class="btn btn-primary" id="dl">Download Report</button>
     </div>
 </div>
