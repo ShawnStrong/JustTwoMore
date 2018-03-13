@@ -51,16 +51,6 @@ public class DonationController {
 				dairy, meat, produce, pantry, bakery, pet_food, nonfood, family_meals_2, family_meals_4, date, page);
 	}
 	
-//	@GetMapping("input")
-//	public @ResponseBody int inputDonation (
-//			@RequestParam String org_name,
-//			@RequestParam String category,
-//			@RequestParam int weight,
-//			@RequestParam int donation) {
-//		
-//		return donationDAO.inputDonation(org_name, category, weight, donation);
-//	}
-	
 	@GetMapping("listOrg")
 	public @ResponseBody List<String> listOrg (
 			@RequestParam int donation) {
@@ -108,11 +98,6 @@ public class DonationController {
 			donationDAO.inputPage(user_name, page);
 			donationService.reportTabPrediction(user_name, time, donation, type);
 		}
-		//List<Donation> donationList = new ArrayList<Donation>();
-		//donationList = donationDAO.getReport(donation, time, type, start_date, end_date);
-		//return DonationService.convertToJson(type, donationList);
-		//List<Object> ListOfReportStuff = donationDAO.getReport(donation, time, type, start_date, end_date);
-		//List<Object> ListOfReportStuff = donationService.constructReport(donation, time, type, start_date, end_date);
 		JSONObject x = donationService.constructReport(donation, time, type, start_date, end_date);
 		if (x.equals(null))
 		{
@@ -122,8 +107,6 @@ public class DonationController {
 		y = x.toString();
 		y = y.replaceAll("''", "'");
 		System.out.println(y);
-		//System.out.println(x.toString());
-		//return x.toString();
 		return y;
 	}
 
@@ -132,10 +115,8 @@ public class DonationController {
 			@RequestParam String username) {
 		System.out.println(username);
 		List<String> widgetTimes = donationService.findWidgetTimes(username);
-		//widgetTimes = DonationService.findWidgetTimes(username);
 
 		return widgetTimes;
-		//return null;
 	}
 
 	@GetMapping("showDonations")

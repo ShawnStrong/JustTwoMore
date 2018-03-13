@@ -71,13 +71,7 @@ public class OrgController {
 		
 		return lop;
 	}
-	
-//	Still need to test but supposedly Spring converts Lists to json automatically (thanks Spring!)
-// 	
-//	@RequestMapping("/carlist.json")
-//	public @ResponseBody List<String> getCarList() {
-//	    return carService.getAllCars();
-//	}
+
 	@GetMapping("list2")
 	public @ResponseBody String listPartner2(@RequestParam String user_name) {
 		if (user_name != "") {

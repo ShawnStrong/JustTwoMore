@@ -35,9 +35,6 @@ public class DonationDAO implements IntDonationDAO {
 				"SELECT * FROM donation_table WHERE (date=?1 and donation=?2) ORDER BY org_name", Donation.class);
 		query.setParameter(1, start_date);
 		query.setParameter(2, donation);
-//		Query query = entityManager.createNativeQuery(
-//				"SELECT * FROM donation_table WHERE " +
-//						"org_name = '" + org_name +"';", Donation.class);
 		List<Donation> donations = query.getResultList();
 		return donations;
 	}
@@ -46,26 +43,7 @@ public class DonationDAO implements IntDonationDAO {
 	public int inputDonation(String org_name, String user_name, String category, int weight, int donation, String date) {
 
 		org_name = org_name.replaceAll("'", "''");
-		
-//		query = entityManager.createNativeQuery(
-//				"INSERT INTO org_table SET org_name = ?1, contact_name = ?2, contact_number = ?3, contact_email = ?4, notes = ?5");
-//	        query.setParameter(1, org_name);
-//	        query.setParameter(2, contact_name);
-//	        query.setParameter(3, contact_number);
-//	        query.setParameter(4, contact_email);
-//	        query.setParameter(5, notes);
-		
-//		Query query = entityManager.createNativeQuery(
-//				"INSERT INTO donation_table SET "
-//						+ "org_id=(SELECT org_id FROM org_table WHERE "
-//						+ "org_name = '" + org_name + "'), "
-//						+ "org_name = '" + org_name
-//						+ "', category = '" + category
-//						+ "', weight = '" + weight
-//						+ "', donation = '" + donation
-//						+ "', user_name = '" + user_name
-//						+ "', date = '" + date + "';");
-//		query.executeUpdate();
+
 		
 		Query query = entityManager.createNativeQuery(
 				"INSERT INTO donation_table SET org_id=(SELECT org_id FROM org_table WHERE org_name=?1), org_name=?2, category=?3, weight=?4, donation=?5, user_name=?6, date=?7");
@@ -80,7 +58,6 @@ public class DonationDAO implements IntDonationDAO {
 		
 		return 0;
 	}
-	//select distinct org_name from donation_table where (ts between '2017-10-15 00:00:00' and '2017-10-15 23:59:59') and user_name = 'Adam';
 	@Override
 	public List<String> getWidgetOrgs(String date, String username)
 	{
@@ -94,17 +71,6 @@ public class DonationDAO implements IntDonationDAO {
 	}
 
 	
-//	query = entityManager.createNativeQuery(
-//    		"UPDATE org_table SET org_name = ?1, contact_name = ?2, contact_number = ?3, contact_email = ?4, notes = ?5 " +
-//    		"WHERE org_name = ?6");
-//	    query.setParameter(1, org_name);
-//        query.setParameter(2, contact_name);
-//        query.setParameter(3, contact_number);
-//        query.setParameter(4, contact_email);
-//        query.setParameter(5, notes);
-//        query.setParameter(6, org_name);
-//        query.executeUpdate();
-	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -112,9 +78,6 @@ public class DonationDAO implements IntDonationDAO {
 		Query query = entityManager.createNativeQuery(
 				"SELECT * FROM donation_table WHERE org_name = ?1", Donation.class);
 		query.setParameter(1, org_name);
-//		Query query = entityManager.createNativeQuery(
-//				"SELECT * FROM donation_table WHERE " +
-//						"org_name = '" + org_name +"';", Donation.class);
 		List<Donation> donations = query.getResultList();
 		return donations;
 	}
@@ -201,7 +164,6 @@ public class DonationDAO implements IntDonationDAO {
 		for (int i = 0; i < frequencyList.size(); i++)
 		{
 			categories.add(frequencyList.get(i).getCategory());
-			//System.out.println(frequencyList.get(i).getCategory());
 		}
 		boolean broken = false;
 		for (int i = 0; i<categoryNames.length;i++)
@@ -221,7 +183,6 @@ public class DonationDAO implements IntDonationDAO {
 			}
 		}
 		System.out.println("Org Name Entered: " + org_name);
-		//System.out.println(categories.get(1));
 		return categories;
 	}
 
@@ -267,13 +228,6 @@ public class DonationDAO implements IntDonationDAO {
 		query.executeUpdate();
 		return 0;
 	}
-
-//	.___  __         .__  .__                  _________              __  .__
-//	|   |/  |______  |  | |__|____    ____    /   _____/ ____   _____/  |_|__| ____   ____
-//	|   \   __\__  \ |  | |  \__  \  /    \   \_____  \_/ __ \_/ ___\   __\  |/  _ \ /    \
-//	|   ||  |  / __ \|  |_|  |/ __ \|   |  \  /        \  ___/\  \___|  | |  (  <_> )   |  \
-//	|___||__| (____  /____/__(____  /___|  / /_______  /\___  >\___  >__| |__|\____/|___|  /
-//	               \/             \/     \/          \/     \/     \/                    \/
 
 	private String[] getTimeArrayYearly(String firstTsYear, String lastTsYear)
 	{
