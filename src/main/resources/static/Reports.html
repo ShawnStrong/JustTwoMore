@@ -198,15 +198,6 @@
                         dataType:'json',
                         success : function(json) {
                             if (json != ""){
-                              //alert("endpoint has returned " + JSON.stringify(json));
-
-//							   dynamically make the headers
-//							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
-//							  $.each(json.columns, function(rowIndex, r) {
-//								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
-//							  });
-//							  headers.append("</thead><tbody></tbody>");
-//							  $("#table1").append(headers);
 
                                 $("#tablebox").empty();
 
@@ -225,9 +216,11 @@
                                         name = this;
                                     }
                                     $(document.createElement("th")).attr({"data-dynatable-column" : this}).html(name).appendTo($("#header"));
-                                })
+                                });
 
-
+                                var stringData = JSON.stringify(json);
+                                stringData = stringData.replace(/_/g , " ");
+                                json = JSON.parse(stringData);
 
                                 var mytable = $("#table1");
                                 mytable.dynatable({
@@ -297,15 +290,6 @@
                         dataType:'json',
                         success : function(json) {
                             if (json != ""){
-                                //alert("endpoint has returned " + JSON.stringify(json));
-
-//							   dynamically make the headers
-//							  var headers = $("<thead><th data-dynatable-column=\"org_name\">Org</th>");
-//							  $.each(json.columns, function(rowIndex, r) {
-//								headers.append("<th data-dynatable-column=\"" + r + "\">" + r + "</th>");
-//							  });
-//							  headers.append("</thead><tbody></tbody>");
-//							  $("#table1").append(headers);
 
                                 $("#tablebox").empty();
                                 var str1 = JSON.stringify(json);
@@ -450,6 +434,9 @@
             <label class="btn btn-primary" id="descriptiveLabel">
                 <input type="radio" name="type" value="0"autocomplete="off" id="descriptive"> Descriptive
             </label>
+            <label class="btn btn-primary" id="categoriesLabel">
+                <input type="radio" name="type" value="2"autocomplete="off" id="categories"> Categories
+            </label>
         </div>
         <br><br><br><br>
         <div class="col-lg-3"></div>
@@ -478,36 +465,7 @@
 
 
 <div id="tablebox">
-    <!--
-            <table id="table1" align="center">
-                <thead id="header">
-                </thead>
-                <tbody id="body">
-                </tbody>
-            </table>
-    -->
 </div>
-
-<!--
-<form method="get" action="/donation/report">
-  <input type="radio" name="donation" value="1" checked> Incoming<br>
-  <input type="radio" name="donation" value="0"> Outgoing<br><br>
-  <input type="radio" name="time" value="2" checked> Yearly<br>
-  <input type="radio" name="time" value="1"> Monthly<br>
-  <input type="radio" name="time" value="0"> Weekly<br><br>
-  <input type="radio" name="type" value="1" checked> Summary<br>
-  <input type="radio" name="type" value="0"> Descriptive<br>
-  Enter a start date:<br>
-  <input type="date" name="start_date"><br>
-  Enter an end date:<br>
-  <input type="date" name="end_date"><br><br>
-  <br>
-  <input type="submit" value="Submit"><br>
-
-</form>
-
-<a href='Console.html' class='button'>back</a>
--->
 
 </body>
 </html>

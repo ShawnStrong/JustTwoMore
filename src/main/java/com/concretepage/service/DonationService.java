@@ -39,16 +39,6 @@ public class DonationService implements IntDonationService {
 	@Override
 	public String getQuickBooksReport(int donation, String start_date){
 		List<Donation> qbList = donationDAO.getQuickBooksDonation(donation, start_date);
-		//{"data":[{"2018":40,"2017":0,"org_name":"C. C's Bakery"},{"2018":483,"2017":0,"org_name":"Metcalfe's Sentry"},
-		// {"2018":0,"2017":30,"org_name":"Org A"},{"2018":0,"2017":10,"org_name":"Org B"}],"columns":["org_name","2017","2018"]}
-
-		//retuned
-		//{"data":[{"Organization":"C. C''s Bakery","Category":"deli","Description":"deli","2018-01-08":"20","Amount":"60",
-		// "Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"1"},{"Organization":"C. C''s Bakery","Category":"dairy",
-		// "Description":"dairy","2018-01-08":"20","Amount":"60","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"2"},
-		// {"Organization":"Metcalfe''s Sentry","Category":"deli","Description":"deli","2018-01-08":"220","Amount":"660",
-		// "Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"3"},{"Organization":"Metcalfe''s Sentry","Category":"bakery","Description":"bakery","2018-01-08":"72","Amount":"216","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"4"},{"Organization":"Metcalfe''s Sentry","Category":"pantry","Description":"pantry","2018-01-08":"35","Amount":"105","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"5"},{"Organization":"Metcalfe''s Sentry","Category":"meat","Description":"meat","2018-01-08":"21","Amount":"63","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"6"},{"Organization":"Metcalfe''s Sentry","Category":"dairy","Description":"dairy","2018-01-08":"135","Amount":"405","Date":"2018-01-08","Due Date":"2018-01-08","Rate":"3","Bill No":"7"},],
-		// {"columns":["Organization","Category","Description","2018-01-08","Amount","Date","Due Date","Rate","Bill No"]}
 		String Data = "{\"data\":[";
 		String columns ="";
 		if (donation == 1) {
@@ -470,7 +460,7 @@ public class DonationService implements IntDonationService {
 		int timeArrayPos = 0;
 		for (Donation x: donationList) {
 			// descriptive type, includes category
-			if (reportType == 0) {
+			if (reportType == 0 || reportType == 2) {
 				// check if need to make new JSONObject
 				if (!name.equals(x.getOrgName()) || !category.equals(x.getCategory())) {
 					// checks for first org. if not, put it into array
@@ -539,12 +529,23 @@ public class DonationService implements IntDonationService {
 			String[] descriptive = new String[timeArray.length + 2];
 			for (int i = 2; i <= timeArray.length + 1; i++) {
 				descriptive[i] = timeArray[i-2];
-			} 
+			}
 			descriptive[0] = "org_name";
 			descriptive[1] = "category";
 			System.out.println("Time Array: " + descriptive[2]);
 			allData.put("columns", descriptive);
-		} else {
+		}
+		else if(reportType == 2)
+		{
+			String[] descriptive = new String[timeArray.length + 1];
+			for (int i = 1; i <= timeArray.length; i++) {
+				descriptive[i] = timeArray[i-1];
+			}
+			descriptive[0] = "category";
+			//System.out.println("Time Array: " + descriptive[2]);
+			allData.put("columns", descriptive);
+		}
+		else {
 			String[] summary = new String[timeArray.length + 1];
 			for (int i = 1; i <= timeArray.length; i++) {
 				summary[i] = timeArray[i-1];
@@ -598,10 +599,180 @@ public class DonationService implements IntDonationService {
 
 	private List<Donation> formatDonationList(List<Donation> donations, String[] dates, int type, int time)
 	{
+		int weight2use = 0;
 		List<Donation> correctlyFormattedDonationList = new ArrayList<Donation>();
 		if (type == 1)//Summary Report
 		{
 			correctlyFormattedDonationList = formatSummaryDonationList(donations, dates, time);
+		}
+		if (type == 2)//Categories Report
+		{
+			correctlyFormattedDonationList = formatDescriptiveDonationList(donations, dates, time);
+			List<Donation> categoryList = new ArrayList<Donation>();
+			int[][] categoriesWeightsArray= new int[10][dates.length];
+			for(int j = 0; j <10; j++){
+				for(int k = 0; k < dates.length ;k++ ){
+					categoriesWeightsArray[j][k] = 0;
+				}
+			}
+			for(Donation x:correctlyFormattedDonationList)
+			{
+				weight2use = x.getWeight();
+				System.out.println("weight2use = " + weight2use);
+				int idx = 0;
+				System.out.println("Categories Report, Time: " + x.getDate() + " Category: " + x.getCategory() + " Weight: " + x.getWeight());
+				String date = x.getDate();
+				for(int i = 0; i < dates.length;i++) {
+					if (date.equals(dates[i])) {
+						System.out.println("index to use = " + i);
+						idx = i;
+						break;
+					}
+				}
+				if(x.getCategory().equals("bakery"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[0][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[0][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("dairy"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[1][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[1][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("deli"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[2][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[2][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("family_meals_2"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[3][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[3][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("family_meals_4"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[4][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[4][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("meat"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[5][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[5][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("nonfood"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[6][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[6][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("pantry"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[7][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[7][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("pet_food"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[8][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[8][idx] = weight2use;
+				}
+				else if(x.getCategory().equals("produce"))
+				{
+					weight2use = weight2use + categoriesWeightsArray[9][idx];
+					System.out.println("weight2use = " + weight2use);
+					categoriesWeightsArray[9][idx] = weight2use;
+				}
+			}
+			for(int h = 0; h < 10; h++)
+			{
+				for(int l = 0; l < dates.length;l++)
+				{
+					Donation y = new Donation();
+					if(h==0)
+					{
+						y.setOrgName("bakery");
+						y.setCategory("bakery");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 1)
+					{
+						y.setOrgName("dairy");
+						y.setCategory("dairy");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 2)
+					{
+						y.setOrgName("deli");
+						y.setCategory("deli");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 3)
+					{
+						y.setOrgName("family_meals_2");
+						y.setCategory("family_meals_2");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 4)
+					{
+						y.setOrgName("family_meals_4");
+						y.setCategory("family_meals_4");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 5)
+					{
+						y.setOrgName("meat");
+						y.setCategory("meat");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 6)
+					{
+						y.setOrgName("nonfood");
+						y.setCategory("nonfood");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 7)
+					{
+						y.setOrgName("pantry");
+						y.setCategory("pantry");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 8)
+					{
+						y.setOrgName("pet_food");
+						y.setCategory("pet_food");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					else if(h == 9)
+					{
+						y.setOrgName("pantry");
+						y.setCategory("pantry");
+						y.setWeight(categoriesWeightsArray[h][l]);
+						y.setDate(dates[l]);
+					}
+					categoryList.add(y);
+				}
+			}
+			for(Donation x: categoryList)
+			{
+				System.out.println("CatgoryList: " + x.getOrgName() + " Category: " + x.getCategory() + " Time: " + x.getDate() + " Weight: " + x.getWeight());
+			}
+			return categoryList;
 		}
 		else//Descriptive Report
 		{
@@ -699,26 +870,6 @@ public class DonationService implements IntDonationService {
 				tempCategory = x.getCategory();
 				cnt++;
 			}
-			/*
-			 * else if(cnt == formattedDonationListWeightsNotAdded.size() -1)
-			{
-				System.out.println("Last Donation Passed into addWeightsSummary: " +
-						"" + x.getOrgName() + " Weight: " + x.getWeight() + " Date Range: " + x.getDate());
-				if (x.getOrgName().equals(tempOrgName) && x.getDate().equals(tempDateRange))
-				{
-					tempWeight += x.getWeight();
-					cnt++;
-					Donation tempDonation = new Donation(tempOrgName, "", tempWeight, tempDateRange);
-					formattedDonationListWeightsAdded.add(tempDonation);
-				}
-				else {
-					Donation tempDonation = new Donation(tempOrgName, "", tempWeight, tempDateRange);
-					formattedDonationListWeightsAdded.add(tempDonation);
-					tempDonation = new Donation(x.getOrgName(), "", x.getWeight(), x.getDate());
-					formattedDonationListWeightsAdded.add(tempDonation);
-				}
-			}
-			 */
 			else if(cnt == formattedDonationListWeightsNotAdded.size() - 1)
 			{
 				if (x.getOrgName().equals(tempOrgName) && x.getDate().equals(tempDateRange) && x.getCategory().equals(tempCategory))
